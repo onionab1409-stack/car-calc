@@ -1,0 +1,78 @@
+// ============================================
+// 🗄️ Схема базы данных — Car-Calc
+// ============================================
+// Реализация: P4 · Бэкенд (подэтап 4.4)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// --- Расчёты (серверный лог) ---
+model Calculation {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  // Входные данные
+  country     String   // USA | Korea | UAE | China
+  destination String   // RU | BY
+  carPrice    Float    // цена в оригинальной валюте
+  currency    String   // USD | KRW | AED | CNY
+  year        Int
+  engineType  String   // petrol | diesel | electric | hybrid
+  horsePower  Int
+
+  // Результат
+  totalRUB    Float    // итоговая цена в рублях
+  breakdown   String   // JSON с полной сметой (CostBreakdown)
+  formula     String   // какая формула использовалась
+
+  // Курсы на момент расчёта
+  exchangeRate Float
+
+  // Telegram пользователь (если есть)
+  telegramUserId String?
+  lead           Lead?
+}
+
+// --- Заявки клиентов ---
+model Lead {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Контакт
+  telegramUserId String
+  username       String?
+  firstName      String?
+  phone          String?
+  comment        String?
+
+  // Связь с расчётом
+  calculationId String      @unique
+  calculation   Calculation @relation(fields: [calculationId], references: [id])
+
+  // Статус заявки
+  status String @default("new") // new | contacted | in_progress | done | cancelled
+}
+
+// --- Настройки админки ---
+model AdminSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+  updatedAt DateTime @updatedAt
+}
+
+// --- Кэш курсов валют ---
+model RateCache {
+  id        String   @id @default(cuid())
+  source    String   // bybit | cbr
+  currency  String   // USDT_RUB | KRW_RUB | CNY_RUB
+  rate      Float
+  updatedAt DateTime @updatedAt
+}

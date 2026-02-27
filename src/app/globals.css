@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --surface-primary: #0c0c0e;
+  --surface-secondary: #1a1a1e;
+  --surface-tertiary: #2a2a2e;
+}
+
+/* Telegram Mini App overrides */
+body {
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
+/* Плавные анимации */
+* {
+  transition-property: background-color, border-color, color, opacity, transform;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+}
