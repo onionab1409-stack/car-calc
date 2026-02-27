@@ -35,3 +35,7 @@ next-env.d.ts
 # IDE
 .idea/
 .vscode/
+-e 
+# SQLite
+*.db
+*.db-journal

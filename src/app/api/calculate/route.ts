@@ -27,7 +27,8 @@ import { checkRateLimit, getClientId } from '@/lib/rate-limiter';
 import { getExchangeRates, getEURRate } from '@/lib/rates';
 import { calculate } from '@/calc';
 import { getAgeCategory } from '@/types';
-import { logCalculation, logError, logInfo } from '@/lib/logger';
+import { logCalculation, logError, logInfo, logCalcEntry } from '@/lib/logger';
+import { saveCalculation } from '@/lib/db-service';
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -115,16 +116,31 @@ export async function POST(request: NextRequest) {
 
     // ─── 7. Лог breakdown (серверный) ───
     logCalculation(result.breakdown);
-    logInfo(
-      'API/calc',
-      `${data.country}→${data.destination} | ` +
-      `${data.make || '?'} ${data.model || '?'} ${data.year} | ` +
-      `${data.price.toLocaleString()} | ` +
-      `${data.horsePower}лс | ` +
-      `= ${result.totalRUB.toLocaleString()}₽ | ` +
-      `${Date.now() - startTime}ms | ` +
-      `${clientId}`
-    );
+
+    // Структурированный лог (для grep/jq)
+    logCalcEntry({
+      timestamp: new Date().toISOString(),
+      country: data.country,
+      destination: data.destination,
+      price: data.price,
+      currency: carInput.currency,
+      year: data.year,
+      horsePower: data.horsePower,
+      totalRUB: Math.round(result.totalRUB),
+      formula: result.breakdown.formula || '',
+      durationMs: Date.now() - startTime,
+      clientId,
+      make: data.make,
+      model: data.model,
+    });
+
+    // Сохраняем в БД (async, не блокируем ответ)
+    saveCalculation({
+      car: carInput,
+      result,
+      rates,
+      telegramUserId: clientId.startsWith('tg:') ? clientId.slice(3) : undefined,
+    }).catch((err) => logError('API/calc', `DB save failed: ${err}`));
 
     // ─── 8. Ответ: ТОЛЬКО totalRUB ───
     return NextResponse.json(
