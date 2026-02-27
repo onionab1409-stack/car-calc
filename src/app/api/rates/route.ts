@@ -1,22 +1,62 @@
-import { NextResponse } from 'next/server';
+// ============================================
+// 💱 GET /api/rates
+// ============================================
+// Подэтап: P4.2 · Бэкенд
+//
+// Возвращает текущие курсы валют (кэшированные).
+// Для UI: показать актуальность данных.
+// Без аутентификации, rate limit 30/мин.
 
-/**
- * GET /api/rates
- * 
- * Возвращает текущие курсы валют (кэшированные).
- * Используется Mini App для отображения актуальности данных.
- * 
- * Реализация: P4 · Бэкенд (подэтап 4.1)
- */
-export async function GET() {
-  // TODO: P4 · Бэкенд
-  // 1. Проверить кэш
-  // 2. Если устарел — запросить Bybit + ЦБ
-  // 3. Применить коррекцию + спред
-  // 4. Вернуть курсы + timestamp
+import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit, getClientId } from '@/lib/rate-limiter';
+import { getExchangeRates } from '@/lib/rates';
+import { logError, logInfo } from '@/lib/logger';
 
-  return NextResponse.json(
-    { error: 'Not implemented yet. See P4 · Бэкенд.' },
-    { status: 501 }
-  );
+export async function GET(request: NextRequest) {
+  try {
+    // Rate limit
+    const clientId = getClientId(request.headers);
+    const rateCheck = checkRateLimit('/api/rates', clientId);
+
+    if (!rateCheck.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests', details: 'Rate limit: 30 requests per minute' },
+        {
+          status: 429,
+          headers: { 'Retry-After': String(Math.ceil(rateCheck.resetMs / 1000)) },
+        }
+      );
+    }
+
+    const rates = await getExchangeRates();
+
+    logInfo('API/rates', `Курсы отданы: USDT=${rates.USDT_RUB}, KRW=${rates.KRW_RUB}, CNY=${rates.CNY_RUB}`);
+
+    return NextResponse.json(
+      {
+        USDT_RUB: rates.USDT_RUB,
+        KRW_RUB: rates.KRW_RUB,
+        CNY_RUB: rates.CNY_RUB,
+        AED_USD: rates.AED_USD,
+        updatedAt: rates.updatedAt,
+      },
+      {
+        status: 200,
+        headers: {
+          'Cache-Control': 'public, max-age=300', // 5 мин клиентский кэш
+          'X-RateLimit-Remaining': String(rateCheck.remaining),
+        },
+      }
+    );
+  } catch (error) {
+    logError('API/rates', error);
+
+    return NextResponse.json(
+      {
+        error: 'Rates temporarily unavailable',
+        details: error instanceof Error ? error.message : 'Internal server error',
+      },
+      { status: 503 }
+    );
+  }
 }
