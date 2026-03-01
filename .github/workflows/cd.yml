@@ -1,0 +1,45 @@
+# ============================================
+# 🚀 P8.3 · GitHub Actions CD — Auto Deploy
+# Car-Calc · app.americanautohouse.com
+# ============================================
+# Запускается ПОСЛЕ успешного CI при push в main
+# SSH → VPS → deploy.sh → pm2 reload
+# ============================================
+# Необходимые GitHub Secrets:
+#   VPS_HOST      — IP адрес VPS
+#   VPS_USER      — SSH пользователь (root)
+#   VPS_SSH_KEY   — Приватный SSH ключ
+# ============================================
+
+name: CD — Deploy
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  deploy:
+    name: 🚀 Deploy to VPS
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    # Деплоим ТОЛЬКО если CI прошёл успешно
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: 🔑 Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          timeout: 120s
+          script: |
+            cd /var/www/car-calc
+            chmod +x deploy/deploy.sh
+            ./deploy/deploy.sh 2>&1
+
+      - name: ✅ Deploy status
+        run: echo "Deployed successfully to app.americanautohouse.com"
