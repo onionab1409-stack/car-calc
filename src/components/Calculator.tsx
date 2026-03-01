@@ -1,29 +1,26 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
-import type { Country, Destination } from '@/types';
-import { StepCountry, StepCar, StepDestination, StepLoading, StepResult, StepLead } from '@/components/wizard';
-import type { CarFormData } from '@/components/wizard';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
+import type { Country, Destination, EngineType } from '@/types';
+import {
+  StepCountry, StepCar, StepDestination, StepLoading, StepResult, StepLead, StepHistory,
+  useHistory,
+} from '@/components/wizard';
+import type { CarFormData, HistoryEntry } from '@/components/wizard';
 
 /**
  * Calculator — главный компонент визарда.
- * Управляет шагами: страна → данные авто → направление → загрузка → результат → заявка
- *
- * P6.2: StepCountry ✅
- * P6.3: StepCar ✅
- * P6.4: StepDestination ✅
- * P6.5: StepLoading + StepResult ✅
- * P6.6: StepLead ⏳
+ * P6.2–P6.7: все шаги + история
  */
 
-export type WizardStep = 'country' | 'car' | 'destination' | 'loading' | 'result' | 'lead' | 'error';
+export type WizardStep = 'country' | 'car' | 'destination' | 'loading' | 'result' | 'lead' | 'error' | 'history';
 
 export interface WizardState {
   country: Country | null;
   destination: Destination | null;
   price: number;
   year: number;
-  engineType: 'petrol' | 'diesel' | 'electric' | 'hybrid';
+  engineType: EngineType;
   horsePower: number;
   engineVolume?: number;
   totalRUB?: number;
@@ -42,10 +39,28 @@ const initialState: WizardState = {
 export function Calculator() {
   const [step, setStep] = useState<WizardStep>('country');
   const [state, setState] = useState<WizardState>(initialState);
+  const history = useHistory();
+  const savedToHistoryRef = useRef(false);
 
   const updateState = useCallback((patch: Partial<WizardState>) => {
     setState(prev => ({ ...prev, ...patch }));
   }, []);
+
+  // Сохранение в историю при получении результата
+  useEffect(() => {
+    if (step === 'result' && state.totalRUB && state.country && state.destination && !savedToHistoryRef.current) {
+      savedToHistoryRef.current = true;
+      history.addEntry({
+        country: state.country,
+        destination: state.destination,
+        price: state.price,
+        year: state.year,
+        engineType: state.engineType,
+        horsePower: state.horsePower,
+        totalRUB: state.totalRUB,
+      });
+    }
+  }, [step, state, history]);
 
   // ─── Handlers ───
 
@@ -67,6 +82,7 @@ export function Calculator() {
 
   const handleDestinationSubmit = useCallback((destination: Destination) => {
     updateState({ destination });
+    savedToHistoryRef.current = false;
     setStep('loading');
   }, [updateState]);
 
@@ -80,13 +96,26 @@ export function Calculator() {
     setStep('error');
   }, [updateState]);
 
-  const handleLeadRequest = useCallback(() => {
-    setStep('lead');
-  }, []);
+  const handleLeadRequest = useCallback(() => setStep('lead'), []);
+  const handleShowHistory = useCallback(() => setStep('history'), []);
 
   const handleNewCalc = useCallback(() => {
     setState(initialState);
+    savedToHistoryRef.current = false;
     setStep('country');
+  }, []);
+
+  const handleHistorySelect = useCallback((entry: HistoryEntry) => {
+    setState({
+      country: entry.country,
+      destination: entry.destination,
+      price: entry.price,
+      year: entry.year,
+      engineType: entry.engineType,
+      horsePower: entry.horsePower,
+    });
+    savedToHistoryRef.current = false;
+    setStep('loading');
   }, []);
 
   const handleBackToCountry = useCallback(() => setStep('country'), []);
@@ -95,13 +124,16 @@ export function Calculator() {
   const handleBackToResult = useCallback(() => setStep('result'), []);
 
   return (
-    <main className="min-h-screen flex flex-col">
-      {/* ─── Step 1: Выбор страны ─── */}
+    <main className="min-h-screen flex flex-col relative">
       {step === 'country' && (
-        <StepCountry onSelect={handleCountrySelect} />
+        <>
+          <StepCountry onSelect={handleCountrySelect} />
+          {history.count > 0 && (
+            <HistoryButton count={history.count} onClick={handleShowHistory} />
+          )}
+        </>
       )}
 
-      {/* ─── Step 2: Данные авто ─── */}
       {step === 'car' && state.country && (
         <StepCar
           country={state.country}
@@ -110,7 +142,6 @@ export function Calculator() {
         />
       )}
 
-      {/* ─── Step 3: Направление ─── */}
       {step === 'destination' && state.country && (
         <StepDestination
           country={state.country}
@@ -123,7 +154,6 @@ export function Calculator() {
         />
       )}
 
-      {/* ─── Step 4: Загрузка (API call) ─── */}
       {step === 'loading' && state.country && state.destination && (
         <StepLoading
           country={state.country}
@@ -138,7 +168,6 @@ export function Calculator() {
         />
       )}
 
-      {/* ─── Step 5: Результат ─── */}
       {step === 'result' && state.country && state.destination && state.totalRUB && (
         <StepResult
           totalRUB={state.totalRUB}
@@ -153,7 +182,6 @@ export function Calculator() {
         />
       )}
 
-      {/* ─── Step 6: Заявка ─── */}
       {step === 'lead' && state.country && state.destination && state.totalRUB && (
         <StepLead
           totalRUB={state.totalRUB}
@@ -168,7 +196,16 @@ export function Calculator() {
         />
       )}
 
-      {/* ─── Ошибка ─── */}
+      {step === 'history' && (
+        <StepHistory
+          entries={history.entries}
+          onSelectEntry={handleHistorySelect}
+          onClearHistory={history.clearHistory}
+          onRemoveEntry={history.removeEntry}
+          onBack={handleBackToCountry}
+        />
+      )}
+
       {step === 'error' && (
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="text-center space-y-4 animate-fade-in max-w-sm">
@@ -198,5 +235,33 @@ export function Calculator() {
         </div>
       )}
     </main>
+  );
+}
+
+/** Плавающая кнопка истории на экране выбора страны */
+function HistoryButton({ count, onClick }: { count: number; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="
+        fixed bottom-6 right-5 z-10
+        flex items-center gap-2
+        bg-bg-card border border-[rgba(196,162,101,0.14)]
+        rounded-full px-4 py-2.5
+        hover:border-[rgba(196,162,101,0.30)]
+        hover:shadow-[0_0_20px_rgba(196,162,101,0.08)]
+        transition-all duration-250
+        animate-slide-up
+      "
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-gold-400">
+        <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.2" />
+        <path d="M8 4.5V8L10 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      </svg>
+      <span className="text-xs text-gold-300">История</span>
+      <span className="bg-[rgba(196,162,101,0.15)] text-gold-400 text-[10px] font-medium px-1.5 py-0.5 rounded-full">
+        {count}
+      </span>
+    </button>
   );
 }
