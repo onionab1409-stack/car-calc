@@ -39,3 +39,8 @@ next-env.d.ts
 # SQLite
 *.db
 *.db-journal
+-e 
+# Playwright
+playwright-report/
+blob-report/
+test-results/
