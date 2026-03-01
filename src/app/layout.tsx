@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { DM_Sans, Playfair_Display, JetBrains_Mono } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 
 const dmSans = DM_Sans({
@@ -46,7 +47,10 @@ export default function RootLayout({
       className={`${dmSans.variable} ${playfair.variable} ${jetbrainsMono.variable}`}
     >
       <head>
-        <script src="https://telegram.org/js/telegram-web-app.js" />
+        <Script
+          src="https://telegram.org/js/telegram-web-app.js"
+          strategy="beforeInteractive"
+        />
       </head>
       <body className="bg-bg-app text-white min-h-screen font-sans antialiased">
         {children}
