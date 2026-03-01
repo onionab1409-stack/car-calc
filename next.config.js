@@ -3,8 +3,10 @@ const nextConfig = {
   // Отключаем строгий режим для Telegram WebApp SDK
   reactStrictMode: false,
 
-  // Серверные переменные окружения
-  serverExternalPackages: ['grammy', 'prisma', '@prisma/client'],
+  // Серверные пакеты (не бандлить)
+  experimental: {
+    serverComponentsExternalPackages: ['grammy', 'prisma', '@prisma/client'],
+  },
 
   // Заголовки для Telegram Mini App
   async headers() {
