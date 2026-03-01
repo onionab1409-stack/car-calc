@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from 'react';
 import type { Country, Destination } from '@/types';
-import { StepCountry, StepCar, StepDestination } from '@/components/wizard';
+import { StepCountry, StepCar, StepDestination, StepLoading, StepResult } from '@/components/wizard';
 import type { CarFormData } from '@/components/wizard';
 
 /**
@@ -10,14 +10,13 @@ import type { CarFormData } from '@/components/wizard';
  * Управляет шагами: страна → данные авто → направление → загрузка → результат → заявка
  *
  * P6.2: StepCountry ✅
- * P6.3: StepCar ⏳
- * P6.4: StepDestination ⏳
- * P6.5: StepResult ⏳
+ * P6.3: StepCar ✅
+ * P6.4: StepDestination ✅
+ * P6.5: StepLoading + StepResult ✅
  * P6.6: StepLead ⏳
- * P6.7: StepHistory ⏳
  */
 
-export type WizardStep = 'country' | 'car' | 'destination' | 'loading' | 'result' | 'lead';
+export type WizardStep = 'country' | 'car' | 'destination' | 'loading' | 'result' | 'lead' | 'error';
 
 export interface WizardState {
   country: Country | null;
@@ -27,6 +26,8 @@ export interface WizardState {
   engineType: 'petrol' | 'diesel' | 'electric' | 'hybrid';
   horsePower: number;
   engineVolume?: number;
+  totalRUB?: number;
+  error?: string;
 }
 
 const initialState: WizardState = {
@@ -46,13 +47,13 @@ export function Calculator() {
     setState(prev => ({ ...prev, ...patch }));
   }, []);
 
-  /** Обработчик выбора страны → переход к вводу данных авто */
+  // ─── Handlers ───
+
   const handleCountrySelect = useCallback((country: Country) => {
     updateState({ country });
     setStep('car');
   }, [updateState]);
 
-  /** Обработчик данных авто → переход к выбору направления */
   const handleCarSubmit = useCallback((data: CarFormData) => {
     updateState({
       price: data.price,
@@ -64,30 +65,42 @@ export function Calculator() {
     setStep('destination');
   }, [updateState]);
 
-  /** Назад к выбору страны */
-  const handleBackToCountry = useCallback(() => {
-    setStep('country');
-  }, []);
-
-  /** Обработчик выбора направления → переход к расчёту */
   const handleDestinationSubmit = useCallback((destination: Destination) => {
     updateState({ destination });
     setStep('loading');
   }, [updateState]);
 
-  /** Назад к вводу данных авто */
-  const handleBackToCar = useCallback(() => {
-    setStep('car');
+  const handleCalcComplete = useCallback((totalRUB: number) => {
+    updateState({ totalRUB });
+    setStep('result');
+  }, [updateState]);
+
+  const handleCalcError = useCallback((error: string) => {
+    updateState({ error });
+    setStep('error');
+  }, [updateState]);
+
+  const handleLeadRequest = useCallback(() => {
+    setStep('lead');
   }, []);
+
+  const handleNewCalc = useCallback(() => {
+    setState(initialState);
+    setStep('country');
+  }, []);
+
+  const handleBackToCountry = useCallback(() => setStep('country'), []);
+  const handleBackToCar = useCallback(() => setStep('car'), []);
+  const handleBackToDestination = useCallback(() => setStep('destination'), []);
 
   return (
     <main className="min-h-screen flex flex-col">
-      {/* ─── Step: Выбор страны ─── */}
+      {/* ─── Step 1: Выбор страны ─── */}
       {step === 'country' && (
         <StepCountry onSelect={handleCountrySelect} />
       )}
 
-      {/* ─── Step: Ввод данных авто ─── */}
+      {/* ─── Step 2: Данные авто ─── */}
       {step === 'car' && state.country && (
         <StepCar
           country={state.country}
@@ -96,7 +109,7 @@ export function Calculator() {
         />
       )}
 
-      {/* ─── Step: Выбор направления ─── */}
+      {/* ─── Step 3: Направление ─── */}
       {step === 'destination' && state.country && (
         <StepDestination
           country={state.country}
@@ -109,12 +122,79 @@ export function Calculator() {
         />
       )}
 
-      {/* ─── Остальные шаги (placeholder) ─── */}
-      {!['country', 'car', 'destination'].includes(step) && (
+      {/* ─── Step 4: Загрузка (API call) ─── */}
+      {step === 'loading' && state.country && state.destination && (
+        <StepLoading
+          country={state.country}
+          destination={state.destination}
+          price={state.price}
+          year={state.year}
+          engineType={state.engineType}
+          horsePower={state.horsePower}
+          engineVolume={state.engineVolume}
+          onComplete={handleCalcComplete}
+          onError={handleCalcError}
+        />
+      )}
+
+      {/* ─── Step 5: Результат ─── */}
+      {step === 'result' && state.country && state.destination && state.totalRUB && (
+        <StepResult
+          totalRUB={state.totalRUB}
+          country={state.country}
+          destination={state.destination}
+          price={state.price}
+          year={state.year}
+          engineType={state.engineType}
+          horsePower={state.horsePower}
+          onLeadRequest={handleLeadRequest}
+          onNewCalc={handleNewCalc}
+        />
+      )}
+
+      {/* ─── Step: Заявка (placeholder — P6.6) ─── */}
+      {step === 'lead' && (
         <div className="flex-1 flex items-center justify-center p-6">
-          <div className="text-center space-y-3 animate-fade-in">
-            <div className="text-4xl">🚗</div>
-            <div className="pill-gold mx-auto w-fit">Шаг: {step}</div>
+          <div className="text-center space-y-4 animate-fade-in">
+            <div className="text-4xl">📩</div>
+            <h2 className="font-serif text-xl text-gold-100">Оставить заявку</h2>
+            <div className="pill-gold mx-auto w-fit">P6.6 — в разработке</div>
+            <button
+              onClick={() => setStep('result')}
+              className="text-sm text-gold-400 underline underline-offset-4 mt-4"
+            >
+              ← Назад к результату
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ─── Ошибка ─── */}
+      {step === 'error' && (
+        <div className="flex-1 flex items-center justify-center p-6">
+          <div className="text-center space-y-4 animate-fade-in max-w-sm">
+            <div className="text-4xl">⚠️</div>
+            <h2 className="font-serif text-xl text-gold-100">Ошибка расчёта</h2>
+            <p className="text-sm text-neutral-400">{state.error || 'Неизвестная ошибка'}</p>
+            <div className="space-y-2 pt-2">
+              <button
+                onClick={handleBackToDestination}
+                className="
+                  w-full h-12 text-sm text-gold-400
+                  border border-[rgba(196,162,101,0.14)] rounded-lg
+                  hover:border-[rgba(196,162,101,0.25)]
+                  transition-all duration-250
+                "
+              >
+                Попробовать снова
+              </button>
+              <button
+                onClick={handleNewCalc}
+                className="text-sm text-neutral-500 hover:text-gold-300 transition-colors"
+              >
+                Начать заново
+              </button>
+            </div>
           </div>
         </div>
       )}
