@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=800">
+<title>Car-Calc · UI Kit · Premium Dark · v6</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════
+   :root — DESIGN TOKENS v6 (MERGE: catalog pixel-analysis + v5 structure)
+   SOURCES: ui-kit-catalog.html + ui-kit-car-calc v5
+   • Surfaces: #343434-#393939 (catalog pixel-verified lum 49-57)
+   • Тени: ТЯЖЁЛЫЕ drop shadows (0 20px 45px — catalog approach)
+   • Pillow highlight: каждая поверхность — яркий верх → transparent 28%
+   • Бордеры: conic-gradient для асимметричного освещения
+   • Gold: #C4A265 (тёплый amber из catalog)
+   ══════════════════════════════════════════════════════════════ */
+:root {
+  /* ═══ BACKGROUNDS — catalog's pixel-verified v6 ═══ */
+  --bg-app:            #1A1A1A;
+  --bg-elevated:       #222222;
+  --surface:           #343434;
+  --surface-hover:     #393939;
+  --surface-pressed:   #2E2E2E;
+  --surface-selected:  #363636;
+  --input-bg:          #141413;
+
+  /* ═══ ACCENT (Gold — catalog's warmer gold) ═══ */
+  --accent:            #C4A265;
+  --accent-hover:      #D4B87A;
+  --accent-active:     #A8883F;
+  --accent-subtle:     rgba(196, 162, 101, 0.12);
+  --accent-glow:       rgba(196, 162, 101, 0.18);
+  --accent-gradient-1: #D4B87A;
+  --accent-gradient-2: #C4A265;
+  --accent-gradient-3: #8B6E35;
+  --accent-border:     rgba(196, 162, 101, 0.35);
+  --accent-border-glow: rgba(196, 162, 101, 0.10);
+
+  /* ═══ TEXT ═══ */
+  --text-primary:      #F5F5F5;
+  --text-secondary:    #ABABAB;
+  --text-muted:        #9C9C9C;
+  --text-on-accent:    #1A1208;
+
+  /* ═══ BORDERS ═══ */
+  --border-subtle:     rgba(196, 162, 101, 0.08);
+  --border-default:    rgba(196, 162, 101, 0.14);
+  --border-hover:      rgba(196, 162, 101, 0.25);
+  --border-accent:     var(--accent);
+
+  /* ═══ STATUS ═══ */
+  --success:           #4ADE80;
+  --success-subtle:    rgba(74, 222, 128, 0.10);
+  --error:             #F87171;
+  --error-subtle:      rgba(248, 113, 113, 0.10);
+  --warning:           #FBBF24;
+  --info:              #60A5FA;
+
+  /* ═══ TYPOGRAPHY ═══ */
+  --font-primary:      'Inter', -apple-system, sans-serif;
+  --font-mono:         'JetBrains Mono', monospace;
+  --text-xs:  11px; --text-sm:  13px; --text-base: 15px;
+  --text-lg:  17px; --text-xl:  22px; --text-2xl:  32px;
+
+  /* ═══ SPACING ═══ */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px;
+  --space-4: 16px; --space-5: 20px; --space-6: 24px;
+  --space-8: 32px; --space-10: 40px; --page-px: 24px;
+
+  /* ═══ RADII ═══ */
+  --radius-xs: 4px;  --radius-sm: 6px;  --radius-md: 10px;
+  --radius-lg: 14px; --radius-xl: 20px; --radius-pill: 9999px;
+
+  /* ═══ SHADOWS — HEAVY catalog style ═══ */
+  /* Z-(-1): ПРОРЕЗЬ — утопленная поверхность */
+  --shadow-z-neg1:
+    inset 0 3px 8px rgba(0,0,0,0.55),
+    inset 0 1px 2px rgba(0,0,0,0.40);
+
+  /* Z-1: ПАНЕЛЬ — heavy drop shadows */
+  --shadow-z1:
+    0 8px 20px rgba(8,6,4,0.6),
+    0 20px 45px rgba(10,8,6,0.4),
+    0 2px 6px rgba(0,0,0,0.35);
+
+  --shadow-z1-hover:
+    0 10px 25px rgba(8,6,4,0.65),
+    0 25px 50px rgba(10,8,6,0.45),
+    0 3px 8px rgba(0,0,0,0.4);
+
+  /* Z-2: ВЫБРАННАЯ ПАНЕЛЬ */
+  --shadow-z2:
+    0 10px 25px rgba(8,6,4,0.65),
+    0 25px 50px rgba(10,8,6,0.45),
+    0 3px 8px rgba(0,0,0,0.4);
+
+  /* Z-3: КНОПКА — тяжёлая тень */
+  --shadow-z3:
+    0 15px 30px rgba(8,6,4,0.7),
+    0 25px 35px -10px rgba(40,25,12,0.5),
+    0 4px 10px rgba(0,0,0,0.4);
+
+  --shadow-z3-hover:
+    0 20px 40px rgba(8,6,4,0.75),
+    0 30px 45px -10px rgba(40,25,12,0.55),
+    0 5px 12px rgba(0,0,0,0.45);
+
+  --shadow-z3-active:
+    0 2px 6px rgba(0,0,0,0.35),
+    inset 0 2px 6px rgba(80,60,10,0.30);
+
+  --shadow-glow-accent:  0 0 12px rgba(196,162,101,0.18);
+  --shadow-glow-error:   0 0 10px rgba(248,113,113,0.14);
+  --shadow-glow-success: 0 0 10px rgba(74,222,128,0.12);
+
+  /* ═══ TRANSITIONS ═══ */
+  --ease-out:      cubic-bezier(0.0, 0.0, 0.2, 1.0);
+  --ease-in:       cubic-bezier(0.4, 0.0, 1.0, 1.0);
+  --ease-in-out:   cubic-bezier(0.4, 0.0, 0.2, 1.0);
+  --ease-bounce:   cubic-bezier(0.34, 1.56, 0.64, 1.0);
+  --ease-spring:   cubic-bezier(0.34, 1.3, 0.64, 1.0);
+
+  /* ═══ TOGGLE THUMB SURFACE ═══ */
+  --thumb-off-light:  #E0E0E0;
+  --thumb-off-dark:   #ABABAB;
+  --thumb-on-light:   #FFFFFF;
+  --thumb-on-dark:    var(--text-primary);  /* #F0ECE2 */
+
+  --duration-instant: 80ms;
+  --duration-fast:    150ms;
+  --duration-normal:  220ms;
+  --duration-slow:    350ms;
+}
+
+/* ══════ RESET ══════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #1A1A1A;
+  background-image:
+    radial-gradient(ellipse 120% 100% at 0% 0%,
+      rgba(70,70,68,0.9) 0%, rgba(55,55,53,0.65) 15%,
+      rgba(42,42,40,0.45) 30%, rgba(30,30,28,0.3) 50%,
+      transparent 75%),
+    radial-gradient(ellipse 80% 80% at 90% 90%,
+      rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 40%,
+      transparent 80%),
+    linear-gradient(180deg,
+      #383838 0%, #303030 10%, #282828 25%, #202020 40%,
+      #181818 55%, #141414 70%, #101010 85%, #0C0C0C 100%);
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  width: 800px;
+  margin: 0 auto;
+  padding: var(--space-10) var(--page-px) 80px;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Noise */
+body::after {
+  content: ''; position: fixed; inset: 0; z-index: 9999;
+  pointer-events: none; opacity: 0.018;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat; mix-blend-mode: overlay;
+}
+/* Vignette */
+/* Виньетка минимальная — референс практически без неё */
+.vignette { position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 65%, rgba(0,0,0,0.12) 100%); }
+
+/* ══════ SECTIONS ══════ */
+.section { margin-bottom: 48px; position: relative; z-index: 2; }
+.section-title {
+  font-size: var(--text-xs); font-weight: 600; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--text-muted);
+  margin-bottom: var(--space-6); padding-bottom: var(--space-3);
+  border-bottom: 1px solid rgba(196,162,101,0.06);
+}
+.section-subtitle {
+  font-size: var(--text-sm); color: var(--text-muted);
+  margin-bottom: var(--space-5); font-style: italic;
+}
+.row { display: flex; gap: var(--space-4); margin-bottom: var(--space-4);
+  align-items: center; flex-wrap: wrap; }
+.row-label { font-size: var(--text-xs); color: var(--text-muted);
+  min-width: 80px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
+
+/* ══════════════════════════════════════════════════════════════
+   A. PRIMARY BUTTON — gold gradient + BRIGHT glowing gold border
+   Key delta: top edge = near-white gold highlight (LED strip effect)
+   ══════════════════════════════════════════════════════════════ */
+/* ═══ PRIMARY BUTTON ═══
+   Материал: ЛИТОЙ ПОЛИРОВАННЫЙ ЗОЛОТОЙ СЛИТОК
+   Форма: выпуклая — верх светлее (ловит свет), низ темнее (самотень)
+   Specular: яркая белая-золотая полоса на верхней грани
+   Тень: тяжёлая, многослойная — кнопка ПАРИТ над поверхностью
+   ═══════════════════════════════════════════════════════════════ */
+.btn-primary {
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 48px; padding: 0 var(--space-8);
+  border: none;
+  border-radius: var(--radius-pill);
+  background:
+    linear-gradient(180deg,
+      rgba(233,208,163,0.55) 0%, rgba(203,172,121,0.3) 8%,
+      transparent 20%),
+    linear-gradient(180deg,
+      #CBAC79 0%, #C4A265 30%, #B89868 50%,
+      #A8883F 70%, #9C764A 100%);
+  color: var(--text-on-accent);
+  font-family: var(--font-primary);
+  font-size: var(--text-base); font-weight: 600; letter-spacing: 0.3px;
+  cursor: pointer;
+  box-shadow:
+    var(--shadow-z3),
+    0 0 12px rgba(196,162,101,0.20),
+    0 0 30px rgba(196,162,101,0.10);
+  transition: transform var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out),
+              filter var(--duration-fast) var(--ease-out);
+  overflow: hidden; z-index: 0;
+}
+.btn-primary::before {
+  content: ''; position: absolute; inset: -5px;
+  border-radius: inherit;
+  background: conic-gradient(from 180deg,
+    #FCECC0 0deg, #FFFCE8 20deg, #FFF8D8 45deg, #FAECC0 70deg,
+    #F0E0A8 90deg, #E8D898 120deg, #DCC880 150deg, #D0BC70 180deg,
+    #C8B068 210deg, #C0A860 240deg, #D0BC70 270deg, #E8D898 300deg,
+    #F5E8B0 330deg, #FCECC0 360deg);
+  z-index: -1; pointer-events: none;
+}
+/* Световой блик-полоса (на hover — скользит по поверхности) */
+.btn-primary::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(105deg,
+    transparent 36%, rgba(255,255,255,0.05) 42%,
+    rgba(255,255,255,0.10) 50%, rgba(255,255,255,0.05) 58%, transparent 64%);
+  opacity: 0; transition: opacity var(--duration-normal) var(--ease-out);
+  pointer-events: none;
+}
+.btn-primary:hover {
+  transform: translateY(-1px); filter: brightness(1.06);
+  box-shadow:
+    var(--shadow-z3-hover),
+    0 0 16px rgba(196,162,101,0.25),
+    0 0 36px rgba(196,162,101,0.12);
+}
+.btn-primary:hover::after { opacity: 1; }
+.btn-primary:active {
+  transform: translateY(1px) scale(0.99); filter: brightness(0.94);
+  box-shadow:
+    var(--shadow-z3-active),
+    0 0 8px rgba(196,162,101,0.10);
+  transition-duration: var(--duration-instant);
+}
+
+/* ══════ SECONDARY BUTTON — with conic border ══════ */
+.btn-secondary {
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 48px; padding: 0 var(--space-8);
+  border: none;
+  border-radius: var(--radius-pill);
+  background:
+    linear-gradient(180deg,
+      rgba(85,78,72,0.85) 0%, rgba(72,68,63,0.6) 4%,
+      rgba(60,57,53,0.35) 10%, rgba(50,47,44,0.15) 18%,
+      transparent 28%),
+    linear-gradient(180deg,
+      #2E2E2C 0%, #2C2C2A 15%, #2A2A28 30%,
+      #292928 45%, #282827 55%, #292928 70%,
+      #2A2A28 85%, #2B2B29 100%);
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+  font-size: var(--text-base); font-weight: 500; letter-spacing: 0.3px;
+  cursor: pointer;
+  box-shadow: var(--shadow-z1);
+  transition: transform var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out),
+              background var(--duration-fast) var(--ease-out);
+  overflow: hidden;
+}
+.btn-secondary::before {
+  content: ''; position: absolute; inset: -6px;
+  border-radius: inherit;
+  background: conic-gradient(from 180deg,
+    #6E6E6E 0deg, #747474 20deg, #727272 45deg, #6A6A6A 70deg,
+    #646464 90deg, #5E5E5E 120deg, #585858 150deg, #525252 180deg,
+    #4E4E4E 210deg, #484848 240deg, #545454 270deg, #606060 300deg,
+    #686868 330deg, #6E6E6E 360deg);
+  z-index: -1; pointer-events: none;
+}
+.btn-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-z1-hover);
+}
+.btn-secondary:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: var(--shadow-z1);
+  transition-duration: var(--duration-instant);
+}
+
+/* ══════ GHOST BUTTON — recessed with pillow ══════ */
+.btn-ghost {
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 48px; padding: 0 var(--space-8);
+  border: none;
+  border-radius: var(--radius-md);
+  background:
+    linear-gradient(180deg,
+      rgba(75,70,64,0.8) 0%, rgba(62,58,53,0.5) 5%,
+      rgba(48,45,42,0.2) 12%, transparent 22%),
+    linear-gradient(180deg,
+      #2E2E2C 0%, #2C2C2A 20%, #2B2B29 40%,
+      #2A2A28 60%, #2B2B29 80%, #2C2C2A 100%);
+  color: var(--text-muted);
+  font-family: var(--font-primary);
+  font-size: var(--text-base); font-weight: 500; letter-spacing: 0.3px;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 2px rgba(100,90,75,0.1),
+    inset 0 -2px 4px rgba(0,0,0,0.28),
+    0 8px 16px rgba(8,6,4,0.8);
+  transition: transform var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out),
+              color var(--duration-fast) var(--ease-out);
+}
+.btn-ghost:hover {
+  transform: translateY(-1px);
+  color: var(--text-secondary);
+  box-shadow:
+    inset 0 1px 2px rgba(100,90,75,0.1),
+    inset 0 -2px 4px rgba(0,0,0,0.28),
+    0 10px 20px rgba(8,6,4,0.85);
+}
+.btn-ghost:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: inset 0 3px 8px rgba(0,0,0,0.55), inset 0 1px 2px rgba(0,0,0,0.40);
+  transition-duration: var(--duration-instant);
+}
+
+/* ══════ DISABLED ══════ */
+.btn-disabled { opacity: 0.28; cursor: not-allowed; pointer-events: none;
+  filter: saturate(0.15) brightness(0.75); }
+.btn-primary.btn-disabled { box-shadow: 0 1px 2px rgba(0,0,0,0.12); }
+
+/* ══════════════════════════════════════════════════════════════
+   B. INPUTS — recessed, Z-(-1)
+   ══════════════════════════════════════════════════════════════ */
+.input-wrapper { position: relative; display: flex; flex-direction: column; gap: var(--space-1); width: 180px; }
+.input-label { font-size: var(--text-xs); font-weight: 500; color: var(--text-secondary); letter-spacing: 0.3px; }
+
+.input-field {
+  height: 44px; padding: 0 var(--space-4);
+  border-radius: var(--radius-md);
+  background:
+    linear-gradient(180deg,
+      rgba(60,57,53,0.35) 0%, rgba(50,47,44,0.15) 8%,
+      transparent 20%),
+    var(--input-bg);
+  border: 1px solid rgba(196,162,101,0.06);
+  color: var(--text-primary);
+  font-family: var(--font-primary); font-size: var(--text-base); font-weight: 400;
+  box-shadow:
+    inset 0 4px 10px rgba(0,0,0,0.5),
+    inset 0 1px 2px rgba(0,0,0,0.35),
+    inset 0 -2px 4px rgba(80,70,55,0.06);
+  transition: border-color var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out);
+  outline: none;
+}
+.input-field::placeholder { color: var(--text-muted); font-weight: 400; }
+.input-field:focus, .input-field.is-focused {
+  border-color: var(--accent);
+  box-shadow:
+    inset 0 4px 10px rgba(0,0,0,0.5),
+    inset 0 1px 2px rgba(0,0,0,0.35),
+    0 0 0 3px var(--accent-subtle),
+    0 0 24px rgba(196,162,101,0.18);
+}
+.input-field.is-filled { color: var(--text-primary); font-weight: 500; }
+.input-field.is-error {
+  border-color: var(--error);
+  box-shadow:
+    inset 0 4px 10px rgba(0,0,0,0.5),
+    inset 0 1px 2px rgba(0,0,0,0.35),
+    0 0 0 3px var(--error-subtle),
+    var(--shadow-glow-error);
+}
+.input-error-text { font-size: var(--text-xs); color: var(--error); font-weight: 500; margin-top: 2px; display: flex; align-items: center; gap: var(--space-1); }
+
+/* ══════════════════════════════════════════════════════════════
+   C. CARDS — gold-tinted borders by default (matching reference!)
+   ══════════════════════════════════════════════════════════════ */
+/* ═══ CARD — парящая металлическая пластина ═══
+   Верхняя грань ловит свет. Нижний край в тени.
+   Бордер = грань металла, ярче сверху-слева (свет) ═══ */
+.card {
+  position: relative;
+  background:
+    linear-gradient(180deg,
+      rgba(80,75,70,0.85) 0%, rgba(68,64,59,0.55) 5%,
+      rgba(55,52,48,0.25) 12%, transparent 22%),
+    linear-gradient(180deg,
+      #393939 0%, #373737 10%, #363636 20%,
+      #353535 30%, #343434 40%, #333333 50%,
+      #323232 60%, #313131 70%, #303030 80%,
+      #2F2F2F 90%, #2E2E2E 100%);
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow:
+    inset 0 1px 2px rgba(90,90,88,0.08),
+    inset 0 -4px 12px rgba(0,0,0,0.25),
+    0 20px 45px rgba(8,8,8,0.7),
+    0 8px 20px rgba(5,5,5,0.55);
+  cursor: pointer;
+  transition: transform var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out);
+  overflow: hidden; width: 220px;
+}
+.card::before {
+  content: ''; position: absolute; inset: -6px;
+  border-radius: calc(var(--radius-lg) + 6px);
+  background: conic-gradient(from 180deg,
+    #5E5E5E 0deg, #626262 20deg, #606060 45deg, #5C5C5C 70deg,
+    #585858 90deg, #545454 120deg, #505050 150deg, #4C4C4C 180deg,
+    #484848 210deg, #444444 240deg, #4C4C4C 270deg, #565656 300deg,
+    #5C5C5C 330deg, #5E5E5E 360deg);
+  z-index: -1; pointer-events: none;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 2px rgba(90,90,88,0.08),
+    inset 0 -4px 12px rgba(0,0,0,0.25),
+    0 25px 55px rgba(8,8,8,0.75),
+    0 10px 25px rgba(5,5,5,0.6);
+}
+.card-title { font-size: var(--text-lg); font-weight: 600; margin-bottom: var(--space-2);
+  display: flex; align-items: center; gap: var(--space-2); }
+.card-subtitle { font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-3); }
+.card-chevron {
+  position: absolute; right: var(--space-5); top: 50%; transform: translateY(-50%);
+  color: rgba(196,162,101,0.40); font-size: 20px;
+  transition: color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+}
+.card:hover .card-chevron { color: var(--accent); transform: translateY(-50%) translateX(2px); }
+
+/* Selected card */
+.card.is-selected {
+  box-shadow:
+    inset 0 1px 2px rgba(90,90,88,0.08),
+    inset 0 -4px 12px rgba(0,0,0,0.25),
+    0 20px 45px rgba(8,8,8,0.7),
+    0 8px 20px rgba(5,5,5,0.55),
+    0 0 12px rgba(196,162,101,0.16);
+  transform: scale(1.01);
+}
+.card-check {
+  position: absolute; top: var(--space-3); right: var(--space-3);
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(196,162,101,0.40);
+}
+.card-check svg { width: 14px; height: 14px; stroke: var(--text-on-accent);
+  stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Compact card */
+.card.is-compact {
+  padding: var(--space-3) var(--space-5);
+  display: flex; align-items: center; gap: var(--space-3);
+  width: auto; min-width: 320px;
+}
+.card.is-compact .card-title { font-size: var(--text-base); margin-bottom: 0; }
+.card.is-compact .card-price {
+  margin-left: auto; font-family: var(--font-mono);
+  font-size: var(--text-base); font-weight: 500;
+  color: var(--accent); letter-spacing: -0.3px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   D1. PILLS
+   ══════════════════════════════════════════════════════════════ */
+.pill {
+  display: inline-flex; align-items: center; gap: var(--space-1);
+  height: 30px; padding: 0 var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs); font-weight: 500; letter-spacing: 0.3px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.14), inset 0 1px 0 rgba(255,255,255,0.03);
+  transition: transform 120ms var(--ease-out), filter 120ms var(--ease-out);
+  cursor: default;
+}
+.pill:hover { transform: scale(1.04); filter: brightness(1.08); }
+.pill-accent { background: var(--accent-subtle); color: var(--accent); border: 1px solid rgba(196,162,101,0.22); }
+.pill-neutral { background: rgba(255,255,255,0.04); color: var(--text-secondary); border: 1px solid rgba(196,162,101,0.08); }
+.pill-success { background: var(--success-subtle); color: var(--success); border: 1px solid rgba(74,222,128,0.16); }
+.pill-warning { background: rgba(251,191,36,0.10); color: var(--warning); border: 1px solid rgba(251,191,36,0.16); }
+
+/* ══════ D2. TOGGLE ══════ */
+.toggle {
+  position: relative; width: 52px; height: 28px;
+  border-radius: var(--radius-pill);
+  background: var(--input-bg);
+  border: 1px solid rgba(196,162,101,0.08);
+  box-shadow: var(--shadow-z-neg1);
+  cursor: pointer;
+  transition: background var(--duration-normal) var(--ease-in-out),
+    box-shadow var(--duration-normal) var(--ease-in-out),
+    border-color var(--duration-normal) var(--ease-in-out);
+}
+.toggle-thumb {
+  position: absolute; top: 3px; left: 3px; width: 22px; height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, var(--thumb-off-light), var(--thumb-off-dark));
+  box-shadow: 0 1px 2px rgba(0,0,0,0.35), 0 4px 8px rgba(0,0,0,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.45);
+  transition: transform 280ms var(--ease-bounce),
+    background 280ms var(--ease-in-out), box-shadow 280ms var(--ease-in-out);
+}
+.toggle.is-on {
+  background: linear-gradient(135deg, var(--accent-gradient-3), var(--accent));
+  border-color: rgba(196,162,101,0.35);
+  box-shadow: var(--shadow-z-neg1), 0 0 8px rgba(196,162,101,0.18);
+}
+.toggle.is-on .toggle-thumb {
+  transform: translateX(24px);
+  background: linear-gradient(180deg, var(--thumb-on-light), var(--thumb-on-dark));
+  box-shadow: 0 1px 2px rgba(0,0,0,0.30), 0 4px 8px rgba(196,162,101,0.30),
+    inset 0 1px 0 rgba(255,255,255,0.55);
+}
+
+/* ══════ D3. RADIO ══════ */
+.radio {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid rgba(196,162,101,0.20);
+  background: transparent; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+.radio.is-checked { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-subtle); }
+.radio-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--accent);
+  transform: scale(0); transition: transform 200ms var(--ease-bounce);
+  box-shadow: 0 0 8px rgba(196,162,101,0.35);
+}
+.radio.is-checked .radio-dot { transform: scale(1); }
+.radio.is-disabled { opacity: 0.30; cursor: not-allowed; }
+
+/* ══════ D4. CHECKBOX ══════ */
+.checkbox {
+  width: 22px; height: 22px; border-radius: var(--radius-sm);
+  border: 2px solid rgba(196,162,101,0.20);
+  background: transparent; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+.checkbox.is-checked { background: var(--accent); border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(196,162,101,0.25); }
+.checkbox svg { width: 14px; height: 14px; stroke: var(--text-on-accent);
+  stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 24; stroke-dashoffset: 24;
+  transition: stroke-dashoffset 250ms var(--ease-out); }
+.checkbox.is-checked svg { stroke-dashoffset: 0; }
+.checkbox.is-disabled { opacity: 0.30; cursor: not-allowed; }
+
+/* ══════ D5. PROGRESS DOTS ══════ */
+.progress-dots { display: flex; align-items: center; gap: 0; }
+.progress-connector { width: 36px; height: 2px; background: rgba(196,162,101,0.08); }
+.progress-connector.is-completed { background: var(--accent); opacity: 0.45; }
+.progress-dot { width: 14px; height: 14px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all var(--duration-normal) var(--ease-out)); }
+.progress-dot.is-completed { background: var(--accent); box-shadow: 0 0 10px rgba(196,162,101,0.22); }
+.progress-dot.is-completed svg { width: 8px; height: 8px; stroke: var(--text-on-accent); stroke-width: 3; fill: none; }
+.progress-dot.is-active { width: 16px; height: 16px; background: var(--accent);
+  animation: pulse-dot 2s ease-in-out infinite; }
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(196,162,101,0.30); }
+  50% { transform: scale(1.18); box-shadow: 0 0 0 7px rgba(196,162,101,0); }
+}
+.progress-dot.is-pending { background: rgba(255,255,255,0.08); width: 12px; height: 12px; }
+
+/* ══════ D6. PROGRESS BAR (new — matching reference) ══════ */
+.progress-bar-track {
+  width: 100%; height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--input-bg);
+  box-shadow: var(--shadow-z-neg1);
+  border: 1px solid rgba(196,162,101,0.06);
+  overflow: hidden;
+  position: relative;
+}
+.progress-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--accent-gradient-3), var(--accent), var(--accent-gradient-1));
+  box-shadow: 0 0 16px rgba(196,162,101,0.32), 0 0 40px rgba(196,162,101,0.12);
+  transition: width var(--duration-slow) var(--ease-out);
+  position: relative;
+}
+.progress-bar-fill::after {
+  content: '';
+  position: absolute; right: 0; top: 0; bottom: 0; width: 20px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.20));
+  border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
+}
+
+/* ══════ D7. DIVIDERS ══════ */
+.divider { width: 100%; margin: var(--space-3) 0; }
+.divider-thin { height: 1px; background: rgba(196,162,101,0.06); }
+.divider-gradient { height: 1px; background: linear-gradient(90deg, transparent, rgba(196,162,101,0.15), transparent); }
+.divider-dashed { height: 0; border: none; border-top: 1px dashed rgba(196,162,101,0.10); }
+
+/* ══════ D8. ICON ELEMENTS (new — matching reference) ══════ */
+.icon-element {
+  width: 44px; height: 44px;
+  border-radius: var(--radius-sm);
+  background:
+    linear-gradient(180deg,
+      rgba(75,70,64,0.8) 0%, rgba(62,58,53,0.5) 5%,
+      rgba(48,45,42,0.2) 12%, transparent 22%),
+    linear-gradient(180deg,
+      #2A2A28 0%, #292928 30%, #282827 60%, #272726 100%);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow:
+    inset 0 1px 2px rgba(100,90,75,0.1),
+    inset 0 -2px 4px rgba(0,0,0,0.28),
+    0 8px 16px rgba(8,6,4,0.8);
+  cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+  color: var(--accent);
+  font-size: 18px;
+  position: relative;
+}
+.icon-element::before {
+  content: ''; position: absolute; inset: -6px;
+  border-radius: calc(var(--radius-sm) + 6px);
+  background: conic-gradient(from 180deg,
+    #5E5E5E 0deg, #626262 20deg, #606060 45deg, #5C5C5C 70deg,
+    #585858 90deg, #545454 120deg, #505050 150deg, #4C4C4C 180deg,
+    #484848 210deg, #444444 240deg, #4C4C4C 270deg, #565656 300deg,
+    #5C5C5C 330deg, #5E5E5E 360deg);
+  z-index: -1; pointer-events: none;
+}
+.icon-element:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-z1-hover), 0 0 14px rgba(196,162,101,0.10);
+  border-color: rgba(196,162,101,0.30);
+}
+.icon-element.is-active {
+  background: rgba(196,162,101,0.10);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-z2), 0 0 16px rgba(196,162,101,0.15);
+}
+.icon-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(196,162,101,0.40);
+}
+/* Circular icon variant (radio/indicator from reference) */
+.icon-element.is-circle {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+}
+.icon-element.is-circle::before { border-radius: 50%; }
+.icon-element.is-circle.is-active {
+  box-shadow: var(--shadow-z2), 0 0 20px rgba(196,162,101,0.20), 0 0 6px rgba(196,162,101,0.30);
+}
+
+/* Vertical bars indicator (equalizer from reference) */
+.icon-bars {
+  display: flex; align-items: flex-end; gap: 3px; height: 20px;
+}
+.icon-bars span {
+  width: 3px; border-radius: 1.5px;
+  background: var(--accent);
+  box-shadow: 0 0 4px rgba(196,162,101,0.30);
+}
+
+/* Mono number display */
+.mono-display {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 40px; padding: 0 var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid rgba(196,162,101,0.14);
+  box-shadow: var(--shadow-z1), 0 0 6px rgba(196,162,101,0.04);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--accent);
+  letter-spacing: 1px; font-weight: 500;
+}
+.mono-display::before {
+  content: ''; position: absolute; inset: 0;
+  border-radius: inherit; padding: 1px;
+  background: linear-gradient(135deg, rgba(196,162,101,0.22) 0%, rgba(196,162,101,0.04) 50%, rgba(196,162,101,0.10) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+}
+
+/* ══════ GOLD CTA CARD (large — bottom of reference) ══════ */
+.gold-card {
+  position: relative;
+  width: 100%;
+  padding: var(--space-6) var(--space-8);
+  border-radius: var(--radius-xl);
+  background:
+    linear-gradient(180deg,
+      rgba(233,208,163,0.55) 0%, rgba(203,172,121,0.3) 8%,
+      transparent 20%),
+    linear-gradient(180deg,
+      #CBAC79 0%, #C4A265 30%, #B89868 50%,
+      #A8883F 70%, #9C764A 100%);
+  color: var(--text-on-accent);
+  box-shadow:
+    var(--shadow-z3),
+    0 0 12px rgba(196,162,101,0.20),
+    0 0 30px rgba(196,162,101,0.10);
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.gold-card::before {
+  content: ''; position: absolute; inset: -5px;
+  border-radius: inherit;
+  background: conic-gradient(from 180deg,
+    #FCECC0 0deg, #FFFCE8 20deg, #FFF8D8 45deg, #FAECC0 70deg,
+    #F0E0A8 90deg, #E8D898 120deg, #DCC880 150deg, #D0BC70 180deg,
+    #C8B068 210deg, #C0A860 240deg, #D0BC70 270deg, #E8D898 300deg,
+    #F5E8B0 330deg, #FCECC0 360deg);
+  z-index: -1; pointer-events: none;
+}
+.gold-card-content { z-index: 1; }
+.gold-card-title { font-size: var(--text-xl); font-weight: 700; margin-bottom: var(--space-1); }
+.gold-card-subtitle { font-size: var(--text-sm); opacity: 0.7; }
+.gold-card-price {
+  font-family: var(--font-mono); font-size: var(--text-2xl);
+  font-weight: 300; letter-spacing: -1px; z-index: 1;
+}
+
+/* ══════ SWATCHES ══════ */
+.swatch-row { display: flex; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-4); }
+.swatch-group-label { font-size: var(--text-xs); color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600;
+  margin-bottom: var(--space-2); margin-top: var(--space-4); }
+.swatch { display: flex; flex-direction: column; align-items: center; gap: var(--space-1); }
+.swatch-color { width: 56px; height: 56px; border-radius: var(--radius-md);
+  border: 1px solid rgba(196,162,101,0.10); box-shadow: var(--shadow-z1); }
+.swatch-hex { font-family: var(--font-mono); font-size: 10px; color: var(--text-secondary); }
+.swatch-name { font-size: 9px; color: var(--text-muted); text-align: center; max-width: 60px; }
+
+/* ══════ Z-AXIS DEMO ══════ */
+.z-demo {
+  position: relative; background: var(--bg-app);
+  border-radius: var(--radius-xl);
+  padding: var(--space-10) var(--space-6) var(--space-8);
+  display: flex; align-items: flex-end; justify-content: center;
+  gap: var(--space-6); min-height: 220px;
+  border: 1px solid rgba(196,162,101,0.10);
+  overflow: hidden;
+}
+.z-demo::before {
+  content: 'DEPTH →'; position: absolute; top: var(--space-4); left: var(--space-5);
+  font-size: var(--text-xs); font-family: var(--font-mono);
+  color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase;
+}
+.z-item { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); }
+.z-label { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-muted); font-weight: 500; }
+.z-element { width: 110px; height: 48px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: var(--text-sm); font-weight: 500; }
+.z-neg1 { background: var(--input-bg); border: 1px solid rgba(196,162,101,0.06);
+  box-shadow: var(--shadow-z-neg1); color: var(--text-muted); }
+.z-0 { background: var(--bg-app); border: 1px dashed rgba(196,162,101,0.08); color: var(--text-muted); }
+.z-1 { background: var(--surface); border: 1px solid rgba(196,162,101,0.12);
+  box-shadow: var(--shadow-z1); color: var(--text-secondary); }
+.z-2 { background: var(--surface-hover); border: 1px solid var(--accent);
+  box-shadow: var(--shadow-z2), 0 0 16px rgba(196,162,101,0.12); color: var(--text-primary); }
+.z-3 { background: linear-gradient(168deg, var(--accent-gradient-1), var(--accent-gradient-3));
+  border: none; box-shadow: var(--shadow-z3), var(--shadow-glow-accent);
+  color: var(--text-on-accent); font-weight: 600; }
+
+/* ══════ CROSS-VALIDATION CARDS ══════ */
+.comp-card {
+  position: relative;
+  background:
+    linear-gradient(180deg,
+      rgba(80,75,70,0.85) 0%, rgba(68,64,59,0.55) 5%,
+      rgba(55,52,48,0.25) 12%, transparent 22%),
+    linear-gradient(180deg,
+      #393939 0%, #373737 10%, #363636 20%,
+      #353535 30%, #343434 40%, #333333 50%,
+      #323232 60%, #313131 70%, #303030 80%,
+      #2F2F2F 90%, #2E2E2E 100%);
+  border: none;
+  border-radius: var(--radius-lg); padding: var(--space-5);
+  box-shadow:
+    inset 0 1px 2px rgba(90,90,88,0.08),
+    inset 0 -4px 12px rgba(0,0,0,0.25),
+    0 20px 45px rgba(8,8,8,0.7),
+    0 8px 20px rgba(5,5,5,0.55);
+  width: 340px; overflow: hidden;
+}
+.comp-card::before {
+  content: ''; position: absolute; inset: -6px;
+  border-radius: calc(var(--radius-lg) + 6px);
+  background: conic-gradient(from 180deg,
+    #5E5E5E 0deg, #626262 20deg, #606060 45deg, #5C5C5C 70deg,
+    #585858 90deg, #545454 120deg, #505050 150deg, #4C4C4C 180deg,
+    #484848 210deg, #444444 240deg, #4C4C4C 270deg, #565656 300deg,
+    #5C5C5C 330deg, #5E5E5E 360deg);
+  z-index: -1; pointer-events: none;
+}
+.comp-card-title { font-size: var(--text-lg); font-weight: 600; margin-bottom: var(--space-2); }
+.comp-card-desc { font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-4); }
+.comp-card .input-field { width: 100%; margin-bottom: var(--space-3); }
+.comp-card .btn-primary { width: 100%; }
+.comp-card .pill { margin-right: var(--space-2); margin-bottom: var(--space-2); }
+.comp-card .toggle-row { display: flex; align-items: center; justify-content: space-between;
+  padding: var(--space-3) 0; border-bottom: 1px solid rgba(196,162,101,0.06); }
+.comp-card .toggle-row:last-child { border-bottom: none; }
+.comp-card .toggle-label { font-size: var(--text-sm); color: var(--text-secondary); }
+
+/* ══════ TOKENS EXPORT ══════ */
+.tokens-export {
+  background:
+    linear-gradient(180deg,
+      rgba(80,75,70,0.85) 0%, rgba(68,64,59,0.55) 5%,
+      rgba(55,52,48,0.25) 12%, transparent 22%),
+    linear-gradient(180deg,
+      #393939 0%, #373737 10%, #363636 20%,
+      #353535 30%, #343434 40%, #333333 50%,
+      #323232 60%, #313131 70%, #303030 80%,
+      #2F2F2F 90%, #2E2E2E 100%);
+  border: none;
+  border-radius: var(--radius-lg); padding: var(--space-5);
+  box-shadow:
+    inset 0 1px 2px rgba(90,90,88,0.08),
+    inset 0 -4px 12px rgba(0,0,0,0.25),
+    0 20px 45px rgba(8,8,8,0.7),
+    0 8px 20px rgba(5,5,5,0.55);
+  overflow-x: auto;
+  position: relative;
+}
+.tokens-export::before {
+  content: ''; position: absolute; inset: -6px;
+  border-radius: calc(var(--radius-lg) + 6px);
+  background: conic-gradient(from 180deg,
+    #5E5E5E 0deg, #626262 20deg, #606060 45deg, #5C5C5C 70deg,
+    #585858 90deg, #545454 120deg, #505050 150deg, #4C4C4C 180deg,
+    #484848 210deg, #444444 240deg, #4C4C4C 270deg, #565656 300deg,
+    #5C5C5C 330deg, #5E5E5E 360deg);
+  z-index: -1; pointer-events: none;
+}
+.tokens-export pre { font-family: var(--font-mono); font-size: 11.5px; line-height: 1.75;
+  color: var(--text-secondary); white-space: pre; margin: 0; }
+.tokens-export .cm { color: var(--text-muted); }
+.tokens-export .p { color: var(--accent); }
+.tokens-export .v { color: var(--text-primary); }
+
+/* ══════ PERCEPTUAL TEST CONTROLS (Chapter 14) ══════ */
+.test-controls {
+  position: fixed; top: 0; left: 50%; transform: translateX(-50%);
+  z-index: 10000;
+  display: flex; gap: var(--space-2); padding: var(--space-2) var(--space-4);
+  background: rgba(11,11,14,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(196,162,101,0.12);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.40);
+}
+.test-btn {
+  height: 30px; padding: 0 var(--space-3);
+  border: 1px solid rgba(196,162,101,0.12);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 10px; font-weight: 500;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+.test-btn:hover { border-color: rgba(196,162,101,0.30); color: var(--text-primary); }
+.test-btn.is-on {
+  background: rgba(196,162,101,0.12);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ══════ STRESS SECTION ══════ */
+.stress-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+.stress-item {
+  background:
+    linear-gradient(180deg,
+      rgba(80,75,70,0.85) 0%, rgba(68,64,59,0.55) 5%,
+      rgba(55,52,48,0.25) 12%, transparent 22%),
+    linear-gradient(180deg,
+      #393939 0%, #373737 10%, #363636 20%,
+      #353535 30%, #343434 40%, #333333 50%,
+      #323232 60%, #313131 70%, #303030 80%,
+      #2F2F2F 90%, #2E2E2E 100%);
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  box-shadow:
+    inset 0 1px 2px rgba(90,90,88,0.08),
+    inset 0 -4px 12px rgba(0,0,0,0.25),
+    0 20px 45px rgba(8,8,8,0.7),
+    0 8px 20px rgba(5,5,5,0.55);
+  position: relative;
+}
+.stress-item::before {
+  content: ''; position: absolute; inset: -6px;
+  border-radius: calc(var(--radius-lg) + 6px);
+  background: conic-gradient(from 180deg,
+    #5E5E5E 0deg, #626262 20deg, #606060 45deg, #5C5C5C 70deg,
+    #585858 90deg, #545454 120deg, #505050 150deg, #4C4C4C 180deg,
+    #484848 210deg, #444444 240deg, #4C4C4C 270deg, #565656 300deg,
+    #5C5C5C 330deg, #5E5E5E 360deg);
+  z-index: -1; pointer-events: none;
+}
+.stress-label {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-muted); letter-spacing: 1px;
+  text-transform: uppercase; margin-bottom: var(--space-3);
+}
+</style>
+</head>
+<body>
+<div class="vignette"></div>
+
+<!-- ═══ PERCEPTUAL TEST CONTROLS (Chapter 14) ═══ -->
+<div class="test-controls">
+  <button class="test-btn" onclick="let b=document.body;b.style.filter=b.style.filter==='blur(3px)'?'':'blur(3px)';this.classList.toggle('is-on')">Squint (blur)</button>
+  <button class="test-btn" onclick="let b=document.body;b.style.filter=b.style.filter==='grayscale(1)'?'':'grayscale(1)';this.classList.toggle('is-on')">B&W (desat)</button>
+  <button class="test-btn" onclick="let b=document.body;b.style.filter=b.style.filter==='invert(1)'?'':'invert(1)';this.classList.toggle('is-on')">Invert</button>
+  <button class="test-btn" onclick="document.body.style.filter='';document.querySelectorAll('.test-btn').forEach(b=>b.classList.remove('is-on'))">Reset</button>
+</div>
+
+<!-- ═══ 1. BUTTONS ═══ -->
+<div class="section">
+  <div class="section-title">Кнопки</div>
+  <div class="section-subtitle">Z-3 · Тактильная метафора: клавиша Steinway. Бордеры светятся золотом.</div>
+
+  <div class="row">
+    <span class="row-label">Default</span>
+    <button class="btn-primary">Рассчитать стоимость</button>
+    <button class="btn-secondary">Новый расчёт</button>
+    <button class="btn-primary btn-disabled">Недоступно</button>
+  </div>
+  <div class="row">
+    <span class="row-label">Hover</span>
+    <button class="btn-primary" style="transform:translateY(-1px);filter:brightness(1.06);box-shadow:0 2px 6px rgba(0,0,0,0.35),0 6px 16px rgba(0,0,0,0.22),0 12px 28px rgba(0,0,0,0.12),0 0 12px rgba(196,162,101,0.20),0 0 28px rgba(196,162,101,0.10);">Рассчитать стоимость</button>
+    <button class="btn-secondary" style="transform:translateY(-1px);border-color:rgba(196,162,101,0.28);box-shadow:0 2px 4px rgba(0,0,0,0.28),0 4px 12px rgba(0,0,0,0.18),0 8px 20px rgba(0,0,0,0.10);">Новый расчёт</button>
+  </div>
+  <div class="row">
+    <span class="row-label">Active</span>
+    <button class="btn-primary" style="transform:translateY(1px) scale(0.99);filter:brightness(0.94);box-shadow:0 1px 2px rgba(0,0,0,0.30),inset 0 1px 4px rgba(80,60,10,0.25),0 0 6px rgba(196,162,101,0.10);">Рассчитать стоимость</button>
+    <button class="btn-secondary" style="transform:translateY(1px) scale(0.98);background:rgba(196,162,101,0.02);box-shadow:0 1px 2px rgba(0,0,0,0.20);">Новый расчёт</button>
+  </div>
+  <div class="row">
+    <span class="row-label">Ghost</span>
+    <button class="btn-ghost">Назад</button>
+    <button class="btn-ghost">Отмена</button>
+    <button class="btn-ghost btn-disabled">Неактивно</button>
+  </div>
+  <div class="row" style="margin-top:var(--space-3);">
+    <span class="row-label">Stress</span>
+    <button class="btn-primary" style="padding:0 20px;">OK</button>
+    <button class="btn-secondary" style="padding:0 20px;">Нет</button>
+    <button class="btn-primary" style="max-width:280px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Рассчитать полную стоимость доставки</button>
+  </div>
+</div>
+
+<!-- ═══ 2. INPUTS ═══ -->
+<div class="section">
+  <div class="section-title">Инпуты</div>
+  <div class="section-subtitle">Z-(-1) · Тактильная метафора: прорезь в алюминиевом блоке. Золотая подсветка при focus.</div>
+
+  <div class="row" style="align-items:flex-start;">
+    <div class="input-wrapper"><span class="input-label">Empty</span>
+      <input class="input-field" type="text" placeholder="Цена автомобиля"></div>
+    <div class="input-wrapper"><span class="input-label">Focused</span>
+      <input class="input-field is-focused" type="text" placeholder="Цена автомобиля"></div>
+    <div class="input-wrapper"><span class="input-label">Filled</span>
+      <input class="input-field is-filled" type="text" value="$25,000"></div>
+    <div class="input-wrapper"><span class="input-label">Error</span>
+      <input class="input-field is-error" type="text" placeholder="Цена авто">
+      <span class="input-error-text">⚠ Укажите цену</span></div>
+  </div>
+  <div class="row" style="align-items:flex-start;margin-top:var(--space-3);">
+    <div class="input-wrapper" style="width:220px;"><span class="input-label">Long value</span>
+      <input class="input-field is-filled" type="text" value="$1,234,567,890"></div>
+    <div class="input-wrapper" style="width:260px;"><span class="input-label">Long error</span>
+      <input class="input-field is-error" type="text" value="">
+      <span class="input-error-text">⚠ Цена должна быть от $1,000 до $999,999</span></div>
+  </div>
+</div>
+
+<!-- ═══ 3. CARDS ═══ -->
+<div class="section">
+  <div class="section-title">Карточки</div>
+  <div class="section-subtitle">Z-1/Z-2 · Золотые бордеры по умолчанию (как на референсе). Hover = приподнять.</div>
+
+  <div class="row" style="align-items:stretch;">
+    <div class="card">
+      <div class="card-title">🇺🇸 США</div>
+      <div class="card-subtitle">Аукционы Copart, IAAI</div>
+      <span class="card-chevron">›</span>
+    </div>
+    <div class="card is-selected">
+      <div class="card-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="card-title">🇺🇸 США</div>
+      <div class="card-subtitle">Аукционы Copart, IAAI</div>
+    </div>
+    <div class="card">
+      <div class="card-title">🇰🇷 Корея</div>
+      <div class="card-subtitle">Encar, K Car, автосалоны</div>
+      <span class="card-chevron">›</span>
+    </div>
+  </div>
+  <div class="row" style="margin-top:var(--space-2);align-items:stretch;">
+    <div class="card">
+      <div class="card-title">🇦🇪 ОАЭ</div>
+      <div class="card-subtitle">Только новые авто (до 1 года)</div>
+      <span class="card-chevron">›</span>
+    </div>
+    <div class="card">
+      <div class="card-title">🇨🇳 Китай</div>
+      <div class="card-subtitle">EV и гибриды, дилеры</div>
+      <span class="card-chevron">›</span>
+    </div>
+  </div>
+  <div class="row" style="margin-top:var(--space-3);">
+    <span class="row-label">Compact</span>
+    <div class="card is-compact"><span>🚗</span>
+      <div class="card-title">Toyota Camry 2023</div>
+      <span class="card-price">3 972 000 ₽</span></div>
+  </div>
+  <div class="row">
+    <span class="row-label" style="visibility:hidden;">_</span>
+    <div class="card is-compact"><span>⚡</span>
+      <div class="card-title">Tesla Model 3 2024 · Long Range</div>
+      <span class="card-price">5 180 000 ₽</span></div>
+  </div>
+</div>
+
+<!-- ═══ 4. MICRO-ELEMENTS ═══ -->
+<div class="section">
+  <div class="section-title">Микро-элементы</div>
+
+  <div class="row" style="margin-bottom:var(--space-5);">
+    <span class="row-label">Pills</span>
+    <span class="pill pill-accent">🇺🇸 США</span>
+    <span class="pill pill-neutral">150 л.с.</span>
+    <span class="pill pill-neutral">бензин</span>
+    <span class="pill pill-accent">$25,000</span>
+    <span class="pill pill-neutral">2023</span>
+    <span class="pill pill-success">электро</span>
+    <span class="pill pill-warning">дизель</span>
+  </div>
+
+  <div class="row" style="margin-bottom:var(--space-5);">
+    <span class="row-label">Toggle</span>
+    <div class="toggle" onclick="this.classList.toggle('is-on')"><div class="toggle-thumb"></div></div>
+    <span style="font-size:var(--text-xs);color:var(--text-muted);width:28px;">OFF</span>
+    <div class="toggle is-on" onclick="this.classList.toggle('is-on')"><div class="toggle-thumb"></div></div>
+    <span style="font-size:var(--text-xs);color:var(--text-muted);">ON</span>
+  </div>
+
+  <div class="row" style="margin-bottom:var(--space-5);">
+    <span class="row-label">Radio</span>
+    <div class="radio" onclick="document.querySelectorAll('.radio:not(.is-disabled)').forEach(r=>r.classList.remove('is-checked'));this.classList.add('is-checked')"><div class="radio-dot"></div></div>
+    <span style="font-size:var(--text-sm);color:var(--text-secondary);">Unchecked</span>
+    <div style="width:8px;"></div>
+    <div class="radio is-checked" onclick="document.querySelectorAll('.radio:not(.is-disabled)').forEach(r=>r.classList.remove('is-checked'));this.classList.add('is-checked')"><div class="radio-dot"></div></div>
+    <span style="font-size:var(--text-sm);color:var(--text-secondary);">Checked</span>
+    <div style="width:8px;"></div>
+    <div class="radio is-disabled"><div class="radio-dot"></div></div>
+    <span style="font-size:var(--text-sm);color:var(--text-muted);">Disabled</span>
+  </div>
+
+  <div class="row" style="margin-bottom:var(--space-5);">
+    <span class="row-label">Checkbox</span>
+    <div class="checkbox" onclick="this.classList.toggle('is-checked')"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <span style="font-size:var(--text-sm);color:var(--text-secondary);">Unchecked</span>
+    <div style="width:8px;"></div>
+    <div class="checkbox is-checked" onclick="this.classList.toggle('is-checked')"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <span style="font-size:var(--text-sm);color:var(--text-secondary);">Checked</span>
+    <div style="width:8px;"></div>
+    <div class="checkbox is-disabled"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <span style="font-size:var(--text-sm);color:var(--text-muted);">Disabled</span>
+  </div>
+
+  <!-- Progress dots -->
+  <div class="row" style="margin-bottom:var(--space-5);">
+    <span class="row-label">Progress</span>
+    <div class="progress-dots">
+      <div class="progress-dot is-completed"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="progress-connector is-completed"></div>
+      <div class="progress-dot is-active"></div>
+      <div class="progress-connector"></div>
+      <div class="progress-dot is-pending"></div>
+      <div class="progress-connector"></div>
+      <div class="progress-dot is-pending"></div>
+    </div>
+  </div>
+
+  <!-- NEW: Progress bar -->
+  <div class="row" style="margin-bottom:var(--space-5);">
+    <span class="row-label">Bar</span>
+    <div style="flex:1;display:flex;flex-direction:column;gap:var(--space-3);">
+      <div class="progress-bar-track"><div class="progress-bar-fill" style="width:65%;"></div></div>
+      <div class="progress-bar-track"><div class="progress-bar-fill" style="width:30%;"></div></div>
+      <div class="progress-bar-track"><div class="progress-bar-fill" style="width:100%;"></div></div>
+    </div>
+  </div>
+
+  <!-- NEW: Icon elements -->
+  <div class="row" style="margin-bottom:var(--space-5);">
+    <span class="row-label">Icons</span>
+    <div class="icon-element" style="position:relative;">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="2" y="2" width="6" height="6" rx="1"/><rect x="12" y="2" width="6" height="6" rx="1"/>
+        <rect x="2" y="12" width="6" height="6" rx="1"/><rect x="12" y="12" width="6" height="6" rx="1"/>
+      </svg>
+    </div>
+    <div class="icon-element" style="position:relative;">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+        <line x1="3" y1="5" x2="17" y2="5"/><line x1="3" y1="10" x2="17" y2="10"/><line x1="3" y1="15" x2="17" y2="15"/>
+      </svg>
+    </div>
+    <div class="icon-element is-active" style="position:relative;">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M10 2v16M2 10h16"/>
+      </svg>
+    </div>
+    <div class="icon-element" style="position:relative;">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="10" cy="10" r="7"/><path d="M10 7v6M10 15v.5"/>
+      </svg>
+    </div>
+    <div class="icon-element" style="position:relative;">
+      <div class="icon-dot"></div>
+    </div>
+    <div class="icon-element is-circle" style="position:relative;">
+      <div class="icon-dot"></div>
+    </div>
+    <div class="icon-element is-circle is-active" style="position:relative;">
+      <div class="icon-dot"></div>
+    </div>
+  </div>
+
+  <!-- Vertical bars + mono number display -->
+  <div class="row" style="margin-bottom:var(--space-5);">
+    <span class="row-label">Display</span>
+    <div class="icon-element" style="position:relative;">
+      <div class="icon-bars">
+        <span style="height:6px;"></span><span style="height:14px;"></span>
+        <span style="height:20px;"></span><span style="height:10px;"></span><span style="height:16px;"></span>
+      </div>
+    </div>
+    <div class="mono-display" style="position:relative;">1999</div>
+    <div class="mono-display" style="position:relative;">16 301</div>
+    <div class="mono-display" style="position:relative;">$25,000</div>
+  </div>
+
+  <!-- Dividers -->
+  <div style="padding:0 80px;">
+    <span class="row-label" style="display:block;margin-bottom:var(--space-3);">Dividers</span>
+    <div class="divider divider-thin"></div>
+    <div style="height:10px;"></div>
+    <div class="divider divider-gradient"></div>
+    <div style="height:10px;"></div>
+    <div class="divider divider-dashed"></div>
+  </div>
+</div>
+
+<!-- ═══ 5. GOLD CTA CARD (new — from reference bottom) ═══ -->
+<div class="section">
+  <div class="section-title">Gold CTA карточка</div>
+  <div class="section-subtitle">Z-3 · Широкий золотой блок — итог расчёта. Как на референсе внизу.</div>
+
+  <div class="gold-card">
+    <div class="gold-card-content">
+      <div class="gold-card-title">Toyota Camry 2023 · 🇺🇸→🇷🇺</div>
+      <div class="gold-card-subtitle">Copart · $25,000 · 150 л.с. · бензин</div>
+    </div>
+    <div class="gold-card-price">3 972 000 ₽</div>
+  </div>
+</div>
+
+<!-- ═══ 6. COLOR PALETTE ═══ -->
+<div class="section">
+  <div class="section-title">Цветовая палитра</div>
+
+  <div class="swatch-group-label">Backgrounds</div>
+  <div class="swatch-row">
+    <div class="swatch"><div class="swatch-color" style="background:#161617;"></div><span class="swatch-hex">#161617</span><span class="swatch-name">--bg-app</span></div>
+    <div class="swatch"><div class="swatch-color" style="background:#1B1B1C;"></div><span class="swatch-hex">#1B1B1C</span><span class="swatch-name">--bg-elevated</span></div>
+    <div class="swatch"><div class="swatch-color" style="background:#222224;"></div><span class="swatch-hex">#222224</span><span class="swatch-name">--surface</span></div>
+    <div class="swatch"><div class="swatch-color" style="background:#2A2A2C;"></div><span class="swatch-hex">#2A2A2C</span><span class="swatch-name">--surface-hover</span></div>
+    <div class="swatch"><div class="swatch-color" style="background:#0E0E0F;"></div><span class="swatch-hex">#0E0E0F</span><span class="swatch-name">--input-bg</span></div>
+  </div>
+
+  <div class="swatch-group-label">Accent</div>
+  <div class="swatch-row">
+    <div class="swatch"><div class="swatch-color" style="background:#DCBF62;"></div><span class="swatch-hex">#DCBF62</span><span class="swatch-name">gradient-1</span></div>
+    <div class="swatch"><div class="swatch-color" style="background:#C9A84E;"></div><span class="swatch-hex">#C9A84E</span><span class="swatch-name">--accent</span></div>
+    <div class="swatch"><div class="swatch-color" style="background:#B89540;"></div><span class="swatch-hex">#B89540</span><span class="swatch-name">--accent-active</span></div>
+    <div class="swatch"><div class="swatch-color" style="background:#A08232;"></div><span class="swatch-hex">#A08232</span><span class="swatch-name">gradient-3</span></div>
+  </div>
+
+  <div class="swatch-group-label">Text</div>
+  <div class="swatch-row">
+    <div class="swatch"><div class="swatch-color" style="background:#F0ECE2;"></div><span class="swatch-hex">#F0ECE2</span><span class="swatch-name">--text-primary</span></div>
+    <div class="swatch"><div class="swatch-color" style="background:#9A9A9A;"></div><span class="swatch-hex">#9A9A9A</span><span class="swatch-name">--text-secondary</span></div>
+    <div class="swatch"><div class="swatch-color" style="background:#8A8A8A;"></div><span class="swatch-hex">#8A8A8A</span><span class="swatch-name">--text-muted</span></div>
+  </div>
+
+  <div class="swatch-group-label">Status</div>
+  <div class="swatch-row">
+    <div class="swatch"><div class="swatch-color" style="background:#4ADE80;"></div><span class="swatch-hex">#4ADE80</span><span class="swatch-name">--success</span></div>
+    <div class="swatch"><div class="swatch-color" style="background:#F87171;"></div><span class="swatch-hex">#F87171</span><span class="swatch-name">--error</span></div>
+    <div class="swatch"><div class="swatch-color" style="background:#FBBF24;"></div><span class="swatch-hex">#FBBF24</span><span class="swatch-name">--warning</span></div>
+    <div class="swatch"><div class="swatch-color" style="background:#60A5FA;"></div><span class="swatch-hex">#60A5FA</span><span class="swatch-name">--info</span></div>
+  </div>
+</div>
+
+<!-- ═══ 7. Z-AXIS DEMO ═══ -->
+<div class="section">
+  <div class="section-title">Z-Axis — Демонстрация глубины</div>
+  <div class="z-demo">
+    <div class="z-item"><div class="z-element z-neg1">Input</div><div class="z-label">Z-(-1)</div></div>
+    <div class="z-item"><div class="z-element z-0">Background</div><div class="z-label">Z-0</div></div>
+    <div class="z-item"><div class="z-element z-1">Card</div><div class="z-label">Z-1</div></div>
+    <div class="z-item"><div class="z-element z-2">Selected</div><div class="z-label">Z-2</div></div>
+    <div class="z-item"><div class="z-element z-3">Button</div><div class="z-label">Z-3</div></div>
+  </div>
+</div>
+
+<!-- ═══ 8. CROSS-VALIDATION ═══ -->
+<div class="section">
+  <div class="section-title">Перекрёстная валидация — Компоненты вместе</div>
+  <div class="section-subtitle">Кнопка парит НАД карточкой (Z-3 > Z-1). Инпут утоплен В карточку (Z-(-1) < Z-1).</div>
+
+  <div class="row" style="align-items:flex-start;gap:var(--space-6);">
+    <div class="comp-card">
+      <div class="comp-card-title">Расчёт стоимости</div>
+      <div class="comp-card-desc">Укажите цену авто на аукционе</div>
+      <input class="input-field" type="text" placeholder="Цена, $" style="width:100%;margin-bottom:var(--space-3);">
+      <input class="input-field is-filled" type="text" value="$25,000" style="width:100%;margin-bottom:var(--space-4);">
+      <div style="display:flex;gap:var(--space-2);flex-wrap:wrap;margin-bottom:var(--space-4);">
+        <span class="pill pill-accent">🇺🇸 США</span>
+        <span class="pill pill-neutral">150 л.с.</span>
+        <span class="pill pill-neutral">2023</span>
+      </div>
+      <button class="btn-primary" style="width:100%;">Рассчитать стоимость</button>
+    </div>
+
+    <div class="comp-card">
+      <div class="comp-card-title">Настройки</div>
+      <div class="comp-card-desc">Параметры расчёта</div>
+      <div class="toggle-row"><span class="toggle-label">Учитывать утильсбор</span>
+        <div class="toggle is-on" onclick="this.classList.toggle('is-on')"><div class="toggle-thumb"></div></div></div>
+      <div class="toggle-row"><span class="toggle-label">Курс USDT (P2P)</span>
+        <div class="toggle is-on" onclick="this.classList.toggle('is-on')"><div class="toggle-thumb"></div></div></div>
+      <div class="toggle-row"><span class="toggle-label">Коммерческий утиль</span>
+        <div class="toggle" onclick="this.classList.toggle('is-on')"><div class="toggle-thumb"></div></div></div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:var(--space-5);">
+    <div class="comp-card" style="width:400px;">
+      <div class="comp-card-title">Форма с ошибкой</div>
+      <input class="input-field is-error" type="text" value="" placeholder="Цена авто" style="width:100%;margin-bottom:2px;">
+      <span class="input-error-text" style="margin-bottom:var(--space-3);">⚠ Укажите цену автомобиля</span>
+      <button class="btn-primary btn-disabled" style="width:100%;">Рассчитать стоимость</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 9. STRESS TESTS (Chapter 19) ═══ -->
+<div class="section">
+  <div class="section-title">Стресс-тесты</div>
+  <div class="section-subtitle">Крайние случаи. Premium UI не должен ломаться на edge-кейсах.</div>
+
+  <div class="stress-grid">
+    <!-- PILL stress -->
+    <div class="stress-item">
+      <div class="stress-label">Pills: min / max / emoji</div>
+      <div style="display:flex;flex-wrap:wrap;gap:var(--space-2);">
+        <span class="pill pill-accent">EU</span>
+        <span class="pill pill-neutral">ОК</span>
+        <span class="pill pill-accent">🇺🇸 Соединённые Штаты Америки</span>
+        <span class="pill pill-success">Электрический</span>
+        <span class="pill pill-warning">⚠ Ограничение</span>
+        <span class="pill pill-neutral">🇰🇷🇨🇳🇦🇪</span>
+      </div>
+    </div>
+
+    <!-- CARD stress: min content -->
+    <div class="stress-item">
+      <div class="stress-label">Card: minimum content</div>
+      <div class="card" style="width:200px;">
+        <div class="card-title">Япония</div>
+        <span class="card-chevron">›</span>
+      </div>
+    </div>
+
+    <!-- CARD stress: max content -->
+    <div class="stress-item">
+      <div class="stress-label">Card: maximum content</div>
+      <div class="card" style="width:260px;">
+        <div class="card-title">🇺🇸 Соединённые Штаты Америки</div>
+        <div class="card-subtitle">Аукционы Copart, IAAI, Manheim. Все штаты. Доставка до порта Владивосток, Санкт-Петербург.</div>
+        <div style="display:flex;gap:var(--space-1);flex-wrap:wrap;margin-top:var(--space-2);">
+          <span class="pill pill-accent" style="height:24px;font-size:10px;">Copart</span>
+          <span class="pill pill-accent" style="height:24px;font-size:10px;">IAAI</span>
+          <span class="pill pill-neutral" style="height:24px;font-size:10px;">Manheim</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- INPUT stress: long values -->
+    <div class="stress-item">
+      <div class="stress-label">Input: overflow / long error</div>
+      <div style="display:flex;flex-direction:column;gap:var(--space-3);">
+        <input class="input-field is-filled" type="text" value="$1,234,567,890.99" style="width:160px;">
+        <div style="width:200px;">
+          <input class="input-field is-error" type="text" value="" placeholder="Введите цену авто на аукционе в валюте страны" style="width:100%;margin-bottom:2px;">
+          <span class="input-error-text">⚠ Цена должна быть от $1,000 до $999,999. Введите корректное значение.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUTTON stress: extremes -->
+    <div class="stress-item">
+      <div class="stress-label">Buttons: short / long / multiline</div>
+      <div style="display:flex;flex-direction:column;gap:var(--space-2);">
+        <div style="display:flex;gap:var(--space-2);align-items:center;">
+          <button class="btn-primary" style="padding:0 16px;height:40px;font-size:13px;">Да</button>
+          <button class="btn-secondary" style="padding:0 16px;height:40px;font-size:13px;">Нет</button>
+          <button class="btn-ghost" style="padding:0 16px;height:40px;font-size:13px;">?</button>
+        </div>
+        <button class="btn-primary" style="max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;height:44px;">Рассчитать полную стоимость доставки из США в Россию с учётом всех пошлин</button>
+        <button class="btn-secondary" style="max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;height:44px;">Сравнить стоимость из разных стран</button>
+      </div>
+    </div>
+
+    <!-- COMPACT CARD stress -->
+    <div class="stress-item">
+      <div class="stress-label">Compact card: long name + big price</div>
+      <div class="card is-compact" style="min-width:auto;width:100%;">
+        <span>🚗</span>
+        <div class="card-title" style="font-size:13px;">Mercedes-Benz GLE 450 4MATIC AMG Line 2024</div>
+        <span class="card-price">12 450 000 ₽</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 10. TOKENS EXPORT ═══ -->
+<div class="section">
+  <div class="section-title">Tokens Export</div>
+  <div class="tokens-export">
+    <pre><span class="cm">/* ═══ Car-Calc UI Kit · Design Tokens · v3 ═══ */</span>
+
+<span class="cm">/* COLORS */</span>
+<span class="p">--bg-app</span>: <span class="v">#161617</span>;  <span class="p">--bg-elevated</span>: <span class="v">#1B1B1C</span>;
+<span class="p">--surface</span>: <span class="v">#222224</span>;  <span class="p">--surface-hover</span>: <span class="v">#2A2A2C</span>;  <span class="p">--input-bg</span>: <span class="v">#0E0E0F</span>;
+<span class="p">--accent</span>: <span class="v">#C9A84E</span>;  <span class="p">--accent-hover</span>: <span class="v">#D9BA60</span>;  <span class="p">--accent-active</span>: <span class="v">#B89540</span>;
+<span class="p">--accent-subtle</span>: <span class="v">rgba(196,162,101,0.12)</span>;  <span class="p">--accent-glow</span>: <span class="v">rgba(196,162,101,0.22)</span>;
+<span class="p">--accent-border</span>: <span class="v">rgba(196,162,101,0.35)</span>;
+<span class="p">--text-primary</span>: <span class="v">#F0ECE2</span>;  <span class="p">--text-secondary</span>: <span class="v">#9A9A9A</span>;  <span class="p">--text-muted</span>: <span class="v">#8A8A8A</span>;
+<span class="p">--text-on-accent</span>: <span class="v">#1A1400</span>;
+<span class="p">--border-subtle</span>: <span class="v">rgba(196,162,101,0.08)</span>;  <span class="cm">/* gold-tinted! */</span>
+<span class="p">--border-default</span>: <span class="v">rgba(196,162,101,0.14)</span>;
+<span class="p">--border-hover</span>: <span class="v">rgba(196,162,101,0.25)</span>;
+<span class="p">--success</span>: <span class="v">#4ADE80</span>;  <span class="p">--error</span>: <span class="v">#F87171</span>;  <span class="p">--warning</span>: <span class="v">#FBBF24</span>;  <span class="p">--info</span>: <span class="v">#60A5FA</span>;
+
+<span class="cm">/* TYPOGRAPHY */</span>
+<span class="p">--font-primary</span>: <span class="v">'Inter', sans-serif</span>;  <span class="p">--font-mono</span>: <span class="v">'JetBrains Mono', monospace</span>;
+<span class="p">--text-xs</span>: <span class="v">11px</span>;  <span class="p">--text-sm</span>: <span class="v">13px</span>;  <span class="p">--text-base</span>: <span class="v">15px</span>;
+<span class="p">--text-lg</span>: <span class="v">17px</span>;  <span class="p">--text-xl</span>: <span class="v">22px</span>;  <span class="p">--text-2xl</span>: <span class="v">32px</span>;
+
+<span class="cm">/* SPACING */</span>
+<span class="p">--space-1</span>: <span class="v">4px</span>;  <span class="p">--space-2</span>: <span class="v">8px</span>;  <span class="p">--space-3</span>: <span class="v">12px</span>;  <span class="p">--space-4</span>: <span class="v">16px</span>;
+<span class="p">--space-5</span>: <span class="v">20px</span>;  <span class="p">--space-6</span>: <span class="v">24px</span>;  <span class="p">--space-8</span>: <span class="v">32px</span>;  <span class="p">--space-10</span>: <span class="v">40px</span>;
+
+<span class="cm">/* RADII */</span>
+<span class="p">--radius-sm</span>: <span class="v">6px</span>;  <span class="p">--radius-md</span>: <span class="v">10px</span>;  <span class="p">--radius-lg</span>: <span class="v">14px</span>;
+<span class="p">--radius-xl</span>: <span class="v">20px</span>;  <span class="p">--radius-pill</span>: <span class="v">9999px</span>;
+
+<span class="cm">/* SHADOWS — see :root for full multi-layer definitions */</span>
+<span class="cm">/* Z-(-1): inset shadows for recessed elements */</span>
+<span class="cm">/* Z-1: 3-layer + inset highlight for cards */</span>
+<span class="cm">/* Z-2: stronger Z-1 for selected */</span>
+<span class="cm">/* Z-3: maximum depth + glow for buttons */</span>
+<span class="cm">/* All accent elements get COLORED glow shadows */</span>
+
+<span class="cm">/* TRANSITIONS */</span>
+<span class="p">--ease-out</span>: <span class="v">cubic-bezier(0.0,0.0,0.2,1.0)</span>;
+<span class="p">--ease-bounce</span>: <span class="v">cubic-bezier(0.34,1.56,0.64,1.0)</span>;
+<span class="p">--duration-fast</span>: <span class="v">150ms</span>;  <span class="p">--duration-normal</span>: <span class="v">220ms</span>;</pre>
+  </div>
+</div>
+
+</body>
+</html>

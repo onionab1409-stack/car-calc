@@ -1,0 +1,2385 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=860">
+<title>Car-Calc · UI Kit v20</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/*
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  CAR-CALC UI KIT v20 — DIFFERENTIATED BORDERS                ║
+  ║  Card borders subtle (lum 58-62), compact=GOLD, badge=WARM  ║
+  ║  Based on RIGHT column pixel analysis: per-component tuning  ║
+  ╚══════════════════════════════════════════════════════════════╝
+*/
+:root {
+  /* ── Backgrounds ── */
+  --bg:               #1A1917;
+  --bg-deep:          #121110;
+  --bg-void:          #0A0908;
+
+  /* ── Card Surfaces (lum 124 peak → lum 72 center) ── */
+  --card-surface-peak: #393939;   /* lum 57 — neutral gray, pixel-verified v16 */
+  --card-surface-mid:  #333333;   /* lum 51 */
+  --card-surface-core: #313131;   /* lum 49 — ref Card#2 exact */
+  --card-surface-deep: #2E2E2E;   /* lum 46 — neutral bottom */
+
+  /* ── Input Surface (warm, lighter #635F5C) ── */
+  --input-surface:    #635F5C;
+
+  /* ── Gold Peaks (BLAZING near-white from pixel analysis) ── */
+  --gold-peak-white:  #FFFFD3;
+  --gold-peak-bright: #FDFDFD;
+  --gold-cta-bottom:  #FFF9D7;
+  --gold-bright:      #C9AF81;
+  --gold-amber:       #836444;
+
+  /* ── CTA Button Surface (actual extracted gold gradient) ── */
+  --cta-surface-edge: #A4885C;
+  --cta-surface-mid:  #CBAC79;
+  --cta-surface-core: #CBAC79;
+  --cta-highlight:    #E9D0A3;
+
+  /* ── Amber / Bevel reflections ── */
+  --amber-bright:     #7B6C5F;
+  --amber-mid:        #726F6A;
+
+  /* ── Legacy gold palette ── */
+  --gold:             #C4A265;
+  --gold-hot:         #FFFCC9;
+  --gold-white:       #FDFEFF;
+  --gold-warm:        #F0D48A;
+  --gold-light:       #D4B87A;
+  --gold-mid:         #B89868;
+  --gold-dark:        #A8883F;
+  --gold-deep:        #8B6E35;
+  --gold-muted:       #6B5C3A;
+  --gold-surface:     #9C764A;
+
+  /* ── Text ── */
+  --text:             #F5F5F5;
+  --text-muted:       #888888;
+  --text-hint:        #666666;
+  --text-on-gold:     #1A1208;
+
+  /* ── Semantic ── */
+  --success:          #4CAF50;
+  --error:            #E57373;
+  --steel:            #8B9DAF;
+
+  /* ── Radii ── */
+  --r-xs:   6px;
+  --r-sm:   8px;
+  --r-md:   12px;
+  --r-lg:   16px;
+  --r-xl:   20px;
+  --r-2xl:  28px;
+  --r-pill: 100px;
+
+  /* ── Fonts ── */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Inter', -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* v17 Background: SPOTLIGHT from upper-left corner
+   Ref: (50,50) lum=62 → (700,250) lum=32 → (1350,750) lum=13
+   Strong diagonal darkening: top-left bright, bottom-right very dark */
+body {
+  background: #1A1A1A;
+  background-image:
+    /* Main spotlight from upper-left corner */
+    radial-gradient(ellipse 120% 100% at 0% 0%,
+      rgba(70,70,68,0.9) 0%,
+      rgba(55,55,53,0.65) 15%,
+      rgba(42,42,40,0.45) 30%,
+      rgba(30,30,28,0.3) 50%,
+      transparent 75%),
+    /* Subtle warm tint in center-left area */
+    radial-gradient(ellipse 40% 40% at 10% 35%,
+      rgba(55,50,45,0.25) 0%,
+      transparent 100%),
+    /* Dark vignette bottom-right */
+    radial-gradient(ellipse 80% 80% at 90% 90%,
+      rgba(0,0,0,0.6) 0%,
+      rgba(0,0,0,0.3) 40%,
+      transparent 80%),
+    /* Base gradient: top bright to bottom dark */
+    linear-gradient(180deg,
+      #383838 0%,       /* top: lum ~56 */
+      #303030 10%,      /* lum ~48 */
+      #282828 25%,      /* lum ~40 */
+      #202020 40%,      /* lum ~32 */
+      #181818 55%,      /* lum ~24 */
+      #141414 70%,      /* lum ~20 */
+      #101010 85%,      /* lum ~16 */
+      #0C0C0C 100%      /* bottom: lum ~12 */
+    );
+  color: var(--text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CATALOG LAYOUT
+   ═══════════════════════════════════════════════════════════ */
+.catalog { max-width: 860px; margin: 0 auto; padding: 48px 40px 80px; }
+.catalog-header { text-align: center; margin-bottom: 56px; }
+.catalog-header h1 {
+  font-family: var(--font-display);
+  font-size: 32px; font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.02em;
+}
+.catalog-header .sub { color: var(--text-hint); font-size: 13px; margin-top: 6px; }
+/* Version updated to v16 */
+
+.section { margin-bottom: 64px; }
+.section-title {
+  font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.15em;
+  color: var(--gold); margin-bottom: 28px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-title::before {
+  content: ''; width: 3px; height: 14px;
+  background: var(--gold); border-radius: 2px;
+}
+
+.row { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 28px; }
+.label {
+  width: 100%; font-size: 10px; color: var(--text-hint);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: -8px;
+}
+.caption {
+  font-size: 10px; color: var(--text-hint); text-align: center;
+  margin-top: 12px; text-transform: uppercase; letter-spacing: 0.08em;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SHARED 3D SYSTEM: EXTREME DEPTH SHADOWS
+   ═══════════════════════════════════════════════════════════ */
+.void-shadow {
+  position: absolute;
+  bottom: -10px; left: 4%; right: 4%;
+  height: 40px;
+  background: radial-gradient(ellipse at center,
+    rgba(40,40,40,0.75) 0%,
+    rgba(35,35,35,0.45) 30%,
+    rgba(30,30,30,0.2) 55%,
+    transparent 80%);
+  filter: blur(18px);
+  z-index: -4;
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT 1: INPUT FIELD — BLAZING NEAR-WHITE GOLD
+   Pixel analysis: gold core reaches lum 249-253 (#FFFFD3)
+   11px wide BLAZING gold border on sides
+   Bottom gold flash at lum 219
+   Surface: warm #635F5C with pillow highlight lum 115
+   ═══════════════════════════════════════════════════════════ */
+.input-wrap { position: relative; display: inline-block; isolation: isolate; }
+
+.input-field {
+  position: relative;
+  width: 420px;
+  height: 104px;
+  border-radius: 34px;
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  cursor: text;
+}
+
+/* Layer 0: Outermost warm ambient glow — focused on top */
+.input-glow-outer {
+  position: absolute;
+  inset: -22px;
+  border-radius: 56px;
+  background: radial-gradient(ellipse at 50% 20%,
+    rgba(255,255,240,0.16) 15%,
+    rgba(255,245,180,0.08) 35%,
+    rgba(200,170,100,0.03) 55%,
+    transparent 80%);
+  box-shadow:
+    0 -12px 50px rgba(255,255,240,0.2),
+    0 0 60px rgba(255,255,240,0.1),
+    0 0 90px rgba(200,170,100,0.06);
+  z-index: -3;
+  pointer-events: none;
+}
+
+/* Layer 1: Neutral pre-glow — VERY SUBTLE */
+.input-preglow {
+  position: absolute;
+  inset: -16px;
+  border-radius: 44px;
+  background: conic-gradient(
+    from 180deg,
+    rgba(80,80,80,0.08) 0deg,
+    rgba(85,85,85,0.12) 45deg,
+    rgba(90,90,90,0.14) 90deg,
+    rgba(85,85,85,0.12) 135deg,
+    rgba(80,80,80,0.08) 180deg,
+    rgba(70,70,70,0.05) 225deg,
+    rgba(75,75,75,0.04) 270deg,
+    rgba(80,80,80,0.06) 315deg,
+    rgba(80,80,80,0.08) 360deg
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Layer 2: WHITE-GOLD CORE — tight, concentrated */
+.input-gold-core {
+  position: absolute;
+  inset: -8px;
+  border-radius: 38px;
+  background: conic-gradient(
+    from 180deg,
+    #FDFFFE 0deg,
+    #FEFFFC 15deg,
+    #FDFFF5 30deg,
+    #FFFFF0 50deg,
+    #FFFFF0 70deg,
+    #FFFEE8 90deg,
+    #FFFFF0 110deg,
+    #FDFFF5 130deg,
+    #FDFFFE 155deg,
+    #FEFFFE 180deg,
+    #FBF2D5 200deg,
+    #F0D8A0 215deg,
+    #E0C080 230deg,
+    #D4AA68 245deg,
+    #C89858 260deg,
+    #D4AA68 275deg,
+    #E0C080 290deg,
+    #F0D8A0 310deg,
+    #FDFFF5 335deg,
+    #FDFFFE 360deg
+  );
+  z-index: 2;
+  pointer-events: none;
+  box-shadow:
+    0 -8px 30px rgba(253,255,251,0.35),
+    0 0 40px rgba(255,255,240,0.25),
+    0 0 15px rgba(253,255,251,0.2);
+}
+
+/* Layer 3: Neutral band — subtle transition between gold and surface */
+.input-amber-band {
+  position: absolute;
+  inset: -1px;
+  border-radius: 29px;
+  background: conic-gradient(
+    from 180deg,
+    #414141 0deg,
+    #424242 30deg,
+    #434343 60deg,
+    #444444 90deg,
+    #434343 110deg,
+    #424242 130deg,
+    #414141 160deg,
+    #404040 180deg,
+    #3F3F3F 200deg,
+    #3E3E3E 220deg,
+    #3D3D3D 240deg,
+    #3C3C3C 260deg,
+    #3B3B3B 280deg,
+    #3D3D3D 300deg,
+    #3F3F3F 320deg,
+    #414141 340deg,
+    #414141 360deg
+  );
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Layer 4: Surface v16 — Top pillow lum 95 (warm 9), body lum 77 (warm 2) */
+/* Ref x=400: y=120 RGB(99,94,90) lum=95, y=140 RGB(81,80,78) lum=80, y=170 RGB(78,76,76) lum=76 */
+.input-surface {
+  position: absolute;
+  inset: 5px;
+  border-radius: 29px;
+  background:
+    /* v17 WIDE pillow — ref: lum 130→80 over ~20px, warm 30→2 */
+    /* y=105: lum 160 → y=110: lum 130 → y=120: lum 89 → y=125: lum 79 */
+    linear-gradient(180deg,
+      rgba(160,145,128,0.85) 0%,
+      rgba(140,128,118,0.7) 3%,
+      rgba(125,118,112,0.55) 6%,
+      rgba(110,105,100,0.42) 10%,
+      rgba(95,90,86,0.3) 15%,
+      rgba(85,82,79,0.18) 20%,
+      rgba(78,76,74,0.08) 28%,
+      transparent 38%),
+    /* v17 Body: lum 75→70, warm 1-2 (darker than v16) */
+    linear-gradient(180deg,
+      #4E4D4C 0%,
+      #4D4C4B 3%,
+      #4C4B4A 6%,
+      #4B4A49 10%,
+      #4A4948 15%,
+      #494948 20%,
+      #494847 30%,
+      #484847 40%,
+      #484746 50%,
+      #474746 60%,
+      #474645 70%,
+      #464645 80%,
+      #464544 90%,
+      #454544 100%
+    );
+  box-shadow:
+    inset 0 4px 10px -1px rgba(140,130,115,0.25),
+    inset 0 -6px 14px rgba(0,0,0,0.3),
+    0 25px 50px rgba(10,10,8,0.75),
+    0 10px 25px rgba(0,0,0,0.65);
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* Bottom gold line (lum 210-214, 5px thick) */
+.input-surface::after {
+  content: '';
+  position: absolute;
+  bottom: 0px; left: 8%; right: 8%; height: 5px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(150,130,85,0.6) 15%,
+    rgba(228,201,132,0.85) 30%,
+    rgba(245,225,140,0.95) 45%,
+    rgba(247,226,147,1) 50%,
+    rgba(245,225,140,0.95) 55%,
+    rgba(228,201,132,0.85) 70%,
+    rgba(150,130,85,0.6) 85%,
+    transparent 100%);
+  border-radius: 0 0 4px 4px;
+}
+
+.input-field .cursor {
+  width: 1.5px; height: 24px;
+  background: var(--gold);
+  opacity: 0.7; margin-right: 10px;
+  animation: blink 1.2s ease infinite;
+  flex-shrink: 0; position: relative; z-index: 10;
+}
+@keyframes blink { 0%,100%{opacity:0.7} 50%{opacity:0} }
+.input-field .placeholder {
+  font-family: var(--font-mono); font-size: 13px; font-weight: 500;
+  letter-spacing: 0.1em; color: var(--gold-muted); text-transform: uppercase;
+  position: relative; z-index: 10;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT 2: 3D CARD — MULTI-ZONE BORDER SYSTEM
+   Warm approach (10px) → Gold ramp (10px) → Dark void (5px) →
+   Warm-brown zone (35px) → Thin gold flash (4px) → Pillow rise (15px)
+   Surface: lum 124 peak → lum 72 center (NEUTRAL gray, not warm)
+   ═══════════════════════════════════════════════════════════ */
+.card-wrap { position: relative; display: inline-block; }
+
+.card-3d {
+  position: relative;
+  border-radius: var(--r-lg);
+  overflow: visible;
+}
+
+/* Layer 0: Neutral approach aura (10px zone) */
+.card-3d .card-aura {
+  position: absolute;
+  inset: -14px;
+  border-radius: calc(var(--r-lg) + 14px);
+  /* v19: Subtle neutral aura — ref: lum 43-58 neutral gray around cards */
+  background: conic-gradient(
+    from 180deg,
+    rgba(70,70,68,0.3) 0deg,
+    rgba(75,75,72,0.35) 45deg,
+    rgba(72,72,70,0.3) 90deg,
+    rgba(60,60,58,0.22) 135deg,
+    rgba(50,50,48,0.15) 180deg,
+    rgba(45,45,44,0.1) 225deg,
+    rgba(50,50,48,0.12) 270deg,
+    rgba(65,65,63,0.25) 360deg
+  );
+  z-index: -1;
+  pointer-events: none;
+  box-shadow: 0 0 30px rgba(60,60,58,0.12), 0 0 60px rgba(40,40,38,0.06);
+}
+
+/* v20b Layer 1: Card border — ref lum ~67 at top → BOOSTED for render. Neutral gray. */
+.card-3d .card-void {
+  position: absolute;
+  inset: -6px;
+  border-radius: calc(var(--r-lg) + 6px);
+  background: conic-gradient(
+    from 180deg,
+    #5E5E5E 0deg,
+    #626262 20deg,
+    #606060 45deg,
+    #5C5C5C 70deg,
+    #585858 90deg,
+    #545454 120deg,
+    #505050 150deg,
+    #4C4C4C 180deg,
+    #484848 210deg,
+    #444444 240deg,
+    #4C4C4C 270deg,
+    #565656 300deg,
+    #5C5C5C 330deg,
+    #5E5E5E 360deg
+  );
+  z-index: 0;
+  pointer-events: none;
+  box-shadow:
+    0 0 15px rgba(100,100,95,0.10),
+    0 -2px 10px rgba(90,90,85,0.06);
+}
+
+/* v20b Layer 2: Card gold-line — slightly brighter than surface for subtle edge */
+.card-3d .card-gold-line {
+  position: absolute;
+  inset: -4px;
+  border-radius: calc(var(--r-lg) + 4px);
+  background: conic-gradient(
+    from 180deg,
+    #525252 0deg,
+    #565656 20deg,
+    #545454 60deg,
+    #505050 90deg,
+    #4C4C4C 120deg,
+    #484848 180deg,
+    #444444 220deg,
+    #484848 270deg,
+    #505050 330deg,
+    #525252 360deg
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Layer 2b: SECOND gold line at ~75% height (ref y=275-277, lum 117) — rendered via ::before */
+.card-3d .card-top-glow {
+  display: none;
+}
+/* v17 Bottom gold line — ref: y=360 lum 74, y=361 lum 99, y=362 lum 54 */
+/* Near bottom of card surface, only 3px, subtle neutral-warm */
+.card-3d .card-surface::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 2px; height: 3px;
+  background: linear-gradient(180deg,
+    rgba(85,82,80,0.6) 0%,
+    rgba(110,108,105,0.7) 50%,
+    rgba(65,62,60,0.5) 100%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Layer 3: SURFACE v20 — NEUTRAL GRAY (RIGHT COLUMN ref: lum 49-56, warm ~0) */
+/* Ref RIGHT column: Card XL #353636 l=53 w=-1, Card LG #323333 l=50 w=-1, Card MD #323131 l=49 w=+1 */
+.card-3d .card-surface {
+  position: relative;
+  border-radius: var(--r-lg);
+  background:
+    /* WIDE pillow — 25px gradual bright peak, neutral cool */
+    linear-gradient(180deg,
+      rgba(75,75,74,0.85) 0%,
+      rgba(72,72,71,0.75) 3%,
+      rgba(68,68,67,0.65) 6%,
+      rgba(64,64,63,0.55) 10%,
+      rgba(60,60,59,0.45) 14%,
+      rgba(56,56,55,0.35) 18%,
+      rgba(52,52,51,0.25) 23%,
+      rgba(48,48,47,0.15) 28%,
+      rgba(44,44,43,0.07) 34%,
+      transparent 42%),
+    /* Neutral gray body — ref: lum 49-56, warm 0 */
+    linear-gradient(180deg,
+      #393939 0%,        /* top: lum 57 */
+      #373737 10%,
+      #363636 20%,       /* lum 54 */
+      #353535 30%,
+      #343434 40%,       /* lum 52 */
+      #333333 50%,       /* center: lum 51 */
+      #323232 60%,
+      #313131 70%,       /* lum 49 */
+      #303030 80%,
+      #2F2F2F 90%,
+      #2E2E2E 100%       /* bottom: lum 46 */
+    );
+  background-blend-mode: normal;
+  box-shadow:
+    inset 0 0 0 1px rgba(80,80,80,0.1),
+    inset 0 1px 2px rgba(90,90,88,0.08),
+    inset 0 -4px 12px rgba(0,0,0,0.25),
+    0 20px 45px rgba(8,8,8,0.7),
+    0 8px 20px rgba(5,5,5,0.55),
+    0 30px 35px -8px rgba(10,10,10,0.5);
+  overflow: hidden;
+  z-index: 3;
+}
+
+/* SPOTLIGHT variant — Card#3: v20 golden sun glow from upper-center */
+/* Ref RIGHT: upper (1310,350) l=124 w=+103, center (1310,400) l=48 w=+28 */
+.card-3d.card-spotlight .card-surface {
+  background:
+    /* Hot golden orb — upper center, ref: lum 124 warm +103 at peak */
+    radial-gradient(ellipse 60% 50% at 50% 35%,
+      rgba(180,130,60,0.85) 0%,     /* lum ~130 peak */
+      rgba(160,115,50,0.7) 10%,
+      rgba(140,100,42,0.55) 20%,
+      rgba(120,85,35,0.4) 30%,
+      rgba(100,70,28,0.28) 40%,
+      rgba(75,52,22,0.15) 55%,
+      rgba(50,35,15,0.06) 70%,
+      transparent 90%),
+    /* Neutral-dark base — lum ~30-35 */
+    linear-gradient(180deg,
+      #282828 0%,
+      #262626 20%,
+      #242424 40%,
+      #232323 50%,
+      #222222 60%,
+      #242424 80%,
+      #262626 100%
+    );
+}
+
+.card-3d .card-surface::after {
+  content: '';
+  position: absolute;
+  bottom: -18px; left: 5%; right: 5%;
+  height: 20px;
+  background: linear-gradient(180deg,
+    rgba(40,38,35,0.6) 0%,
+    rgba(50,48,42,0.4) 40%,
+    rgba(60,55,45,0.25) 70%,
+    transparent 100%);
+  filter: blur(6px);
+  border-radius: 0 0 50% 50%;
+  pointer-events: none;
+}
+
+.card-content {
+  padding: 20px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 4;
+}
+.card-text {
+  font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+  letter-spacing: 0.12em; color: var(--gold-muted); text-transform: uppercase;
+}
+
+/* Size variants */
+.card-xl .card-surface { width: 240px; height: 130px; }
+.card-lg .card-surface { width: 170px; height: 130px; }
+.card-md .card-surface { width: 130px; height: 130px; }
+.card-sq  { border-radius: var(--r-md); }
+.card-sq .card-aura { border-radius: calc(var(--r-md) + 14px); }
+.card-sq .card-void { border-radius: calc(var(--r-md) + 8px); }
+.card-sq .card-gold-line { border-radius: calc(var(--r-md) + 5px); }
+.card-sq .card-surface { width: 100px; height: 110px; border-radius: var(--r-md); }
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT 3: PROGRESS BAR ELEMENT
+   Same multi-zone system scaled for horizontal layout
+   ═══════════════════════════════════════════════════════════ */
+.progress-wrap { position: relative; display: inline-block; }
+
+.progress-el {
+  position: relative;
+  width: 420px; height: 60px;
+  border-radius: var(--r-lg);
+  display: flex; align-items: center;
+  padding: 0 20px; gap: 16px;
+}
+.progress-el .p-aura {
+  position: absolute; inset: -14px;
+  border-radius: calc(var(--r-lg) + 14px);
+  background: conic-gradient(from 180deg,
+    rgba(80,55,30,0.35) 0deg, rgba(90,60,35,0.4) 45deg,
+    rgba(85,55,30,0.35) 90deg, rgba(70,48,25,0.28) 135deg,
+    rgba(60,40,22,0.2) 180deg, rgba(55,38,20,0.15) 225deg,
+    rgba(60,42,24,0.18) 270deg, rgba(75,52,28,0.3) 360deg);
+  box-shadow: 0 0 30px rgba(80,55,30,0.12), 0 0 60px rgba(60,40,20,0.06);
+  z-index: -1; pointer-events: none;
+}
+.progress-el .p-void {
+  position: absolute; inset: -8px;
+  border-radius: calc(var(--r-lg) + 8px);
+  background: conic-gradient(from 180deg,
+    #877768 0deg, #90806F 20deg, #887868 45deg, #7E6E5E 70deg,
+    #756556 90deg, #6C5C4E 120deg, #645448 150deg, #5C4C40 180deg,
+    #544438 210deg, #4C3E34 240deg, #5A4C40 270deg, #6E5E50 300deg,
+    #806E5E 330deg, #877768 360deg);
+  z-index: 0; pointer-events: none;
+  box-shadow: 0 0 20px rgba(130,115,95,0.08), 0 -3px 12px rgba(130,115,95,0.05);
+}
+.progress-el .p-gold-line {
+  position: absolute; inset: -5px;
+  border-radius: calc(var(--r-lg) + 5px);
+  background: conic-gradient(from 180deg,
+    #5A5A5A 0deg, #5E5E5E 20deg, #5C5C5C 60deg, #585858 90deg,
+    #545454 120deg, #505050 180deg, #4C4C4C 220deg, #505050 270deg,
+    #565656 330deg, #5A5A5A 360deg);
+  z-index: 1; pointer-events: none;
+}
+.progress-el .p-topline {
+  position: absolute; inset: -2px;
+  border-radius: calc(var(--r-lg) + 2px);
+  background: conic-gradient(from 180deg,
+    #585858 0deg, #606060 60deg, #585858 120deg,
+    #505050 180deg, #4A4A4A 240deg, #505050 300deg, #585858 360deg);
+  z-index: 2; pointer-events: none;
+}
+.progress-el .p-surface {
+  position: absolute; inset: 0; border-radius: var(--r-lg);
+  background:
+    /* Sharp top pillow */
+    linear-gradient(180deg,
+      rgba(80,75,70,0.8) 0%, rgba(70,66,62,0.5) 5%,
+      rgba(58,55,52,0.25) 12%, transparent 22%),
+    linear-gradient(180deg,
+      #2E2E2C 0%, #2D2D2B 20%, #2C2C2A 40%,
+      #2B2B29 60%, #2C2C2A 80%, #2D2D2B 100%);
+  box-shadow:
+    inset 0 -8px 18px -3px rgba(100,100,100,0.15),
+    inset 0 1px 2px rgba(110,100,85,0.1),
+    inset 0 -2px 5px rgba(0,0,0,0.3),
+    0 20px 45px rgba(10,8,5,0.85),
+    0 8px 20px rgba(0,0,0,0.6);
+  z-index: 3;
+}
+.progress-el .p-label {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  letter-spacing: 0.12em; color: var(--text-hint); text-transform: uppercase;
+  position: relative; z-index: 4; flex-shrink: 0;
+}
+.progress-track {
+  flex: 1; height: 5px; background: #1A1A1E;
+  border-radius: 3px; overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.6);
+  position: relative; z-index: 4;
+}
+.progress-fill {
+  height: 100%; width: 55%; border-radius: 3px;
+  /* v18a: Warm gold fill — ref: lum 111-117, warm 40-55 (dimmed from v18) */
+  background: linear-gradient(90deg,
+    #645230 0%, #72603A 20%, #7C6840 40%,
+    #806C42 50%, #7C6840 60%, #72603A 80%, #645230 100%);
+  box-shadow: 0 0 6px rgba(140,110,55,0.3), 0 0 12px rgba(120,90,45,0.12);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT 4: BADGE BUTTON
+   Same multi-zone void + gold line system, darker surface
+   ═══════════════════════════════════════════════════════════ */
+.badge-wrap { position: relative; display: inline-block; }
+
+.badge-el {
+  position: relative; height: 56px; padding: 0 28px;
+  border-radius: var(--r-md);
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+/* v20 Badge aura: warm brown tint */
+.badge-el .bd-aura {
+  position: absolute; inset: -14px;
+  border-radius: calc(var(--r-md) + 14px);
+  background: conic-gradient(from 180deg,
+    rgba(75,65,50,0.3) 0deg, rgba(80,70,55,0.35) 45deg,
+    rgba(75,68,55,0.3) 90deg, rgba(65,58,46,0.22) 135deg,
+    rgba(55,48,38,0.15) 180deg, rgba(50,44,35,0.1) 225deg,
+    rgba(55,48,38,0.12) 270deg, rgba(70,63,50,0.25) 360deg);
+  box-shadow: 0 0 30px rgba(70,58,42,0.12), 0 0 60px rgba(50,40,28,0.06);
+  z-index: -1; pointer-events: none;
+}
+/* v20b Badge: WARM BROWN border — ref: lum ~89, warm +24 — BOOSTED +50% for anti-alias compensation */
+.badge-el .bd-void {
+  position: absolute; inset: -8px;
+  border-radius: calc(var(--r-md) + 8px);
+  background: conic-gradient(from 180deg,
+    #9C8C72 0deg, #A09076 20deg, #9E8E74 45deg, #9A8A70 70deg,
+    #96866C 90deg, #928268 120deg, #8E7E64 150deg, #8A7A60 180deg,
+    #86765C 210deg, #827258 240deg, #8A7A60 270deg, #94846A 300deg,
+    #9A8A70 330deg, #9C8C72 360deg);
+  z-index: 0; pointer-events: none;
+  box-shadow: 0 0 18px rgba(130,110,80,0.12), 0 -2px 10px rgba(110,90,65,0.08);
+}
+.badge-el .bd-gold-line {
+  position: absolute; inset: -5px;
+  border-radius: calc(var(--r-md) + 5px);
+  /* ref: lum=89 warm=+24 — CSS boosted to ~lum 130 for render match */
+  background: conic-gradient(from 180deg,
+    #90826A 0deg, #928468 20deg, #918268 60deg, #8D7E66 90deg,
+    #897A62 120deg, #85765E 180deg, #81725A 220deg, #85765E 270deg,
+    #8B7C64 330deg, #90826A 360deg);
+  z-index: 1; pointer-events: none;
+}
+.badge-el .bd-topline {
+  position: absolute; inset: -2px;
+  border-radius: calc(var(--r-md) + 2px);
+  background: conic-gradient(from 180deg,
+    #867862 0deg, #8C7E66 60deg, #867862 120deg,
+    #7E7058 180deg, #766850 240deg, #7E7058 300deg, #867862 360deg);
+  z-index: 2; pointer-events: none;
+}
+.badge-el .bd-surface {
+  position: absolute; inset: 0; border-radius: var(--r-md);
+  background:
+    /* Strong top pillow — sharp convexity */
+    linear-gradient(180deg,
+      rgba(85,78,72,0.9) 0%, rgba(75,70,65,0.7) 4%,
+      rgba(65,62,58,0.45) 8%, rgba(55,52,48,0.2) 15%,
+      transparent 25%),
+    /* Body */
+    linear-gradient(180deg,
+      #2E2E2C 0%, #2C2C2A 20%, #2B2B29 40%,
+      #2A2A28 60%, #2B2B29 80%, #2C2C2A 100%);
+  box-shadow:
+    inset 0 -5px 12px -2px rgba(85,82,80,0.15),
+    inset 0 1px 2px rgba(120,110,95,0.1),
+    inset 0 -3px 6px rgba(0,0,0,0.35),
+    0 15px 30px rgba(8,6,4,0.85),
+    0 25px 35px -10px rgba(40,25,12,0.5);
+  z-index: 3;
+}
+.badge-el .b-text {
+  font-family: var(--font-mono); font-size: 13px; font-weight: 600;
+  letter-spacing: 0.12em; color: var(--gold);
+  text-shadow: 0 0 12px rgba(196,162,101,0.5), 0 0 24px rgba(196,162,101,0.2);
+  position: relative; z-index: 4; text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT 5: ICON CARD — VERY DARK (lum 44-47)
+   Same void + gold line, minimal border
+   ═══════════════════════════════════════════════════════════ */
+.icon-card-wrap { position: relative; display: inline-block; }
+
+.icon-card {
+  position: relative;
+  width: 96px; height: 110px;
+  border-radius: var(--r-lg);
+  display: flex; align-items: center; justify-content: center;
+}
+.icon-card .ic-aura {
+  position: absolute; inset: -14px;
+  border-radius: calc(var(--r-lg) + 14px);
+  background: conic-gradient(from 180deg,
+    rgba(70,70,68,0.3) 0deg, rgba(75,75,72,0.35) 45deg,
+    rgba(72,72,70,0.3) 90deg, rgba(60,60,58,0.22) 135deg,
+    rgba(50,50,48,0.15) 180deg, rgba(45,45,44,0.1) 225deg,
+    rgba(50,50,48,0.12) 270deg, rgba(65,65,63,0.25) 360deg);
+  box-shadow: 0 0 30px rgba(60,60,58,0.12), 0 0 60px rgba(40,40,38,0.06);
+  z-index: -1; pointer-events: none;
+}
+.icon-card .ic-void {
+  position: absolute; inset: -8px;
+  border-radius: calc(var(--r-lg) + 8px);
+  background: conic-gradient(from 180deg,
+    #6E6E6E 0deg, #747474 20deg, #727272 45deg, #6A6A6A 70deg,
+    #646464 90deg, #5E5E5E 120deg, #585858 150deg, #525252 180deg,
+    #4E4E4E 210deg, #484848 240deg, #545454 270deg, #606060 300deg,
+    #686868 330deg, #6E6E6E 360deg);
+  z-index: 0; pointer-events: none;
+  box-shadow: 0 0 18px rgba(130,115,95,0.08), 0 -2px 10px rgba(130,115,95,0.05);
+}
+.icon-card .ic-gold-line {
+  position: absolute; inset: -5px;
+  border-radius: calc(var(--r-lg) + 5px);
+  background: conic-gradient(from 180deg,
+    #5A5A5A 0deg, #5E5E5E 20deg, #5C5C5C 60deg, #585858 90deg,
+    #545454 120deg, #505050 180deg, #4C4C4C 220deg, #505050 270deg,
+    #565656 330deg, #5A5A5A 360deg);
+  z-index: 1; pointer-events: none;
+}
+.icon-card .ic-topline {
+  position: absolute; inset: -2px;
+  border-radius: calc(var(--r-lg) + 2px);
+  background: conic-gradient(from 180deg,
+    #585858 0deg, #606060 60deg, #585858 120deg,
+    #505050 180deg, #4A4A4A 240deg, #505050 300deg, #585858 360deg);
+  z-index: 2; pointer-events: none;
+}
+.icon-card .ic-surface {
+  position: absolute; inset: 0; border-radius: var(--r-lg);
+  background:
+    /* Sharp convex pillow */
+    linear-gradient(180deg,
+      rgba(80,74,68,0.85) 0%, rgba(68,64,59,0.6) 4%,
+      rgba(56,53,49,0.35) 10%, rgba(46,44,41,0.12) 18%,
+      transparent 28%),
+    radial-gradient(ellipse 80% 50% at 50% 50%,
+      rgba(65,62,58,0.2) 0%, transparent 60%),
+    linear-gradient(180deg,
+      #2C2C2A 0%, #2B2B29 15%, #2A2A28 30%,
+      #292928 50%, #282827 65%, #2A2A28 85%, #2B2B29 100%);
+  box-shadow:
+    inset 0 0 20px 2px rgba(80,75,65,0.1),
+    inset 0 -4px 8px rgba(0,0,0,0.3),
+    0 15px 30px rgba(8,6,4,0.85),
+    0 25px 35px -10px rgba(40,25,12,0.45);
+  z-index: 3;
+}
+.icon-card .ic-content { position: relative; z-index: 4; }
+
+/* Gold vertical lines */
+.gold-lines { display: flex; gap: 7px; align-items: center; }
+.gold-lines span {
+  width: 2.5px; border-radius: 1.5px;
+  background: linear-gradient(180deg, var(--gold-warm) 0%, var(--gold) 40%, var(--gold-dark) 100%);
+  box-shadow: 0 0 8px rgba(196,162,101,0.4), 0 0 16px rgba(196,162,101,0.15);
+}
+.gold-lines span:nth-child(1) { height: 24px; }
+.gold-lines span:nth-child(2) { height: 32px; }
+.gold-lines span:nth-child(3) { height: 24px; }
+
+/* Glow dot */
+.glow-dot-el {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%,
+    rgba(255,200,100,0.8) 0%, rgba(196,162,101,0.4) 50%, transparent 100%);
+  box-shadow: 0 0 20px rgba(196,162,101,0.6), 0 0 40px rgba(196,162,101,0.25);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT 6: TOGGLE PILL
+   Same multi-zone, card-like surface but more compact
+   ═══════════════════════════════════════════════════════════ */
+.toggle-pill-wrap { position: relative; display: inline-block; }
+
+.toggle-pill-el {
+  position: relative;
+  width: 200px; height: 56px;
+  border-radius: var(--r-pill);
+  display: inline-flex; align-items: center;
+  padding: 0 24px; gap: 12px;
+}
+
+/* Bottom glow — warm light shining upward from beneath */
+.toggle-pill-el::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 10%; right: 10%;
+  height: 8px;
+  background: radial-gradient(ellipse 80% 100% at 50% 0%,
+    rgba(200,160,80,0.5) 0%, rgba(180,140,60,0.3) 40%, transparent 100%);
+  border-radius: 0 0 50% 50%;
+  z-index: 4;
+  pointer-events: none;
+  filter: blur(3px);
+}
+
+.toggle-pill-el .tp-aura {
+  position: absolute; inset: -14px;
+  border-radius: calc(var(--r-pill) + 14px);
+  background: conic-gradient(from 180deg,
+    rgba(70,70,68,0.3) 0deg, rgba(75,75,72,0.35) 45deg,
+    rgba(72,72,70,0.3) 90deg, rgba(60,60,58,0.22) 135deg,
+    rgba(50,50,48,0.15) 180deg, rgba(45,45,44,0.1) 225deg,
+    rgba(50,50,48,0.12) 270deg, rgba(65,65,63,0.25) 360deg);
+  box-shadow: 0 0 30px rgba(60,60,58,0.12), 0 0 60px rgba(40,40,38,0.06);
+  z-index: -1; pointer-events: none;
+}
+/* v20b Toggle: NEUTRAL DIM border — ref: lum ~57, warm +3 — mostly neutral */
+.toggle-pill-el .tp-void {
+  position: absolute; inset: -8px;
+  border-radius: calc(var(--r-pill) + 8px);
+  background: conic-gradient(from 180deg,
+    #505050 0deg, #545454 20deg, #525252 45deg, #4E4E4E 70deg,
+    #4A4A4A 90deg, #464646 120deg, #424242 150deg, #3E3E3E 180deg,
+    #3A3A3A 210deg, #363636 240deg, #3E3E3E 270deg, #484848 300deg,
+    #4E4E4E 330deg, #505050 360deg);
+  z-index: 0; pointer-events: none;
+  box-shadow: 0 0 20px rgba(70,70,70,0.10), 0 -3px 12px rgba(60,60,60,0.06);
+}
+.toggle-pill-el .tp-gold-line {
+  position: absolute; inset: -5px;
+  border-radius: calc(var(--r-pill) + 5px);
+  /* ref: lum ~57, warm +3 — nearly neutral */
+  background: conic-gradient(from 180deg,
+    #404040 0deg, #434343 20deg, #424242 60deg, #3E3E3E 90deg,
+    #3A3A3A 120deg, #363636 180deg, #323232 220deg, #363636 270deg,
+    #3C3C3C 330deg, #404040 360deg);
+  z-index: 1; pointer-events: none;
+}
+.toggle-pill-el .tp-topline {
+  position: absolute; inset: -2px;
+  border-radius: calc(var(--r-pill) + 2px);
+  background: conic-gradient(from 180deg,
+    #3A3A3A 0deg, #404040 60deg, #3A3A3A 120deg,
+    #343434 180deg, #2E2E2E 240deg, #343434 300deg, #3A3A3A 360deg);
+  z-index: 2; pointer-events: none;
+  box-shadow: 0 0 5px rgba(60,60,60,0.06);
+}
+.toggle-pill-el .tp-surface {
+  position: absolute; inset: 0; border-radius: var(--r-pill);
+  background:
+    /* Sharp top pillow — convex edge */
+    linear-gradient(180deg,
+      rgba(85,78,72,0.85) 0%, rgba(72,68,63,0.6) 4%,
+      rgba(60,57,53,0.35) 10%, rgba(50,47,44,0.15) 18%,
+      transparent 28%),
+    linear-gradient(180deg,
+      #2E2E2C 0%, #2C2C2A 15%, #2A2A28 30%,
+      #292928 45%, #282827 55%, #292928 70%,
+      #2A2A28 85%, #2B2B29 100%);
+  box-shadow:
+    inset 0 2px 3px rgba(150,120,80,0.12),
+    inset 0 10px 20px -5px rgba(100,100,100,0.12),
+    inset 0 -4px 8px rgba(0,0,0,0.3),
+    0 15px 30px rgba(8,6,4,0.85),
+    0 6px 15px rgba(0,0,0,0.55);
+  z-index: 3;
+}
+.toggle-pill-el .tp-label {
+  font-family: var(--font-mono); font-size: 13px; font-weight: 600;
+  letter-spacing: 0.1em; color: var(--gold);
+  position: relative; z-index: 4; text-transform: uppercase;
+}
+.led-group { display: flex; gap: 6px; position: relative; z-index: 4; }
+.led-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%,
+    rgba(255,200,100,0.8) 0%, rgba(196,162,101,0.4) 50%, transparent 100%);
+  box-shadow: 0 0 8px rgba(196,162,101,0.5);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT 7: ICON BUTTON (small, minimal)
+   ═══════════════════════════════════════════════════════════ */
+.icon-btn-wrap { position: relative; display: inline-block; }
+
+.icon-btn-el {
+  position: relative;
+  width: 60px; height: 50px;
+  border-radius: var(--r-md);
+  display: flex; align-items: center; justify-content: center;
+}
+.icon-btn-el .ib-aura {
+  position: absolute; inset: -10px;
+  border-radius: calc(var(--r-md) + 10px);
+  background: conic-gradient(from 180deg,
+    rgba(70,70,68,0.3) 0deg, rgba(75,75,72,0.35) 45deg,
+    rgba(72,72,70,0.3) 90deg, rgba(60,60,58,0.22) 135deg,
+    rgba(50,50,48,0.15) 180deg, rgba(45,45,44,0.1) 225deg,
+    rgba(50,50,48,0.12) 270deg, rgba(65,65,63,0.25) 360deg);
+  box-shadow: 0 0 30px rgba(60,60,58,0.12), 0 0 60px rgba(40,40,38,0.06);
+  z-index: -1; pointer-events: none;
+}
+.icon-btn-el .ib-void {
+  position: absolute; inset: -6px;
+  border-radius: calc(var(--r-md) + 6px);
+  background: conic-gradient(from 180deg,
+    #6E6E6E 0deg, #747474 20deg, #727272 45deg, #6A6A6A 70deg,
+    #646464 90deg, #5E5E5E 120deg, #585858 150deg, #525252 180deg,
+    #4E4E4E 210deg, #484848 240deg, #545454 270deg, #606060 300deg,
+    #686868 330deg, #6E6E6E 360deg);
+  z-index: 0; pointer-events: none;
+  box-shadow: 0 0 12px rgba(130,115,95,0.08), 0 -2px 8px rgba(130,115,95,0.05);
+}
+.icon-btn-el .ib-gold-line {
+  position: absolute; inset: -3px;
+  border-radius: calc(var(--r-md) + 3px);
+  background: conic-gradient(from 180deg,
+    #5A5A5A 0deg, #5E5E5E 20deg, #5C5C5C 60deg, #585858 90deg,
+    #545454 120deg, #505050 180deg, #4C4C4C 220deg, #505050 270deg,
+    #565656 330deg, #5A5A5A 360deg);
+  z-index: 1; pointer-events: none;
+}
+.icon-btn-el .ib-surface {
+  position: absolute; inset: 0; border-radius: var(--r-md);
+  background:
+    /* Sharp pillow */
+    linear-gradient(180deg,
+      rgba(75,70,64,0.8) 0%, rgba(62,58,53,0.5) 5%,
+      rgba(48,45,42,0.2) 12%, transparent 22%),
+    linear-gradient(180deg,
+      #2A2A28 0%, #292928 30%, #282827 60%, #272726 100%);
+  box-shadow:
+    inset 0 1px 2px rgba(100,90,75,0.1),
+    inset 0 -2px 4px rgba(0,0,0,0.28),
+    0 8px 16px rgba(8,6,4,0.8);
+  z-index: 3;
+}
+.mini-lines { display: flex; gap: 4px; align-items: center; position: relative; z-index: 3; }
+.mini-lines span {
+  width: 1.5px; background: var(--gold);
+  box-shadow: 0 0 6px rgba(196,162,101,0.4);
+}
+.mini-lines span:nth-child(1) { height: 14px; }
+.mini-lines span:nth-child(2) { height: 18px; }
+.mini-lines span:nth-child(3) { height: 14px; }
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT 8: OVAL TOGGLE (interior lum 31-41 ULTRA DARK)
+   Gold ramp: lum 53→163 on edges, sharp void drop
+   ═══════════════════════════════════════════════════════════ */
+.oval-toggle-wrap { position: relative; display: inline-block; }
+
+.oval-toggle {
+  position: relative;
+  width: 180px; height: 50px;
+  border-radius: var(--r-pill);
+  background:
+    radial-gradient(ellipse 100% 60% at 50% 20%,
+      rgba(100,100,100,0.15) 0%, transparent 60%),
+    linear-gradient(180deg,
+      #303030 0%, #303030 50%, #2E2E2E 100%);
+  box-shadow:
+    inset 0 2px 4px rgba(150,120,80,0.1),
+    inset 0 -4px 8px rgba(0,0,0,0.4),
+    0 12px 25px rgba(8,6,4,0.8),
+    inset 0 0 0 6px #353535,
+    inset 0 0 0 7px conic-gradient(from 180deg,
+      #C9AF81 0deg, #DFC494 90deg, #C9AF81 180deg,
+      #9E8455 270deg, #C9AF81 360deg);
+}
+.oval-toggle::before {
+  content: '';
+  position: absolute;
+  right: 8px; top: 50%; transform: translateY(-50%);
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  /* v18a: Warm gold body — ref: lum 155-161, warm 76 (brightened) */
+  /* Top gold line at lum 180, body gradient warm amber */
+  background:
+    radial-gradient(circle at 50% 15%,
+      rgba(220,190,120,0.85) 0%,
+      rgba(200,170,100,0.5) 30%,
+      transparent 55%),
+    radial-gradient(circle at 50% 50%,
+      #C8A068 0%,       /* center: lum 158, warm 96 */
+      #C09860 15%,      /* lum 149 */
+      #B89058 30%,      /* lum 141 */
+      #B08850 50%,      /* lum 133 */
+      #A88048 70%,      /* lum 125 */
+      #A07840 90%,      /* lum 117 */
+      #987038 100%      /* edge: lum 109 */
+    );
+  box-shadow:
+    0 4px 12px rgba(160,120,60,0.5),
+    0 0 8px rgba(180,140,70,0.3),
+    inset 0 2px 4px rgba(220,185,110,0.4),
+    inset 0 -3px 6px rgba(0,0,0,0.35);
+  z-index: 2;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT 9: SETTINGS CARD (lum 54-61, dark)
+   ═══════════════════════════════════════════════════════════ */
+.settings-wrap { position: relative; display: inline-block; }
+
+.settings-el {
+  position: relative;
+  width: 220px; height: 56px;
+  border-radius: var(--r-md);
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0 18px; gap: 12px;
+}
+.settings-el .se-aura {
+  position: absolute; inset: -10px;
+  border-radius: calc(var(--r-md) + 10px);
+  background: conic-gradient(from 180deg,
+    rgba(70,70,68,0.3) 0deg, rgba(75,75,72,0.35) 45deg,
+    rgba(72,72,70,0.3) 90deg, rgba(60,60,58,0.22) 135deg,
+    rgba(50,50,48,0.15) 180deg, rgba(45,45,44,0.1) 225deg,
+    rgba(50,50,48,0.12) 270deg, rgba(65,65,63,0.25) 360deg);
+  box-shadow: 0 0 30px rgba(60,60,58,0.12), 0 0 60px rgba(40,40,38,0.06);
+  z-index: -1; pointer-events: none;
+}
+/* v20b Settings: NEUTRAL border — ref: lum ~104, warm -1 — NEUTRAL gray, BOOSTED +35% */
+.settings-el .se-void {
+  position: absolute; inset: -6px;
+  border-radius: calc(var(--r-md) + 6px);
+  background: conic-gradient(from 180deg,
+    #9A9A9A 0deg, #9E9E9E 20deg, #9C9C9C 45deg, #989898 70deg,
+    #949494 90deg, #909090 120deg, #8C8C8C 150deg, #888888 180deg,
+    #848484 210deg, #808080 240deg, #888888 270deg, #929292 300deg,
+    #989898 330deg, #9A9A9A 360deg);
+  z-index: 0; pointer-events: none;
+  box-shadow: 0 0 15px rgba(100,100,100,0.10), 0 -2px 8px rgba(80,80,80,0.06);
+}
+.settings-el .se-gold-line {
+  position: absolute; inset: -3px;
+  border-radius: calc(var(--r-md) + 3px);
+  /* ref: lum=104 warm=-1 — NEUTRAL, CSS boosted to ~lum 140 */
+  background: conic-gradient(from 180deg,
+    #929292 0deg, #949494 20deg, #939393 60deg, #909090 90deg,
+    #8C8C8C 120deg, #888888 180deg, #848484 220deg, #888888 270deg,
+    #8E8E8E 330deg, #929292 360deg);
+  z-index: 1; pointer-events: none;
+}
+.settings-el .se-topline {
+  position: absolute; inset: -1px;
+  border-radius: calc(var(--r-md) + 1px);
+  background: conic-gradient(from 180deg,
+    #8A8A8A 0deg, #909090 60deg, #8A8A8A 120deg,
+    #848484 180deg, #7E7E7E 240deg, #848484 300deg, #8A8A8A 360deg);
+  z-index: 2; pointer-events: none;
+}
+.settings-el .se-surface {
+  position: absolute; inset: 0; border-radius: var(--r-md);
+  background:
+    /* Sharp convex pillow */
+    linear-gradient(180deg,
+      rgba(90,82,75,0.9) 0%, rgba(78,72,66,0.65) 4%,
+      rgba(65,60,55,0.4) 10%, rgba(52,48,44,0.15) 18%,
+      transparent 28%),
+    linear-gradient(180deg,
+      #2C2C2A 0%, #2A2A28 15%, #282826 30%,
+      #272725 50%, #262624 65%, #272725 80%, #282826 100%);
+  box-shadow:
+    inset 0 8px 18px -4px rgba(110,110,110,0.18),
+    inset 0 1px 2px rgba(120,105,85,0.12),
+    inset 0 -4px 8px rgba(0,0,0,0.3),
+    0 12px 25px rgba(8,6,4,0.85),
+    0 25px 30px -10px rgba(40,25,12,0.45);
+  z-index: 3;
+}
+.settings-el .s-text {
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  color: var(--gold);
+  position: relative; z-index: 3; letter-spacing: 0.08em;
+}
+.settings-el .s-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(255,200,100,0.8), rgba(196,162,101,0.3));
+  box-shadow: 0 0 6px rgba(196,162,101,0.4);
+  position: relative; z-index: 3;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT 10: CIRCLE RADIO (lum 44-47, minimal)
+   ═══════════════════════════════════════════════════════════ */
+.circle-radio-wrap { position: relative; display: inline-block; }
+
+.circle-radio {
+  position: relative;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+}
+.circle-radio .cr-aura {
+  position: absolute; inset: -8px;
+  border-radius: 50%;
+  background: conic-gradient(from 180deg,
+    rgba(70,70,68,0.3) 0deg, rgba(75,75,72,0.35) 45deg,
+    rgba(72,72,70,0.3) 90deg, rgba(60,60,58,0.22) 135deg,
+    rgba(50,50,48,0.15) 180deg, rgba(45,45,44,0.1) 225deg,
+    rgba(50,50,48,0.12) 270deg, rgba(65,65,63,0.25) 360deg);
+  box-shadow: 0 0 30px rgba(60,60,58,0.12), 0 0 60px rgba(40,40,38,0.06);
+  z-index: -1; pointer-events: none;
+}
+.circle-radio .cr-void {
+  position: absolute; inset: -5px;
+  border-radius: 50%;
+  background: conic-gradient(from 180deg,
+    #6E6E6E 0deg, #747474 20deg, #727272 45deg, #6A6A6A 70deg,
+    #646464 90deg, #5E5E5E 120deg, #585858 150deg, #525252 180deg,
+    #4E4E4E 210deg, #484848 240deg, #545454 270deg, #606060 300deg,
+    #686868 330deg, #6E6E6E 360deg);
+  z-index: 0; pointer-events: none;
+  box-shadow: 0 0 12px rgba(130,115,95,0.08), 0 -2px 8px rgba(130,115,95,0.05);
+}
+.circle-radio .cr-gold-line {
+  position: absolute; inset: -2px;
+  border-radius: 50%;
+  background: conic-gradient(from 180deg,
+    #5A5A5A 0deg, #5E5E5E 20deg, #5C5C5C 60deg, #585858 90deg,
+    #545454 120deg, #505050 180deg, #4C4C4C 220deg, #505050 270deg,
+    #565656 330deg, #5A5A5A 360deg);
+  z-index: 1; pointer-events: none;
+}
+.circle-radio .cr-surface {
+  position: absolute; inset: 0; border-radius: 50%;
+  background:
+    /* Sharp pillow */
+    linear-gradient(180deg,
+      rgba(72,66,60,0.8) 0%, rgba(58,54,50,0.5) 8%,
+      rgba(45,43,40,0.2) 18%, transparent 30%),
+    linear-gradient(180deg,
+      #2A2A28 0%, #292928 30%, #282827 60%, #272726 100%);
+  box-shadow:
+    inset 0 1px 2px rgba(100,90,75,0.1),
+    inset 0 -2px 4px rgba(0,0,0,0.28),
+    0 8px 16px rgba(8,6,4,0.8);
+  z-index: 3;
+}
+.circle-radio .ring {
+  position: absolute; inset: 6px;
+  border-radius: 50%;
+  border: 2px solid #C9AF81;
+  box-shadow: 0 0 8px rgba(196,162,101,0.3);
+  z-index: 3;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT 11: COMPACT PILL (Led/Value badge)
+   ═══════════════════════════════════════════════════════════ */
+.compact-pill-wrap { position: relative; display: inline-block; }
+
+.compact-pill-el {
+  position: relative;
+  width: 180px; height: 48px;
+  border-radius: var(--r-md);
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0 16px; gap: 10px;
+  font-size: 12px;
+}
+/* v20c Compact aura: PALE GOLDEN warm glow */
+.compact-pill-el .cp-aura {
+  position: absolute; inset: -10px;
+  border-radius: calc(var(--r-md) + 10px);
+  background: conic-gradient(from 180deg,
+    rgba(180,140,80,0.28) 0deg, rgba(190,150,85,0.33) 45deg,
+    rgba(185,145,82,0.28) 90deg, rgba(160,120,65,0.20) 135deg,
+    rgba(140,100,55,0.14) 180deg, rgba(130,94,50,0.10) 225deg,
+    rgba(140,100,55,0.12) 270deg, rgba(170,135,75,0.25) 360deg);
+  box-shadow: 0 0 30px rgba(200,160,90,0.18), 0 0 60px rgba(160,120,60,0.10);
+  z-index: -1; pointer-events: none;
+}
+/* v20c Compact: PALE GOLD border — ref: lum ~171, warm +80 — LESS SATURATED, MORE BRIGHT */
+.compact-pill-el .cp-void {
+  position: absolute; inset: -6px;
+  border-radius: calc(var(--r-md) + 6px);
+  background: conic-gradient(from 180deg,
+    #F4CC88 0deg, #F8D08C 20deg, #F6CE8A 45deg, #F2CA86 70deg,
+    #EEC682 90deg, #EAC27E 120deg, #E6BE7A 150deg, #E2BA76 180deg,
+    #DEB672 210deg, #DAB26E 240deg, #E2BA76 270deg, #ECC480 300deg,
+    #F2CA86 330deg, #F4CC88 360deg);
+  z-index: 0; pointer-events: none;
+  box-shadow: 0 0 22px rgba(220,180,100,0.22), 0 -2px 14px rgba(200,160,80,0.15);
+}
+.compact-pill-el .cp-gold-line {
+  position: absolute; inset: -3px;
+  border-radius: calc(var(--r-md) + 3px);
+  /* ref: lum=171 warm=+80 — PALE GOLD, less saturated */
+  background: conic-gradient(from 180deg,
+    #ECC27C 0deg, #EEC480 20deg, #EDC37E 60deg, #EAC07B 90deg,
+    #E6BC78 120deg, #E2B874 180deg, #DEB470 220deg, #E2B874 270deg,
+    #E8BE7A 330deg, #ECC27C 360deg);
+  z-index: 1; pointer-events: none;
+}
+.compact-pill-el .cp-topline {
+  position: absolute; inset: -1px;
+  border-radius: calc(var(--r-md) + 1px);
+  background: conic-gradient(from 180deg,
+    #E0B670 0deg, #E8BE78 60deg, #E0B670 120deg,
+    #D8AE68 180deg, #D0A660 240deg, #D8AE68 300deg, #E0B670 360deg);
+  z-index: 2; pointer-events: none;
+}
+.compact-pill-el .cp-surface {
+  position: absolute; inset: 0; border-radius: var(--r-md);
+  background:
+    /* Sharp pillow */
+    linear-gradient(180deg,
+      rgba(78,72,66,0.85) 0%, rgba(65,61,56,0.55) 5%,
+      rgba(52,48,44,0.25) 12%, transparent 22%),
+    linear-gradient(180deg,
+      #2A2A28 0%, #292928 20%, #282827 40%,
+      #292928 60%, #2A2A28 80%, #2B2B29 100%);
+  box-shadow:
+    inset 0 1px 2px rgba(100,90,75,0.1),
+    inset 0 -2px 4px rgba(0,0,0,0.28),
+    0 8px 16px rgba(8,6,4,0.8);
+  z-index: 3;
+}
+.compact-pill-el .cp-l {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-hint); text-transform: uppercase;
+  position: relative; z-index: 3; letter-spacing: 0.1em;
+}
+.compact-pill-el .cp-v {
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  color: var(--gold);
+  position: relative; z-index: 3; letter-spacing: 0.05em;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT 12: STEPPER DOTS
+   ═══════════════════════════════════════════════════════════ */
+.stepper-wrap { position: relative; display: inline-block; }
+
+.stepper-el {
+  position: relative;
+  width: 340px; height: 60px;
+  border-radius: var(--r-lg);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+.stepper-el .st-aura {
+  position: absolute; inset: -14px;
+  border-radius: calc(var(--r-lg) + 14px);
+  background: conic-gradient(from 180deg,
+    rgba(70,70,68,0.3) 0deg, rgba(75,75,72,0.35) 45deg,
+    rgba(72,72,70,0.3) 90deg, rgba(60,60,58,0.22) 135deg,
+    rgba(50,50,48,0.15) 180deg, rgba(45,45,44,0.1) 225deg,
+    rgba(50,50,48,0.12) 270deg, rgba(65,65,63,0.25) 360deg);
+  box-shadow: 0 0 30px rgba(60,60,58,0.12), 0 0 60px rgba(40,40,38,0.06);
+  z-index: -1; pointer-events: none;
+}
+.stepper-el .st-void {
+  position: absolute; inset: -8px;
+  border-radius: calc(var(--r-lg) + 8px);
+  background: conic-gradient(from 180deg,
+    #6E6E6E 0deg, #747474 20deg, #727272 45deg, #6A6A6A 70deg,
+    #646464 90deg, #5E5E5E 120deg, #585858 150deg, #525252 180deg,
+    #4E4E4E 210deg, #484848 240deg, #545454 270deg, #606060 300deg,
+    #686868 330deg, #6E6E6E 360deg);
+  z-index: 0; pointer-events: none;
+  box-shadow: 0 0 20px rgba(130,115,95,0.08), 0 -3px 12px rgba(130,115,95,0.05);
+}
+.stepper-el .st-gold-line {
+  position: absolute; inset: -5px;
+  border-radius: calc(var(--r-lg) + 5px);
+  background: conic-gradient(from 180deg,
+    #5A5A5A 0deg, #5E5E5E 20deg, #5C5C5C 60deg, #585858 90deg,
+    #545454 120deg, #505050 180deg, #4C4C4C 220deg, #505050 270deg,
+    #565656 330deg, #5A5A5A 360deg);
+  z-index: 1; pointer-events: none;
+}
+.stepper-el .st-topline {
+  position: absolute; inset: -2px;
+  border-radius: calc(var(--r-lg) + 2px);
+  background: conic-gradient(from 180deg,
+    #585858 0deg, #606060 60deg, #585858 120deg,
+    #505050 180deg, #4A4A4A 240deg, #505050 300deg, #585858 360deg);
+  z-index: 2; pointer-events: none;
+}
+.stepper-el .st-surface {
+  position: absolute; inset: 0; border-radius: var(--r-lg);
+  background:
+    /* Sharp pillow */
+    linear-gradient(180deg,
+      rgba(80,75,70,0.85) 0%, rgba(68,64,59,0.55) 5%,
+      rgba(55,52,48,0.25) 12%, transparent 22%),
+    linear-gradient(180deg,
+      #2C2C2A 0%, #2B2B29 20%, #2A2A28 40%,
+      #2B2B29 60%, #2C2C2A 80%, #2D2D2B 100%);
+  box-shadow:
+    inset 0 1px 3px rgba(100,90,75,0.1),
+    inset 0 -2px 5px rgba(0,0,0,0.28),
+    0 20px 45px rgba(10,8,6,0.9),
+    0 8px 20px rgba(0,0,0,0.65);
+  z-index: 3;
+}
+.stepper-el .st-label {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  letter-spacing: 0.12em; color: var(--text-hint); text-transform: uppercase;
+  position: relative; z-index: 4; flex-shrink: 0;
+}
+.step-dots {
+  display: flex; gap: 8px; position: relative; z-index: 4;
+  flex: 1; justify-content: flex-end;
+}
+.s-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #505050; box-shadow: inset 0 -1px 2px rgba(0,0,0,0.4);
+}
+.s-dot.done {
+  background: linear-gradient(135deg, #C9AF81, #DFC494);
+  box-shadow: 0 0 8px rgba(196,162,101,0.3);
+}
+.s-dot.active {
+  background: linear-gradient(135deg, #E9D0A3, #FFF5B5);
+  box-shadow: 0 0 10px rgba(255,255,211,0.4);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT 13: CTA BUTTON — v19 DARK WARM + WIDE GOLD BORDER
+   Ref: Dark button with massive bright gold border at top
+   Surface: dark warm gradient (lum 22-39, warm +8-43)
+   Border: WIDE bright gold zone (lum 140-244) at top
+   ═══════════════════════════════════════════════════════════ */
+.cta-wrap { position: relative; display: inline-block; }
+
+.cta-el {
+  position: relative;
+  height: 64px;
+  padding: 0 32px;
+  border-radius: var(--r-lg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  gap: 12px;
+}
+
+/* Layer 0: Warm bottom-glow aura */
+.cta-el .cta-aura {
+  position: absolute;
+  inset: -20px;
+  border-radius: calc(var(--r-lg) + 20px);
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%,
+      rgba(200,160,80,0.35) 0%, rgba(180,140,60,0.2) 30%,
+      rgba(140,100,40,0.08) 60%, transparent 100%),
+    radial-gradient(ellipse 60% 40% at 50% 100%,
+      rgba(160,120,50,0.15) 0%, transparent 80%);
+  box-shadow:
+    0 -10px 40px rgba(200,170,100,0.2),
+    0 -5px 20px rgba(220,180,100,0.15),
+    0 0 60px rgba(160,120,60,0.08);
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* Layer 1: BRIGHT WIDE gold border — spans 8px, lum 140-244 */
+.cta-el .cta-void {
+  position: absolute;
+  inset: -8px;
+  border-radius: calc(var(--r-lg) + 8px);
+  background: conic-gradient(from 180deg,
+    #FCECC0 0deg, #FFFCE8 20deg, #FFF8D8 45deg, #FAECC0 70deg,
+    #F0E0A8 90deg, #E8D898 120deg, #DCC880 150deg, #D0BC70 180deg,
+    #C8B068 210deg, #C0A860 240deg, #D0BC70 270deg, #E8D898 300deg,
+    #F5E8B0 330deg, #FCECC0 360deg);
+  z-index: -1;
+  pointer-events: none;
+  box-shadow:
+    0 0 30px rgba(240,210,130,0.35),
+    0 -3px 18px rgba(255,230,150,0.3),
+    0 0 50px rgba(220,180,100,0.15);
+}
+
+/* Layer 1b: BRIGHT TOP FLASH — white-gold line at very top, lum 244 */
+.cta-el .cta-void::after {
+  content: '';
+  position: absolute;
+  top: -1px; left: 5%; right: 5%;
+  height: 4px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,248,220,0.8) 10%,
+    rgba(255,252,235,1.0) 25%,
+    rgba(255,255,245,1.0) 50%,
+    rgba(255,252,235,1.0) 75%,
+    rgba(255,248,220,0.8) 90%,
+    transparent 100%);
+  border-radius: 2px;
+  box-shadow: 0 0 12px rgba(255,245,210,0.8), 0 0 24px rgba(255,235,180,0.4), 0 0 4px rgba(255,250,230,0.9);
+}
+
+/* Layer 2: WIDE gradient from gold to dark (lum 139→43, 16px zone) */
+.cta-el .cta-gold-line {
+  position: absolute;
+  inset: -4px;
+  border-radius: calc(var(--r-lg) + 4px);
+  background:
+    linear-gradient(180deg,
+      #BE8040 0%,
+      #9A6630 20%,
+      #6B4520 40%,
+      #4C2E14 60%,
+      #3A2310 80%,
+      #2E1C0E 100%),
+    conic-gradient(from 180deg,
+      #6E4828 0deg, #7A5430 60deg, #6E4828 120deg,
+      #5A3C20 180deg, #4E3018 240deg, #5A3C20 300deg, #6E4828 360deg);
+  background-blend-mode: normal;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Layer 3: DARK WARM surface — lum 22-39, warm +8-43 */
+.cta-el .cta-bevel {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-lg);
+  background:
+    /* Warm tint stronger at top, fading to neutral at bottom */
+    linear-gradient(180deg,
+      #2A1E12 0%,      /* top: lum ~30, warm +24 */
+      #261A10 8%,       /* lum ~27, warm +22 */
+      #231710 15%,      /* lum ~24, warm +19 */
+      #20150E 25%,      /* lum ~22, warm +18 */
+      #1E140D 35%,      /* lum ~21, warm +17 */
+      #1D1410 45%,      /* lum ~21, warm +13 */
+      #1D1612 55%,      /* lum ~22, warm +11 */
+      #1E1714 65%,      /* lum ~24, warm +10 */
+      #1F1916 75%,      /* lum ~26, warm +9 */
+      #201B18 85%,      /* lum ~27, warm +8 */
+      #211C19 95%,      /* lum ~29, warm +8 */
+      #221D1A 100%      /* bottom: lum ~30, warm +8 */
+    );
+  box-shadow:
+    inset 0 2px 8px rgba(60,40,15,0.4),
+    inset 0 -2px 6px rgba(35,25,15,0.3),
+    0 20px 45px rgba(10,5,0,0.8),
+    0 8px 20px rgba(5,3,0,0.5);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Top shine — warm glow from gold border bleeding into dark surface */
+.cta-el .cta-shine {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 18px;
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+  background: linear-gradient(180deg,
+    rgba(180,130,60,0.35) 0%,
+    rgba(140,100,40,0.2) 20%,
+    rgba(100,70,25,0.1) 45%,
+    rgba(60,40,15,0.04) 70%,
+    transparent 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Bottom subtle warm reflection */
+.cta-el .cta-reflect {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 12px;
+  border-radius: 0 0 var(--r-lg) var(--r-lg);
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(40,30,18,0.2) 40%,
+    rgba(50,35,20,0.3) 70%,
+    rgba(45,32,18,0.25) 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.cta-el .cta-text {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--gold);    /* GOLD text on dark surface */
+  position: relative;
+  z-index: 4;
+  text-transform: uppercase;
+}
+
+.cta-el .cta-dots {
+  display: flex; gap: 4px; position: relative; z-index: 4;
+}
+.cta-el .cta-dots span {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: rgba(196,162,101,0.5);
+  box-shadow: 0 0 3px rgba(196,162,101,0.2);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT 14: COUNTRY CARD
+   ═══════════════════════════════════════════════════════════ */
+.country-card-wrap { position: relative; display: inline-block; }
+
+.country-card {
+  position: relative;
+  width: 200px;
+  padding: 20px;
+  border-radius: var(--r-lg);
+  display: flex; flex-direction: column; gap: 6px;
+  cursor: pointer;
+}
+.country-card .cc-aura {
+  position: absolute; inset: -14px;
+  border-radius: calc(var(--r-lg) + 14px);
+  background: conic-gradient(from 180deg,
+    rgba(85,75,65,0.25) 0deg, rgba(110,90,70,0.3) 90deg,
+    rgba(100,85,70,0.25) 180deg, rgba(75,65,55,0.18) 270deg,
+    rgba(85,75,65,0.25) 360deg);
+  z-index: -1; pointer-events: none;
+}
+.country-card .cc-void {
+  position: absolute; inset: -8px;
+  border-radius: calc(var(--r-lg) + 8px);
+  background: conic-gradient(from 180deg,
+    #FBF0C3 0deg, #FFF5B5 45deg, #FBF0C3 90deg,
+    #E9C683 180deg, #A88050 270deg, #FBF0C3 360deg);
+  z-index: 0; pointer-events: none;
+  box-shadow: 0 0 18px rgba(251,240,195,0.15), 0 -2px 10px rgba(255,248,208,0.1);
+}
+.country-card .cc-gold-line {
+  position: absolute; inset: -5px;
+  border-radius: calc(var(--r-lg) + 5px);
+  background: conic-gradient(from 180deg,
+    #2E2E2E 0deg, #2A2A2A 45deg, #2E2E2E 90deg,
+    #2A2A2A 180deg, #2A2A2A 270deg, #2E2E2E 360deg);
+  z-index: 1; pointer-events: none;
+}
+.country-card .cc-topline {
+  position: absolute; inset: -2px;
+  border-radius: calc(var(--r-lg) + 2px);
+  background: conic-gradient(from 180deg,
+    #C9AF81 0deg, #DFC494 90deg, #C9AF81 180deg,
+    #9E8455 270deg, #C9AF81 360deg);
+  z-index: 2; pointer-events: none;
+}
+.country-card .cc-surface {
+  position: absolute; inset: 0; border-radius: var(--r-lg);
+  background:
+    radial-gradient(ellipse 90% 50% at 50% 10%,
+      rgba(75,72,68,0.15) 0%, transparent 55%),
+    linear-gradient(180deg,
+      #3F3F3D 0%,       /* TOP: lum 62 */
+      #3E3E3C 5%,
+      #3D3C3A 12%,
+      #3C3B38 20%,
+      #3B3935 30%,
+      #3A3834 40%,
+      #393733 50%,
+      #383630 60%,
+      #372F2A 70%,
+      #362E28 80%,
+      #352D27 90%,
+      #342C27 100%     /* BOTTOM: lum 44, warm brown */
+    );
+  box-shadow:
+    inset 0 1px 4px rgba(100,95,90,0.08),
+    inset 0 -4px 10px rgba(0,0,0,0.25),
+    0 20px 45px rgba(10,8,6,0.9),
+    0 8px 20px rgba(0,0,0,0.6);
+  z-index: 3;
+}
+.country-card .flag {
+  font-size: 28px; line-height: 1;
+  position: relative; z-index: 5;
+}
+.country-card .name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gold);
+  position: relative; z-index: 5;
+}
+.country-card .hint {
+  font-size: 11px;
+  color: var(--text-hint);
+  position: relative; z-index: 5;
+}
+.country-card.sel .cc-surface {
+  background:
+    radial-gradient(ellipse 95% 60% at 50% 15%,
+      rgba(200,200,200,0.35) 0%, transparent 55%),
+    linear-gradient(180deg,
+      #8C8C8C 0%, #6F6F6F 30%, #646464 50%, #5A5A5A 70%, #424242 100%);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   APP COMPONENTS (Form inputs, Pills, etc.)
+   ═══════════════════════════════════════════════════════════ */
+.app-input { position: relative; margin-bottom: 20px; }
+.app-input label {
+  display: block;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+  transition: color 0.2s;
+}
+.app-input label.active { color: var(--gold); }
+.app-input input {
+  width: 100%; max-width: 280px;
+  padding: 12px 16px;
+  background: rgba(40,35,30,0.6);
+  border: 1px solid #404038;
+  border-radius: var(--r-md);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+  transition: all 0.2s;
+}
+.app-input input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), 0 0 12px rgba(196,162,101,0.2);
+}
+.app-input input.error {
+  border-color: var(--error);
+}
+.app-input input.price { padding-right: 32px; }
+.app-input .sfx {
+  position: absolute; right: 16px; bottom: 12px;
+  color: var(--gold); font-size: 12px; font-weight: 500;
+}
+.app-input .err-msg {
+  font-size: 11px; color: var(--error);
+  margin-top: 4px;
+}
+
+.app-pill {
+  display: inline-block;
+  padding: 10px 18px;
+  background: rgba(50,45,40,0.5);
+  border: 1px solid #504A45;
+  border-radius: var(--r-pill);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-right: 8px;
+}
+.app-pill.on {
+  background: rgba(196,162,101,0.15);
+  border-color: var(--gold);
+  color: var(--gold);
+  box-shadow: 0 0 12px rgba(196,162,101,0.2);
+}
+
+.app-tog {
+  width: 48px; height: 28px;
+  border-radius: var(--r-pill);
+  background: #2A2A2E;
+  position: relative;
+  cursor: pointer;
+  border: 1px solid #404038;
+  box-shadow: inset 0 -1px 3px rgba(0,0,0,0.4);
+  transition: all 0.3s;
+}
+.app-tog::after {
+  content: '';
+  position: absolute;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: #505050;
+  top: 1px; left: 2px;
+  transition: all 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+.app-tog.on {
+  background: #3A3A3E;
+  border-color: var(--gold);
+}
+.app-tog.on::after {
+  left: 22px;
+  background: linear-gradient(135deg, #C9AF81, #DFC494);
+  box-shadow: 0 0 8px rgba(196,162,101,0.4), 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.app-dots { display: flex; gap: 8px; }
+.app-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #404038;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.app-dot.cur {
+  background: linear-gradient(135deg, #C9AF81, #DFC494);
+  box-shadow: 0 0 8px rgba(196,162,101,0.4);
+}
+.app-dot.done {
+  background: linear-gradient(135deg, #A8905D, #BFA570);
+  box-shadow: 0 0 6px rgba(196,162,101,0.3);
+}
+
+.app-bar {
+  height: 8px;
+  background: #2A2A2E;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
+}
+.app-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg,
+    #C9AF81 0%, #DFC494 50%, #C9AF81 100%);
+  border-radius: 4px;
+  box-shadow: 0 0 8px rgba(196,162,101,0.3);
+}
+
+.app-div {
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent, #404038 20%, #404038 80%, transparent);
+}
+.app-div.gold {
+  background: linear-gradient(90deg,
+    transparent, #C9AF81 20%, #C9AF81 80%, transparent);
+  box-shadow: 0 0 8px rgba(196,162,101,0.2);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TYPOGRAPHY & UTILITIES
+   ═══════════════════════════════════════════════════════════ */
+.typo-line {
+  padding: 20px;
+  margin-bottom: 20px;
+  background: rgba(50,45,40,0.3);
+  border-radius: var(--r-md);
+  border-left: 3px solid var(--gold);
+}
+.typo-meta {
+  display: block;
+  font-size: 10px;
+  color: var(--text-hint);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+}
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sw-box {
+  width: 100%;
+  height: 80px;
+  border-radius: var(--r-md);
+  border: 1px solid #404038;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+.sw-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+}
+.sw-hex {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.css-ref {
+  padding: 24px;
+  background: rgba(50,45,40,0.4);
+  border-radius: var(--r-lg);
+  border: 1px solid #404038;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  overflow-x: auto;
+}
+.css-ref .c { color: #888888; }
+.css-ref .v { color: var(--gold); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="catalog">
+
+<div class="catalog-header">
+  <h1>Car-Calc · UI Kit v19</h1>
+  <div class="sub">v19.0 · Dark Warm CTA + Bright Gold Border + Warm Brown Cards</div>
+</div>
+
+<!-- ═══════════ REF-20 REPLICA COMPONENTS ═══════════ -->
+<div class="section">
+  <div class="section-title">Ref-20 Replica — Ultra 3D Volume</div>
+
+  <!-- ROW 1: INPUT FIELD -->
+  <div class="label">Row 1 · Input Field (near-white gold core #FFFFD3, bottom gold line)</div>
+  <div class="row">
+    <div class="input-wrap">
+      <div class="input-glow-outer"></div>
+      <div class="input-field">
+        <div class="input-preglow"></div>
+        <div class="input-gold-core"></div>
+        <div class="input-amber-band"></div>
+        <div class="input-surface"></div>
+        <div class="cursor"></div>
+        <span class="placeholder">Button</span>
+      </div>
+      <div class="void-shadow"></div>
+      <div class="caption">Active Input / Focused State</div>
+    </div>
+  </div>
+
+  <!-- ROW 1: 3D CARDS -->
+  <div class="label">Row 1 · 3D Cards (dark void + thin gold line + pillow surface)</div>
+  <div class="row">
+    <div class="card-wrap">
+      <div class="card-3d card-xl">
+        <div class="card-aura"></div>
+        <div class="card-void"></div>
+        <div class="card-gold-line"></div>
+        <div class="card-top-glow"></div>
+        <div class="card-surface">
+          <div class="card-content"><span class="card-text">Card</span></div>
+        </div>
+      </div>
+      <div class="void-shadow"></div>
+      <div class="caption">Large</div>
+    </div>
+    <div class="card-wrap">
+      <div class="card-3d card-lg">
+        <div class="card-aura"></div>
+        <div class="card-void"></div>
+        <div class="card-gold-line"></div>
+        <div class="card-top-glow"></div>
+        <div class="card-surface">
+          <div class="card-content"><span class="card-text">Views</span></div>
+        </div>
+      </div>
+      <div class="void-shadow"></div>
+      <div class="caption">Medium</div>
+    </div>
+    <div class="card-wrap">
+      <div class="card-3d card-md card-spotlight">
+        <div class="card-aura"></div>
+        <div class="card-void"></div>
+        <div class="card-gold-line"></div>
+        <div class="card-top-glow"></div>
+        <div class="card-surface">
+          <div class="card-content"><span class="card-text">Data</span></div>
+        </div>
+      </div>
+      <div class="void-shadow"></div>
+      <div class="caption">Small</div>
+    </div>
+  </div>
+
+  <!-- ROW 2: PROGRESS + BADGE + ICON CARDS -->
+  <div class="label">Row 2 · Progress + Badge + Icon Cards</div>
+  <div class="row">
+    <div class="progress-wrap">
+      <div class="progress-el">
+        <div class="p-aura"></div>
+        <div class="p-void"></div>
+        <div class="p-gold-line"></div>
+        <div class="p-topline"></div>
+        <div class="p-surface"></div>
+        <span class="p-label">Lead</span>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+      </div>
+      <div class="void-shadow"></div>
+      <div class="caption">Progress Bar</div>
+    </div>
+    <div class="badge-wrap">
+      <div class="badge-el">
+        <div class="bd-aura"></div>
+        <div class="bd-void"></div>
+        <div class="bd-gold-line"></div>
+        <div class="bd-topline"></div>
+        <div class="bd-surface"></div>
+        <span class="b-text">Badge</span>
+      </div>
+      <div class="void-shadow" style="left:12%;right:12%;"></div>
+      <div class="caption">Badge Button</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="icon-card-wrap">
+      <div class="icon-card">
+        <div class="ic-aura"></div>
+        <div class="ic-void"></div>
+        <div class="ic-gold-line"></div>
+        <div class="ic-topline"></div>
+        <div class="ic-surface"></div>
+        <div class="ic-content"><div class="gold-lines"><span></span><span></span><span></span></div></div>
+      </div>
+      <div class="void-shadow" style="left:10%;right:10%;"></div>
+      <div class="caption">Icon Lines</div>
+    </div>
+    <div class="icon-card-wrap">
+      <div class="icon-card">
+        <div class="ic-aura"></div>
+        <div class="ic-void"></div>
+        <div class="ic-gold-line"></div>
+        <div class="ic-topline"></div>
+        <div class="ic-surface"></div>
+        <div class="ic-content"><div class="glow-dot-el"></div></div>
+      </div>
+      <div class="void-shadow" style="left:10%;right:10%;"></div>
+      <div class="caption">Glow Indicator</div>
+    </div>
+  </div>
+
+  <!-- ROW 3: TOGGLE PILL + CONTROLS -->
+  <div class="label">Row 3 · Toggle Pill + Controls</div>
+  <div class="row">
+    <div class="toggle-pill-wrap">
+      <div class="toggle-pill-el">
+        <div class="tp-aura"></div>
+        <div class="tp-void"></div>
+        <div class="tp-gold-line"></div>
+        <div class="tp-topline"></div>
+        <div class="tp-surface"></div>
+        <span class="tp-label">Blend</span>
+        <div class="led-group"><div class="led-dot"></div><div class="led-dot"></div></div>
+      </div>
+      <div class="void-shadow"></div>
+      <div class="caption">Toggle Pill</div>
+    </div>
+    <div class="icon-btn-wrap">
+      <div class="icon-btn-el">
+        <div class="ib-aura"></div>
+        <div class="ib-void"></div>
+        <div class="ib-gold-line"></div>
+        <div class="ib-surface"></div>
+        <div class="mini-lines"><span></span><span></span><span></span></div>
+      </div>
+      <div class="void-shadow" style="left:12%;right:12%;height:16px;"></div>
+      <div class="caption">Icon Btn</div>
+    </div>
+    <div class="oval-toggle-wrap">
+      <div class="oval-toggle"></div>
+      <div class="void-shadow" style="left:12%;right:12%;height:16px;"></div>
+      <div class="caption">Toggle ON</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="settings-wrap">
+      <div class="settings-el">
+        <div class="se-aura"></div>
+        <div class="se-void"></div>
+        <div class="se-gold-line"></div>
+        <div class="se-topline"></div>
+        <div class="se-surface"></div>
+        <span class="s-text">1630</span>
+        <span class="s-dot"></span>
+      </div>
+      <div class="void-shadow" style="left:10%;right:10%;"></div>
+      <div class="caption">Settings Card</div>
+    </div>
+    <div class="circle-radio-wrap">
+      <div class="circle-radio">
+        <div class="cr-aura"></div>
+        <div class="cr-void"></div>
+        <div class="cr-gold-line"></div>
+        <div class="cr-surface"></div>
+        <div class="ring"></div>
+      </div>
+      <div class="void-shadow" style="left:15%;right:15%;height:14px;"></div>
+      <div class="caption">Radio</div>
+    </div>
+  </div>
+
+  <!-- ROW 4: COMPACT + STEPPER + CTA -->
+  <div class="label">Row 4 · Compact + Stepper + CTA (gold surface)</div>
+  <div class="row">
+    <div class="compact-pill-wrap">
+      <div class="compact-pill-el">
+        <div class="cp-aura"></div>
+        <div class="cp-void"></div>
+        <div class="cp-gold-line"></div>
+        <div class="cp-topline"></div>
+        <div class="cp-surface"></div>
+        <span class="cp-l">Led</span>
+        <span class="cp-v">1909</span>
+      </div>
+      <div class="void-shadow" style="left:12%;right:12%;"></div>
+      <div class="caption">Compact Badge</div>
+    </div>
+    <div class="stepper-wrap">
+      <div class="stepper-el">
+        <div class="st-aura"></div>
+        <div class="st-void"></div>
+        <div class="st-gold-line"></div>
+        <div class="st-topline"></div>
+        <div class="st-surface"></div>
+        <span class="st-label">Steps</span>
+        <div class="step-dots">
+          <div class="s-dot done"></div><div class="s-dot done"></div>
+          <div class="s-dot active"></div><div class="s-dot active"></div>
+          <div class="s-dot"></div><div class="s-dot"></div>
+          <div class="s-dot"></div><div class="s-dot"></div>
+        </div>
+      </div>
+      <div class="void-shadow"></div>
+      <div class="caption">Stepper Dots</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="cta-wrap">
+      <div class="cta-el">
+        <div class="cta-aura"></div>
+        <div class="cta-void"></div>
+        <div class="cta-gold-line"></div>
+        <div class="cta-bevel"></div>
+        <div class="cta-shine"></div>
+        <span class="cta-text">Рассчитать</span>
+        <div class="cta-dots"><span></span><span></span></div>
+        <div class="cta-reflect"></div>
+      </div>
+      <div class="void-shadow" style="bottom:-8px;height:32px;"></div>
+      <div class="caption">Primary CTA</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ APP COMPONENTS ═══════════ -->
+<div class="section">
+  <div class="section-title">Компоненты приложения</div>
+
+  <div class="label">Карточки стран</div>
+  <div class="row">
+    <div class="country-card-wrap">
+      <div class="country-card">
+        <div class="cc-aura"></div>
+        <div class="cc-void"></div>
+        <div class="cc-gold-line"></div>
+        <div class="cc-topline"></div>
+        <div class="cc-surface"></div>
+        <span class="flag">🇺🇸</span><span class="name">США</span><span class="hint">Аукционы</span>
+      </div>
+      <div class="void-shadow" style="height:16px;"></div>
+    </div>
+    <div class="country-card-wrap">
+      <div class="country-card sel">
+        <div class="cc-aura"></div>
+        <div class="cc-void"></div>
+        <div class="cc-gold-line"></div>
+        <div class="cc-topline"></div>
+        <div class="cc-surface"></div>
+        <span class="flag">🇰🇷</span><span class="name">Корея</span><span class="hint">Дилеры</span>
+      </div>
+      <div class="void-shadow" style="height:16px;"></div>
+    </div>
+    <div class="country-card-wrap">
+      <div class="country-card">
+        <div class="cc-aura"></div>
+        <div class="cc-void"></div>
+        <div class="cc-gold-line"></div>
+        <div class="cc-topline"></div>
+        <div class="cc-surface"></div>
+        <span class="flag">🇦🇪</span><span class="name">ОАЭ</span><span class="hint">Новые</span>
+      </div>
+      <div class="void-shadow" style="height:16px;"></div>
+    </div>
+    <div class="country-card-wrap">
+      <div class="country-card">
+        <div class="cc-aura"></div>
+        <div class="cc-void"></div>
+        <div class="cc-gold-line"></div>
+        <div class="cc-topline"></div>
+        <div class="cc-surface"></div>
+        <span class="flag">🇨🇳</span><span class="name">Китай</span><span class="hint">Электро</span>
+      </div>
+      <div class="void-shadow" style="height:16px;"></div>
+    </div>
+  </div>
+
+  <div class="label">Инпуты</div>
+  <div class="row">
+    <div class="app-input">
+      <label>Мощность</label>
+      <input type="text" placeholder="Введите л.с.">
+    </div>
+    <div class="app-input">
+      <label class="active">Мощность</label>
+      <input type="text" class="focused" placeholder="Введите л.с.">
+    </div>
+    <div class="app-input">
+      <label>Мощность</label>
+      <input type="text" value="150">
+    </div>
+  </div>
+  <div class="row">
+    <div class="app-input">
+      <label style="color:var(--error);">Мощность</label>
+      <input type="text" class="error" value="9999">
+      <div class="err-msg">Максимум 1500 л.с.</div>
+    </div>
+    <div class="app-input" style="position:relative;">
+      <label class="active">Стоимость</label>
+      <input type="text" class="price focused" value="225,000">
+      <span class="sfx">$</span>
+    </div>
+  </div>
+
+  <div class="label">Pills</div>
+  <div class="row">
+    <span class="app-pill on">Бензин</span>
+    <span class="app-pill">Дизель</span>
+    <span class="app-pill">Электро</span>
+    <span class="app-pill">Гибрид</span>
+  </div>
+
+  <div class="label">Контролы</div>
+  <div class="row" style="gap:32px;align-items:center;">
+    <div style="text-align:center;"><div class="app-tog"></div><div class="caption">Off</div></div>
+    <div style="text-align:center;"><div class="app-tog on"></div><div class="caption">On</div></div>
+    <div style="text-align:center;">
+      <div class="app-dots">
+        <div class="app-dot cur"></div><div class="app-dot"></div><div class="app-dot"></div><div class="app-dot"></div>
+      </div><div class="caption">Step 1</div>
+    </div>
+    <div style="text-align:center;">
+      <div class="app-dots">
+        <div class="app-dot done"></div><div class="app-dot done"></div><div class="app-dot cur"></div><div class="app-dot"></div>
+      </div><div class="caption">Step 3</div>
+    </div>
+  </div>
+
+  <div class="label">Progress Bar</div>
+  <div style="max-width:360px;display:flex;flex-direction:column;gap:14px;">
+    <div><div class="app-bar"><div class="app-bar-fill" style="width:25%;"></div></div><div class="caption" style="text-align:left;">25%</div></div>
+    <div><div class="app-bar"><div class="app-bar-fill" style="width:65%;"></div></div><div class="caption" style="text-align:left;">65%</div></div>
+    <div><div class="app-bar" style="height:6px;"><div class="app-bar-fill" style="width:100%;"></div></div><div class="caption" style="text-align:left;">100%</div></div>
+  </div>
+
+  <div class="label" style="margin-top:24px;">Кнопки</div>
+  <div class="row">
+    <div class="cta-wrap">
+      <div class="cta-el" style="height:52px;padding:0 32px;">
+        <div class="cta-aura"></div>
+        <div class="cta-bevel"></div>
+        <div class="cta-shine"></div>
+        <span class="cta-text" style="font-size:12px;">Продолжить</span>
+        <div class="cta-reflect"></div>
+      </div>
+      <div class="void-shadow" style="bottom:-6px;height:20px;background:radial-gradient(ellipse,rgba(160,120,70,0.35),transparent 65%);"></div>
+      <div class="caption">Primary</div>
+    </div>
+    <div>
+      <div style="height:48px;padding:0 24px;border-radius:var(--r-md);background:transparent;border:1.5px solid #604C38;display:inline-flex;align-items:center;cursor:pointer;box-shadow:0 0 8px rgba(96,76,56,0.15);">
+        <span style="font-size:14px;font-weight:500;color:var(--gold);">Назад</span>
+      </div>
+      <div class="caption">Secondary</div>
+    </div>
+    <div>
+      <div style="height:40px;padding:0 16px;display:inline-flex;align-items:center;cursor:pointer;">
+        <span style="font-size:14px;color:var(--text-hint);">Пропустить</span>
+      </div>
+      <div class="caption">Ghost</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="cta-wrap" style="width:340px;">
+      <div class="cta-el" style="height:52px;width:100%;">
+        <div class="cta-aura"></div>
+        <div class="cta-bevel"></div>
+        <div class="cta-shine"></div>
+        <span class="cta-text" style="font-size:12px;">Рассчитать стоимость</span>
+        <div class="cta-reflect"></div>
+      </div>
+      <div class="void-shadow" style="bottom:-6px;height:20px;background:radial-gradient(ellipse,rgba(160,120,70,0.35),transparent 65%);"></div>
+      <div class="caption">Full Width</div>
+    </div>
+  </div>
+
+  <div class="label">Разделители</div>
+  <div style="max-width:400px;display:flex;flex-direction:column;gap:20px;">
+    <div><div class="app-div"></div><div class="caption" style="text-align:left;">Standard</div></div>
+    <div><div class="app-div gold"></div><div class="caption" style="text-align:left;">Gold</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ TYPOGRAPHY ═══════════ -->
+<div class="section">
+  <div class="section-title">Типографика</div>
+  <div class="typo-line"><div class="typo-meta">Price · Cormorant Garamond 56px 700</div>
+    <div style="font-family:var(--font-display);font-size:56px;font-weight:700;letter-spacing:-0.03em;">4,450,000 <span style="color:var(--gold);">₽</span></div></div>
+  <div class="typo-line"><div class="typo-meta">H1 · Cormorant Garamond 28px 600</div>
+    <div style="font-family:var(--font-display);font-size:28px;font-weight:600;">Откуда везём?</div></div>
+  <div class="typo-line"><div class="typo-meta">H2 · Inter 20px 600</div>
+    <div style="font-size:20px;font-weight:600;">Параметры авто</div></div>
+  <div class="typo-line"><div class="typo-meta">Body · Inter 15px</div>
+    <div style="font-size:15px;">Рассчитайте полную стоимость доставки автомобиля.</div></div>
+  <div class="typo-line"><div class="typo-meta">Caption · Inter 12px</div>
+    <div style="font-size:12px;color:var(--text-muted);">Только для физических лиц · до 160 л.с.</div></div>
+  <div class="typo-line"><div class="typo-meta">Mono · JetBrains Mono 14px / 24px</div>
+    <div style="font-family:var(--font-mono);font-size:14px;color:var(--text-muted);">USDT/RUB: 98.50</div>
+    <div style="font-family:var(--font-mono);font-size:24px;font-weight:700;margin-top:2px;">3,972,193</div></div>
+</div>
+
+<!-- ═══════════ COLORS ═══════════ -->
+<div class="section">
+  <div class="section-title">Палитра (расширенная)</div>
+
+  <div class="label">Фоны</div>
+  <div class="swatches" style="margin-bottom:18px;">
+    <div class="swatch"><div class="sw-box" style="background:#0A0908;"></div><div class="sw-name">Void</div><div class="sw-hex">#0A0908</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#121110;"></div><div class="sw-name">Deep</div><div class="sw-hex">#121110</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#1A1917;"></div><div class="sw-name">BG</div><div class="sw-hex">#1A1917</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#2E2E2D;"></div><div class="sw-name">Surface</div><div class="sw-hex">#2E2E2D</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#3E3E3E;"></div><div class="sw-name">Card Top</div><div class="sw-hex">#3E3E3E</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#505050;"></div><div class="sw-name">Card Core</div><div class="sw-hex">#505050</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#3F3F3D;"></div><div class="sw-name">Card Peak</div><div class="sw-hex">#3F3F3D</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#635F5C;"></div><div class="sw-name">Input</div><div class="sw-hex">#635F5C</div></div>
+  </div>
+
+  <div class="label">Dark Void + Gold Lines</div>
+  <div class="swatches" style="margin-bottom:18px;">
+    <div class="swatch"><div class="sw-box" style="background:#38342F;"></div><div class="sw-name">Void Gap</div><div class="sw-hex">#38342F</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#C9AF81;"></div><div class="sw-name">Gold Line</div><div class="sw-hex">#C9AF81</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#FFFFD3;"></div><div class="sw-name">Gold Peak</div><div class="sw-hex">#FFFFD3</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#FFF9D7;"></div><div class="sw-name">CTA Bottom</div><div class="sw-hex">#FFF9D7</div></div>
+  </div>
+
+  <div class="label">CTA Button Surface</div>
+  <div class="swatches" style="margin-bottom:18px;">
+    <div class="swatch"><div class="sw-box" style="background:#A4885C;"></div><div class="sw-name">Edge (lum 140)</div><div class="sw-hex">#A4885C</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#BFA170;"></div><div class="sw-name">Mid (lum 165)</div><div class="sw-hex">#BFA170</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#CBAC79;"></div><div class="sw-name">Core (lum 175)</div><div class="sw-hex">#CBAC79</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#E9D0A3;"></div><div class="sw-name">Top Border</div><div class="sw-hex">#E9D0A3</div></div>
+  </div>
+
+  <div class="label">Amber / Bevel reflections</div>
+  <div class="swatches" style="margin-bottom:18px;">
+    <div class="swatch"><div class="sw-box" style="background:#7B6C5F;"></div><div class="sw-name">Bright</div><div class="sw-hex">#7B6C5F</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#726F6A;"></div><div class="sw-name">Mid</div><div class="sw-hex">#726F6A</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#836444;"></div><div class="sw-name">Gold Amber</div><div class="sw-hex">#836444</div></div>
+  </div>
+
+  <div class="label">Золото — полный спектр</div>
+  <div class="swatches" style="margin-bottom:18px;">
+    <div class="swatch"><div class="sw-box" style="background:#FDFEFF;"></div><div class="sw-name">White</div><div class="sw-hex">#FDFEFF</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#FFFCC9;"></div><div class="sw-name">Hot</div><div class="sw-hex">#FFFCC9</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#FFF8C0;"></div><div class="sw-name">Flare</div><div class="sw-hex">#FFF8C0</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#F0D48A;"></div><div class="sw-name">Warm</div><div class="sw-hex">#F0D48A</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#D4B87A;"></div><div class="sw-name">Light</div><div class="sw-hex">#D4B87A</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#C4A265;"></div><div class="sw-name">Gold</div><div class="sw-hex">#C4A265</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#A88A50;"></div><div class="sw-name">Active</div><div class="sw-hex">#A88A50</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#9C764A;"></div><div class="sw-name">LED</div><div class="sw-hex">#9C764A</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#8B6E35;"></div><div class="sw-name">Deep</div><div class="sw-hex">#8B6E35</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#6B5C3A;"></div><div class="sw-name">Muted</div><div class="sw-hex">#6B5C3A</div></div>
+  </div>
+
+  <div class="label">Текст + Семантика</div>
+  <div class="swatches">
+    <div class="swatch"><div class="sw-box" style="background:#F5F5F5;"></div><div class="sw-name">Text</div><div class="sw-hex">#F5F5F5</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#888888;"></div><div class="sw-name">Muted</div><div class="sw-hex">#888888</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#666666;"></div><div class="sw-name">Hint</div><div class="sw-hex">#666666</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#1A1208;"></div><div class="sw-name">On Gold</div><div class="sw-hex">#1A1208</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#4CAF50;"></div><div class="sw-name">OK</div><div class="sw-hex">#4CAF50</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#E57373;"></div><div class="sw-name">Err</div><div class="sw-hex">#E57373</div></div>
+    <div class="swatch"><div class="sw-box" style="background:#8B9DAF;"></div><div class="sw-name">Steel</div><div class="sw-hex">#8B9DAF</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ CSS TOKENS ═══════════ -->
+<div class="section">
+  <div class="section-title">CSS Tokens (pixel-perfect v7.0)</div>
+  <div class="css-ref" style="max-width:680px;">
+    <span class="c">/* ── Backgrounds ── */</span><br>
+    --bg: <span class="v">#1A1917</span>; --bg-deep: <span class="v">#121110</span>; --bg-void: <span class="v">#0A0908</span>;<br><br>
+
+    <span class="c">/* ── Card Surfaces (lum 124 peak → lum 72 center) ── */</span><br>
+    --card-surface-peak: <span class="v">#3F3F3D</span> (lum 62); --card-surface-core: <span class="v">#372F2A</span> (lum 48);<br><br>
+
+    <span class="c">/* ── Input Surface (warm, lighter #635F5C) ── */</span><br>
+    --input-surface: <span class="v">#635F5C</span>;<br><br>
+
+    <span class="c">/* ── BLAZING Gold Peaks (near-white from pixel data) ── */</span><br>
+    --gold-peak-white: <span class="v">#FFFFD3</span> (lum 249); --gold-cta-bottom: <span class="v">#FFF9D7</span> (lum 246);<br><br>
+
+    <span class="c">/* ── CTA Surface (radial gradient) ── */</span><br>
+    --cta-surface-core: <span class="v">#CBAC79</span>; --cta-highlight: <span class="v">#E9D0A3</span>;<br><br>
+
+    <span class="c">/* ── V7 MULTI-ZONE 3D SYSTEM ── */</span><br>
+    <span class="c">/* INPUT: 11px BLAZING gold core + fast amber drop + pillow highlight */</span><br>
+    <span class="c">/* CARDS: warm approach + bright gold ramp + dark void + thin gold flash + pillow surface */</span><br>
+    <span class="c">/* CTA: gold surface with top bright border + bottom MASSIVE gold reflection */</span><br>
+    <span class="c">/* SHADOWS: 0 25px 50px rgba(10,8,6,0.95), blur 15px for extreme depth */</span>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

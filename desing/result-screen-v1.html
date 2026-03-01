@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Результат — Стоимость доставки</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+  /* ═══ CSS CUSTOM PROPERTIES ═══ */
+  :root {
+    --bg: #0C0C0E;
+    --bg-deep: #080809;
+    --surface: #1A1A1E;
+    --surface-light: #222226;
+    --border: #2A2A2E;
+    --border-light: #333338;
+    
+    --accent: #C4A265;
+    --accent-light: #D4B876;
+    --accent-dark: #A8893F;
+    --accent-glow: rgba(196, 162, 101, 0.35);
+    --accent-glow-strong: rgba(196, 162, 101, 0.6);
+    
+    --steel: #8B9DAF;
+    --steel-muted: #6B7D8F;
+    
+    --text: #F5F5F5;
+    --text-secondary: #AAAAAA;
+    --text-muted: #888888;
+    --text-hint: #666666;
+    
+    --success: #4CAF50;
+    --error: #E57373;
+    
+    --radius-card: 12px;
+    --radius-button: 24px;
+    --radius-input: 8px;
+    
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-sans: 'Inter', -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  /* ═══ RESET & BASE ═══ */
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html, body {
+    height: 100%;
+    background: #000;
+    font-family: var(--font-sans);
+    color: var(--text);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ═══ PHONE FRAME ═══ */
+  .phone-frame {
+    position: relative;
+    width: 390px;
+    height: 844px;
+    margin: 0 auto;
+    background: var(--bg);
+    overflow: hidden;
+    border-radius: 0;
+  }
+
+  @media (min-width: 500px) {
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #000;
+    }
+    .phone-frame {
+      border-radius: 44px;
+      border: 2px solid #1A1A1E;
+      box-shadow: 
+        0 0 0 4px #0A0A0A,
+        0 20px 80px rgba(0,0,0,0.8),
+        inset 0 0 0 1px rgba(255,255,255,0.03);
+    }
+  }
+
+  /* ═══ SCREEN CONTAINER ═══ */
+  .screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ═══ BACKGROUND EFFECTS ═══ */
+  .bg-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Warm ambient glow from top-center */
+  .bg-gradient::before {
+    content: '';
+    position: absolute;
+    top: -120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(196, 162, 101, 0.08) 0%,
+      rgba(196, 162, 101, 0.03) 40%,
+      transparent 70%
+    );
+    border-radius: 50%;
+  }
+
+  /* Subtle bottom glow for CTA area */
+  .bg-gradient::after {
+    content: '';
+    position: absolute;
+    bottom: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 300px;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(196, 162, 101, 0.04) 0%,
+      transparent 60%
+    );
+    border-radius: 50%;
+  }
+
+  /* ═══ HEADER ═══ */
+  .header {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 56px 20px 12px;
+    min-height: 88px;
+  }
+
+  .header-back {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .header-back:active {
+    background: rgba(255,255,255,0.06);
+  }
+
+  .header-back svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--text-secondary);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .header-title {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .header-actions {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .header-actions:active {
+    background: rgba(255,255,255,0.06);
+  }
+
+  .header-actions svg {
+    width: 18px;
+    height: 18px;
+    stroke: var(--text-muted);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ═══ MAIN CONTENT ═══ */
+  .content {
+    position: relative;
+    z-index: 5;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 24px;
+  }
+
+  /* ═══ COUNTRY FLAG / ROUTE ═══ */
+  .route-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    padding: 6px 16px;
+    background: rgba(196, 162, 101, 0.08);
+    border: 1px solid rgba(196, 162, 101, 0.15);
+    border-radius: 20px;
+    animation: fadeInDown 0.6s ease-out;
+  }
+
+  .route-badge .flag {
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  .route-badge .route-text {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent-light);
+    letter-spacing: 0.5px;
+  }
+
+  .route-badge .route-arrow {
+    color: var(--text-hint);
+    font-size: 11px;
+  }
+
+  /* ═══ LABEL "ИТОГО" ═══ */
+  .total-label {
+    margin-top: 32px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-hint);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    animation: fadeInDown 0.7s ease-out;
+  }
+
+  /* ═══ THE PRICE — HERO ═══ */
+  .price-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 16px;
+    animation: priceReveal 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* Glow orb behind the price */
+  .price-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 340px;
+    height: 200px;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(196, 162, 101, 0.15) 0%,
+      rgba(196, 162, 101, 0.06) 35%,
+      rgba(196, 162, 101, 0.02) 55%,
+      transparent 75%
+    );
+    border-radius: 50%;
+    filter: blur(20px);
+    pointer-events: none;
+    animation: glowPulse 4s ease-in-out infinite;
+  }
+
+  .price-number {
+    position: relative;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 72px;
+    line-height: 1;
+    letter-spacing: -2px;
+    color: var(--accent-light);
+    text-shadow:
+      0 0 40px rgba(196, 162, 101, 0.4),
+      0 0 80px rgba(196, 162, 101, 0.15),
+      0 2px 4px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+  }
+
+  .price-number .price-main {
+    font-size: 72px;
+  }
+
+  .price-number .price-decimals {
+    font-size: 42px;
+    font-weight: 500;
+    opacity: 0.7;
+    vertical-align: baseline;
+  }
+
+  .price-currency {
+    margin-top: 8px;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--steel);
+    letter-spacing: 4px;
+    text-transform: lowercase;
+    animation: fadeInUp 0.9s ease-out;
+  }
+
+  /* ═══ SPARKLE PARTICLES ═══ */
+  .particles-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 360px;
+    height: 120px;
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  .particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 50%;
+    opacity: 0;
+    animation: sparkle var(--duration) ease-in-out var(--delay) infinite;
+  }
+
+  .particle.large {
+    width: 4px;
+    height: 4px;
+    background: var(--accent-light);
+    box-shadow: 0 0 6px rgba(196, 162, 101, 0.6);
+  }
+
+  /* ═══ DECORATIVE LINE ═══ */
+  .divider-line {
+    width: 160px;
+    height: 1px;
+    margin-top: 32px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--accent-dark) 30%,
+      var(--accent) 50%,
+      var(--accent-dark) 70%,
+      transparent 100%
+    );
+    opacity: 0.3;
+    animation: fadeIn 1s ease-out 0.5s both;
+  }
+
+  /* ═══ CAR INFO SUMMARY ═══ */
+  .car-summary {
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    animation: fadeInUp 0.8s ease-out 0.3s both;
+    width: 100%;
+    max-width: 342px;
+  }
+
+  .car-summary-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(196, 162, 101, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .car-summary-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--accent);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .car-summary-details {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .car-summary-title {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .car-summary-meta {
+    margin-top: 3px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-hint);
+    letter-spacing: 0.3px;
+  }
+
+  .car-summary-meta span {
+    color: var(--text-muted);
+  }
+
+  .car-summary-share {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .car-summary-share:active {
+    background: var(--surface-light);
+    border-color: var(--border-light);
+  }
+
+  .car-summary-share svg {
+    width: 14px;
+    height: 14px;
+    stroke: var(--text-hint);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ═══ INFO CHIPS ═══ */
+  .info-chips {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    animation: fadeInUp 0.8s ease-out 0.5s both;
+  }
+
+  .chip {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-muted);
+    letter-spacing: 0.2px;
+  }
+
+  .chip svg {
+    width: 12px;
+    height: 12px;
+    stroke: var(--steel-muted);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  /* ═══ DISCLAIMER ═══ */
+  .disclaimer {
+    margin-top: 16px;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-hint);
+    text-align: center;
+    line-height: 1.5;
+    max-width: 300px;
+    animation: fadeInUp 0.8s ease-out 0.6s both;
+  }
+
+  /* ═══ BOTTOM CTA ═══ */
+  .bottom-section {
+    position: relative;
+    z-index: 10;
+    padding: 0 24px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .cta-button {
+    position: relative;
+    width: 100%;
+    height: 56px;
+    border: none;
+    border-radius: var(--radius-button);
+    background: linear-gradient(135deg, #B8943F 0%, #D4B876 50%, #C4A265 100%);
+    color: #1A1A1E;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 
+      0 4px 20px rgba(196, 162, 101, 0.25),
+      0 1px 3px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.15) 50%,
+      transparent 100%
+    );
+    transition: left 0.5s ease;
+  }
+
+  .cta-button:active {
+    transform: scale(0.98);
+    box-shadow: 
+      0 2px 10px rgba(196, 162, 101, 0.2),
+      0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .cta-button:active::before {
+    left: 100%;
+  }
+
+  .secondary-button {
+    width: 100%;
+    height: 48px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-button);
+    background: transparent;
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .secondary-button:active {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--border-light);
+    color: var(--text-secondary);
+  }
+
+  /* ═══ ANIMATIONS ═══ */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes fadeInDown {
+    from { 
+      opacity: 0;
+      transform: translateY(-12px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInUp {
+    from { 
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes priceReveal {
+    0% {
+      opacity: 0;
+      transform: scale(0.85) translateY(20px);
+      filter: blur(8px);
+    }
+    60% {
+      opacity: 1;
+      transform: scale(1.02) translateY(-2px);
+      filter: blur(0px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      filter: blur(0px);
+    }
+  }
+
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+  }
+
+  @keyframes sparkle {
+    0%, 100% { 
+      opacity: 0;
+      transform: scale(0);
+    }
+    30% { 
+      opacity: 0.8;
+      transform: scale(1);
+    }
+    70% {
+      opacity: 0.5;
+      transform: scale(0.8);
+    }
+  }
+
+  @keyframes countUp {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ═══ SAFE AREA ═══ */
+  @supports (padding-bottom: env(safe-area-inset-bottom)) {
+    .bottom-section {
+      padding-bottom: calc(24px + env(safe-area-inset-bottom));
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <div class="screen">
+    <!-- Background effects -->
+    <div class="bg-gradient"></div>
+
+    <!-- Header -->
+    <header class="header">
+      <button class="header-back" aria-label="Назад">
+        <svg viewBox="0 0 24 24">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+      <span class="header-title">Итого</span>
+      <button class="header-actions" aria-label="Поделиться">
+        <svg viewBox="0 0 24 24">
+          <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/>
+          <polyline points="16 6 12 2 8 6"/>
+          <line x1="12" y1="2" x2="12" y2="15"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Main Content -->
+    <div class="content">
+      <!-- Route badge -->
+      <div class="route-badge">
+        <span class="flag">🇺🇸</span>
+        <span class="route-text">США</span>
+        <span class="route-arrow">→</span>
+        <span class="flag">🇷🇺</span>
+        <span class="route-text">Россия</span>
+      </div>
+
+      <!-- Label -->
+      <div class="total-label">Полная стоимость</div>
+
+      <!-- THE PRICE -->
+      <div class="price-container">
+        <div class="price-glow"></div>
+        <div class="particles-container" id="particles"></div>
+        <div class="price-number" id="priceDisplay">
+          <span class="price-main">3 972 193</span>
+        </div>
+        <div class="price-currency">рублей</div>
+      </div>
+
+      <!-- Decorative divider -->
+      <div class="divider-line"></div>
+
+      <!-- Car summary card -->
+      <div class="car-summary">
+        <div class="car-summary-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M5 17h2m10 0h2M5 17a2 2 0 01-2-2V9a2 2 0 012-2h1l2-3h8l2 3h1a2 2 0 012 2v6a2 2 0 01-2 2"/>
+            <circle cx="7.5" cy="17" r="1.5"/>
+            <circle cx="16.5" cy="17" r="1.5"/>
+          </svg>
+        </div>
+        <div class="car-summary-details">
+          <div class="car-summary-title">BMW X5 xDrive40i</div>
+          <div class="car-summary-meta">
+            <span>$38 500</span> · 2024 · бензин · 340 л.с.
+          </div>
+        </div>
+        <button class="car-summary-share" aria-label="Копировать">
+          <svg viewBox="0 0 24 24">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Info chips -->
+      <div class="info-chips">
+        <div class="chip">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          01.03.2026
+        </div>
+        <div class="chip">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/>
+          </svg>
+          Москва
+        </div>
+        <div class="chip">
+          <svg viewBox="0 0 24 24">
+            <path d="M9 12l2 2 4-4"/>
+            <circle cx="12" cy="12" r="10"/>
+          </svg>
+          Физ. лицо
+        </div>
+      </div>
+
+      <!-- Disclaimer -->
+      <div class="disclaimer">
+        Предварительный расчёт. Точная сумма зависит от курса на день оплаты.
+      </div>
+    </div>
+
+    <!-- Bottom CTA -->
+    <div class="bottom-section">
+      <button class="cta-button" id="ctaButton">
+        Оставить заявку
+      </button>
+      <button class="secondary-button">
+        Рассчитать другой автомобиль
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ═══ PARTICLE SYSTEM ═══
+  function createParticles() {
+    const container = document.getElementById('particles');
+    if (!container) return;
+    
+    const particleCount = 24;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle' + (Math.random() > 0.7 ? ' large' : '');
+      
+      const x = Math.random() * 360 - 180;
+      const y = Math.random() * 120 - 60;
+      const duration = 2 + Math.random() * 3;
+      const delay = Math.random() * 4;
+      
+      particle.style.cssText = `
+        left: calc(50% + ${x}px);
+        top: calc(50% + ${y}px);
+        --duration: ${duration}s;
+        --delay: ${delay}s;
+      `;
+      
+      container.appendChild(particle);
+    }
+  }
+
+  // ═══ PRICE COUNT-UP ANIMATION ═══
+  function animatePrice() {
+    const priceElement = document.querySelector('.price-main');
+    if (!priceElement) return;
+    
+    const targetPrice = 3972193;
+    const duration = 1800;
+    const startTime = performance.now();
+    const startPrice = 0;
+    
+    function formatPrice(num) {
+      return num.toLocaleString('ru-RU').replace(/,/g, ' ');
+    }
+    
+    function easeOutExpo(t) {
+      return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+    }
+    
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeOutExpo(progress);
+      
+      const currentPrice = Math.round(startPrice + (targetPrice - startPrice) * easedProgress);
+      priceElement.textContent = formatPrice(currentPrice);
+      
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      }
+    }
+    
+    // Start after a short delay to let page load
+    setTimeout(() => {
+      requestAnimationFrame(update);
+    }, 400);
+  }
+
+  // ═══ CTA HAPTIC FEEDBACK ═══
+  document.getElementById('ctaButton')?.addEventListener('click', function() {
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+      window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+    }
+    // Visual feedback
+    this.style.transform = 'scale(0.96)';
+    setTimeout(() => {
+      this.style.transform = '';
+    }, 150);
+  });
+
+  // ═══ INIT ═══
+  document.addEventListener('DOMContentLoaded', () => {
+    createParticles();
+    animatePrice();
+  });
+</script>
+
+</body>
+</html>

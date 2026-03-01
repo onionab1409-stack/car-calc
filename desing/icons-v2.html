@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car-Calc Icons · SVG Pixel-Perfect Set v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Page BG — radial gradient, lighter top-left #404145, darker center #17191C */
+  --page-bg-light: #3A3B40;
+  --page-bg-dark: #1A1B1F;
+
+  /* Tile BG — DRAMATIC vertical gradient (light source top-left) */
+  --tile-top: #47484C;
+  --tile-bottom: #1E1F23;
+
+  /* Icon gold: median from pixel analysis */
+  --icon-gold: #F0C060;
+  --icon-gold-bright: #FFD880;
+  --icon-gold-fill: #F0C060;
+
+  /* Glow */
+  --glow-color: rgba(240, 192, 96, 0.35);
+  --glow-strong: rgba(240, 192, 96, 0.5);
+
+  /* Text */
+  --text-muted: #6A6A70;
+  --text-dim: #505055;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  /* Radial gradient: lighter top-left, darker bottom-right */
+  background: radial-gradient(ellipse at 15% 10%, #404145 0%, #2A2B2F 35%, #1A1B1F 70%, #141518 100%);
+  font-family: 'Inter', sans-serif;
+  color: #E0E0E0;
+  padding: 40px 30px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--icon-gold);
+  margin-bottom: 4px;
+}
+h2 {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #888;
+  margin: 48px 0 18px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(240,192,96,0.1);
+}
+
+/* ========== TILE GRID ========== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, 136px);
+  gap: 16px;
+}
+.tile-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.tile {
+  width: 136px;
+  height: 136px;
+  /* DRAMATIC gradient: bright top → very dark bottom (3D convex surface) */
+  background: linear-gradient(170deg, #4A4B50 0%, #3C3D42 20%, #2E2F34 50%, #222326 75%, #1A1B1F 100%);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  /* 3D floating shadow system */
+  box-shadow:
+    /* Deep drop shadow (tile floating above surface) */
+    6px 10px 24px rgba(0, 0, 0, 0.6),
+    3px 5px 12px rgba(0, 0, 0, 0.4),
+    /* Subtle ambient shadow */
+    1px 2px 4px rgba(0, 0, 0, 0.3),
+    /* Inner top highlight (light catching top edge) */
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    /* Inner bottom darkening */
+    inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+}
+/* Top edge bevel highlight — catches light from top-left */
+.tile::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.02) 100%);
+  border-radius: 20px 20px 0 0;
+  pointer-events: none;
+}
+/* Left edge subtle highlight */
+.tile::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 50%, transparent 100%);
+  border-radius: 20px 0 0 20px;
+  pointer-events: none;
+}
+
+.tile svg {
+  width: 62px;
+  height: 62px;
+  /* Stroke icons default */
+  color: var(--icon-gold);
+  /* Strong gold glow (metallic neon tube effect) */
+  filter: drop-shadow(0 0 5px rgba(240,192,96,0.45)) drop-shadow(0 0 2px rgba(255,220,120,0.3));
+}
+.tile-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-dim);
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+/* Fill icons (lock, world-map) — brighter + stronger glow */
+.tile--fill svg {
+  color: var(--icon-gold-bright);
+  filter: drop-shadow(0 0 10px rgba(240,192,96,0.55)) drop-shadow(0 0 3px rgba(255,220,120,0.4));
+}
+/* Extra glow icons (globe) */
+.tile--glow svg {
+  filter: drop-shadow(0 0 8px rgba(240,192,96,0.5)) drop-shadow(0 0 14px rgba(240,192,96,0.2));
+}
+
+/* ========== SIZES SECTION ========== */
+.sizes-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 36px;
+  margin: 18px 0;
+}
+.size-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.size-item svg { color: var(--icon-gold); filter: drop-shadow(0 0 3px var(--glow-color)); }
+.size-item span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* ========== COLOR VARIANTS ========== */
+.color-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin: 5px 0;
+  flex-wrap: wrap;
+}
+.color-row svg { width: 22px; height: 22px; filter: none; }
+.color-row.on-dark { background: #1E1F23; color: var(--icon-gold); }
+.color-row.on-dark-white { background: #1E1F23; color: #E8E8E8; }
+.color-row.on-gold { background: var(--icon-gold); color: #1A1A1E; }
+.color-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-muted);
+  min-width: 90px;
+}
+.color-row.on-gold .color-label { color: rgba(26,26,30,0.5); }
+
+/* ========== STATES ========== */
+.states-row {
+  display: flex;
+  gap: 20px;
+  margin: 14px 0;
+}
+.state-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.state-item .tile { width: 80px; height: 80px; border-radius: 16px; }
+.state-item .tile svg { width: 36px; height: 36px; }
+.state-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  color: var(--text-dim);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.s-hover svg { color: #FFD880 !important; filter: drop-shadow(0 0 8px rgba(255,216,128,0.5)) !important; }
+.s-active svg { color: #FFE8A0 !important; filter: drop-shadow(0 0 12px rgba(255,232,160,0.6)) !important; }
+.s-disabled svg { color: #4A4A50 !important; opacity: 0.4 !important; filter: none !important; }
+.s-error svg { color: #E57373 !important; filter: drop-shadow(0 0 6px rgba(229,115,115,0.4)) !important; }
+</style>
+</head>
+<body>
+
+<h1>Car-Calc · Icon Set v2</h1>
+<h2>24 SVG Icons · Pixel-Perfect · 3D Gold on Dark</h2>
+
+<!-- ===================================== -->
+<!-- SVG SYMBOL DEFINITIONS -->
+<!-- ===================================== -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+
+<!-- ===================== ROW 1 ===================== -->
+
+<!-- 1. car — FRONT VIEW of SUV/crossover (matching reference) -->
+<symbol id="i-car" viewBox="0 0 48 48" fill="none">
+  <!-- roof line (wide arc) -->
+  <path d="M12 18c1.5-4 4-7 6.5-8h11c2.5 1 5 4 6.5 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- windshield (inner trapezoid) -->
+  <path d="M15 18c1-2.5 3-4.5 5-5.5h8c2 1 4 3 5 5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- hood line / belt line -->
+  <path d="M12 18h24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <!-- body sides flaring down -->
+  <path d="M8 24c0-2 1-4 2.5-5L12 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M40 24c0-2-1-4-2.5-5L36 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- front face / grille belt -->
+  <path d="M8 24h32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <!-- grille bars -->
+  <path d="M14 26.5h20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <path d="M12 29h24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <!-- headlights (filled rects) -->
+  <rect x="8" y="22" width="5" height="3" rx="1" fill="currentColor" opacity="0.85"/>
+  <rect x="35" y="22" width="5" height="3" rx="1" fill="currentColor" opacity="0.85"/>
+  <!-- lower bumper -->
+  <path d="M6 32h36" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <path d="M6 32v-2c0-1 .8-2 2-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M42 32v-2c0-1-.8-2-2-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- air intake -->
+  <path d="M16 31h16" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+</symbol>
+
+<!-- 2. container — Side view freight container with vertical ribs -->
+<symbol id="i-container" viewBox="0 0 48 48" fill="none">
+  <!-- main body -->
+  <rect x="5" y="15" width="38" height="16" rx="1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- vertical ribs (corrugated) -->
+  <line x1="8" y1="15" x2="8" y2="31" stroke="currentColor" stroke-width="0.7" stroke-linecap="round"/>
+  <line x1="10.5" y1="15" x2="10.5" y2="31" stroke="currentColor" stroke-width="0.7" stroke-linecap="round"/>
+  <line x1="13" y1="15" x2="13" y2="31" stroke="currentColor" stroke-width="0.7" stroke-linecap="round"/>
+  <line x1="15.5" y1="15" x2="15.5" y2="31" stroke="currentColor" stroke-width="0.7" stroke-linecap="round"/>
+  <line x1="18" y1="15" x2="18" y2="31" stroke="currentColor" stroke-width="0.7" stroke-linecap="round"/>
+  <line x1="20.5" y1="15" x2="20.5" y2="31" stroke="currentColor" stroke-width="0.7" stroke-linecap="round"/>
+  <line x1="23" y1="15" x2="23" y2="31" stroke="currentColor" stroke-width="0.7" stroke-linecap="round"/>
+  <line x1="25.5" y1="15" x2="25.5" y2="31" stroke="currentColor" stroke-width="0.7" stroke-linecap="round"/>
+  <line x1="28" y1="15" x2="28" y2="31" stroke="currentColor" stroke-width="0.7" stroke-linecap="round"/>
+  <line x1="30.5" y1="15" x2="30.5" y2="31" stroke="currentColor" stroke-width="0.7" stroke-linecap="round"/>
+  <line x1="33" y1="15" x2="33" y2="31" stroke="currentColor" stroke-width="0.7" stroke-linecap="round"/>
+  <line x1="35.5" y1="15" x2="35.5" y2="31" stroke="currentColor" stroke-width="0.7" stroke-linecap="round"/>
+  <line x1="38" y1="15" x2="38" y2="31" stroke="currentColor" stroke-width="0.7" stroke-linecap="round"/>
+  <!-- bottom rail -->
+  <line x1="5" y1="33" x2="43" y2="33" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <!-- 4 wheels -->
+  <circle cx="12" cy="36" r="2.2" stroke="currentColor" stroke-width="1.3"/>
+  <circle cx="20" cy="36" r="2.2" stroke="currentColor" stroke-width="1.3"/>
+  <circle cx="28" cy="36" r="2.2" stroke="currentColor" stroke-width="1.3"/>
+  <circle cx="36" cy="36" r="2.2" stroke="currentColor" stroke-width="1.3"/>
+  <!-- axle line -->
+  <line x1="12" y1="36" x2="36" y2="36" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/>
+</symbol>
+
+<!-- 3. forklift — truck with shelf/loading structure -->
+<symbol id="i-forklift" viewBox="0 0 48 48" fill="none">
+  <!-- shelf/mast structure (left) -->
+  <rect x="7" y="10" width="16" height="24" rx="1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- horizontal shelf lines -->
+  <line x1="7" y1="16" x2="23" y2="16" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <line x1="7" y1="22" x2="23" y2="22" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <line x1="7" y1="28" x2="23" y2="28" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <!-- cab (right) -->
+  <rect x="25" y="18" width="14" height="16" rx="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- windshield -->
+  <path d="M28 18v6h8v-3c0-1.5-1-3-3-3h-5z" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- connection -->
+  <line x1="23" y1="28" x2="25" y2="28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <!-- wheels -->
+  <circle cx="14" cy="38" r="2.5" stroke="currentColor" stroke-width="2"/>
+  <circle cx="33" cy="38" r="2.5" stroke="currentColor" stroke-width="2"/>
+  <!-- axle -->
+  <line x1="7" y1="34" x2="39" y2="34" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+</symbol>
+
+<!-- 4. ship-crane — Cargo ship with crane -->
+<symbol id="i-ship-crane" viewBox="0 0 48 48" fill="none">
+  <!-- hull -->
+  <path d="M4 32c1-3 4-6 8-6h24c4 0 7 3 8 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- deck structure -->
+  <rect x="10" y="22" width="20" height="4" rx="1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="14" y="18" width="10" height="4" rx="1" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- crane mast -->
+  <line x1="12" y1="22" x2="12" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <!-- crane arm -->
+  <path d="M12 12l22 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <!-- crane diagonal support -->
+  <path d="M12 12l8-4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <!-- cable (dashed) -->
+  <path d="M34 12v10" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-dasharray="2.5 2"/>
+  <!-- hook/load -->
+  <rect x="31" y="22" width="6" height="3" rx="0.8" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- wave -->
+  <path d="M2 36c4-1.5 8-2 12-1.5s8 1.5 12 2 8 0 12-1 8-2 8-2" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/>
+</symbol>
+
+<!-- 5. ship — Low profile cargo vessel / tanker side view -->
+<symbol id="i-ship" viewBox="0 0 48 48" fill="none">
+  <!-- hull base -->
+  <path d="M4 30h40c0 0-2 4-6 4H10c-4 0-6-4-6-4z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- main body -->
+  <rect x="8" y="20" width="32" height="10" rx="1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- upper cabin -->
+  <rect x="14" y="14" width="14" height="6" rx="1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- windows on upper cabin -->
+  <rect x="16" y="15.5" width="4" height="3" rx="0.8" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="22" y="15.5" width="4" height="3" rx="0.8" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- funnel/chimney -->
+  <rect x="32" y="16" width="4" height="4" rx="0.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- porthole -->
+  <circle cx="38" cy="25" r="1.8" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <!-- deck details -->
+  <line x1="8" y1="24" x2="12" y2="24" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/>
+</symbol>
+
+<!-- 6. truck — Large delivery truck (cargo LEFT, cab RIGHT) -->
+<symbol id="i-truck" viewBox="0 0 48 48" fill="none">
+  <!-- cargo box (left/main) -->
+  <rect x="4" y="14" width="24" height="18" rx="1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- horizontal stripes on cargo -->
+  <line x1="8" y1="19" x2="24" y2="19" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <line x1="8" y1="23" x2="20" y2="23" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <line x1="8" y1="27" x2="24" y2="27" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/>
+  <!-- cab (right) -->
+  <path d="M28 18h8c2 0 4 2 4 4v10H28z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- windshield -->
+  <path d="M30 18h4c2 0 3.5 1.5 4 3v3h-8z" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- connection line -->
+  <line x1="28" y1="14" x2="28" y2="32" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <!-- bumper -->
+  <line x1="38" y1="30" x2="42" y2="30" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <!-- wheels -->
+  <circle cx="12" cy="35" r="2.8" stroke="currentColor" stroke-width="2"/>
+  <circle cx="22" cy="35" r="2.8" stroke="currentColor" stroke-width="2"/>
+  <circle cx="36" cy="35" r="2.8" stroke="currentColor" stroke-width="2"/>
+  <!-- axle -->
+  <line x1="4" y1="32" x2="42" y2="32" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+</symbol>
+
+<!-- ===================== ROW 2 ===================== -->
+
+<!-- 7. calculator — with car icon on display -->
+<symbol id="i-calculator" viewBox="0 0 48 48" fill="none">
+  <!-- body -->
+  <rect x="10" y="6" width="28" height="36" rx="3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- display -->
+  <rect x="14" y="10" width="20" height="10" rx="2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- car silhouette on display -->
+  <path d="M19 17.5c.8-1.5 2-2.5 3.5-2.5h3c1.5 0 2.7 1 3.5 2.5" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="18" y1="17.5" x2="30" y2="17.5" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/>
+  <!-- button grid 4×4 -->
+  <rect x="14" y="23" width="4" height="3.5" rx="0.8" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="19.5" y="23" width="4" height="3.5" rx="0.8" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="25" y="23" width="4" height="3.5" rx="0.8" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="30.5" y="23" width="3.5" height="3.5" rx="0.8" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="14" y="28.5" width="4" height="3.5" rx="0.8" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="19.5" y="28.5" width="4" height="3.5" rx="0.8" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="25" y="28.5" width="4" height="3.5" rx="0.8" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="30.5" y="28.5" width="3.5" height="3.5" rx="0.8" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="14" y="34" width="4" height="3.5" rx="0.8" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="19.5" y="34" width="4" height="3.5" rx="0.8" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="25" y="34" width="4" height="3.5" rx="0.8" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="30.5" y="34" width="3.5" height="3.5" rx="0.8" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round"/>
+</symbol>
+
+<!-- 8. shield-electric — Shield with lightning bolt (bold) -->
+<symbol id="i-shield-electric" viewBox="0 0 48 48" fill="none">
+  <path d="M24 4C19 8 13 10 8 10v16c0 9 7 15 16 19 9-4 16-10 16-19V10c-5 0-11-2-16-6z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- lightning bolt — bold clean zigzag -->
+  <path d="M27 14l-5 9h7l-6 10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+</symbol>
+
+<!-- 9. container-load — Container with car loading via ramp -->
+<symbol id="i-container-load" viewBox="0 0 48 48" fill="none">
+  <!-- container frame -->
+  <rect x="4" y="10" width="32" height="24" rx="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- vertical dividers -->
+  <line x1="14" y1="10" x2="14" y2="34" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/>
+  <line x1="24" y1="10" x2="24" y2="34" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/>
+  <!-- car inside (side view silhouette) -->
+  <path d="M17 27c1-2 2.5-3.5 4.5-3.5h5c2 0 3.5 1.5 4.5 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="16" y1="27" x2="32" y2="27" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- ramp (right side, angled down) -->
+  <path d="M36 34l8 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <path d="M36 10l0 24" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <!-- car wheels -->
+  <circle cx="20" cy="29" r="1.5" stroke="currentColor" stroke-width="0.8"/>
+  <circle cx="29" cy="29" r="1.5" stroke="currentColor" stroke-width="0.8"/>
+</symbol>
+
+<!-- 10. world-map — FILLED continents (LARGE, visible Mercator) -->
+<symbol id="i-world-map" viewBox="0 0 48 48">
+  <!-- North America -->
+  <path fill="currentColor" d="M5 14l2-2 3-1 3 0 2 1 2 3 1 3-1 3-2 2-1 3 1 2-1 1-2-1-2-2-1-3-2-2-1-2 0-3 1-2z"/>
+  <!-- Central America bridge -->
+  <path fill="currentColor" d="M13 24l1 1 1 2 0 1-1 0-1-2z"/>
+  <!-- South America -->
+  <path fill="currentColor" d="M13 28l2-1 2 1 2 3 1 3 0 3-1 2-2 1-2-1-1-2 0-3 0-3-1-2z"/>
+  <!-- Europe -->
+  <path fill="currentColor" d="M21 11l2-1 3 0 2 1 0 2-1 2-2 1-2-1-1-1 0-2z"/>
+  <!-- Africa -->
+  <path fill="currentColor" d="M21 17l2-1 3 1 2 2 1 4 0 3-1 3-2 2-2 1-2-1-1-3 0-4 1-4z"/>
+  <!-- Asia (large mass) -->
+  <path fill="currentColor" d="M27 9l3-1 4 1 3 2 2 3 1 4 0 3-2 3-3 1-2-1-3-2-2-3 0-4 1-3z"/>
+  <!-- India/SE Asia -->
+  <path fill="currentColor" d="M30 22l2 0 1 2 0 3-1 2-2 0-1-2 0-3z"/>
+  <!-- Australia -->
+  <path fill="currentColor" d="M35 28l3-1 3 1 1 2 0 3-2 2-3 0-2-2 0-3z"/>
+  <!-- Japan/islands -->
+  <path fill="currentColor" d="M39 14l1 0 1 2 0 2-1 1-1-1 0-2z"/>
+  <!-- Greenland -->
+  <path fill="currentColor" d="M14 9l2-1 2 1 0 2-1 1-2 0-1-1z"/>
+</symbol>
+
+<!-- 11. phone-app — Smartphone with UI -->
+<symbol id="i-phone-app" viewBox="0 0 48 48" fill="none">
+  <!-- phone body -->
+  <rect x="12" y="5" width="24" height="38" rx="4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- top bar -->
+  <line x1="12" y1="12" x2="36" y2="12" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/>
+  <!-- bottom bar -->
+  <line x1="12" y1="37" x2="36" y2="37" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/>
+  <!-- speaker/notch -->
+  <line x1="20" y1="8" x2="28" y2="8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- screen: large display element (circle/dial) -->
+  <circle cx="24" cy="22" r="5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <circle cx="24" cy="22" r="1.5" fill="currentColor" opacity="0.5"/>
+  <!-- UI button grid below -->
+  <rect x="15" y="30" width="5" height="4" rx="1" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="21.5" y="30" width="5" height="4" rx="1" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="28" y="30" width="5" height="4" rx="1" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- home indicator -->
+  <line x1="20" y1="40" x2="28" y2="40" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+</symbol>
+
+<!-- 12. globe — Globe with ring/magnifier -->
+<symbol id="i-globe" viewBox="0 0 48 48" fill="none">
+  <!-- main globe circle -->
+  <circle cx="22" cy="22" r="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <!-- longitude lines (vertical arcs) -->
+  <ellipse cx="22" cy="22" rx="5.5" ry="14" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/>
+  <ellipse cx="22" cy="22" rx="10" ry="14" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/>
+  <!-- latitude lines (horizontal) -->
+  <ellipse cx="22" cy="22" rx="14" ry="5" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/>
+  <path d="M9.5 15h25" stroke="currentColor" stroke-width="0.7" stroke-linecap="round"/>
+  <path d="M9.5 29h25" stroke="currentColor" stroke-width="0.7" stroke-linecap="round"/>
+  <!-- orbital ring around globe -->
+  <ellipse cx="22" cy="24" rx="18" ry="6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" transform="rotate(-20, 22, 24)"/>
+  <!-- magnifier/pointer handle at bottom-right -->
+  <line x1="36" y1="34" x2="42" y2="40" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="42" cy="40" r="1.5" fill="currentColor" opacity="0.6"/>
+</symbol>
+
+<!-- ===================== ROW 3 ===================== -->
+
+<!-- 13. lock — LARGE FILLED padlock with 3D metallic gradient -->
+<symbol id="i-lock" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="lockGrad" x1="0.3" y1="0" x2="0.7" y2="1">
+      <stop offset="0%" stop-color="#FFE8B8"/>
+      <stop offset="25%" stop-color="#F5CC70"/>
+      <stop offset="60%" stop-color="#E0B050"/>
+      <stop offset="100%" stop-color="#B88830"/>
+    </linearGradient>
+    <linearGradient id="shackleGrad" x1="0.3" y1="0" x2="0.7" y2="1">
+      <stop offset="0%" stop-color="#FFECC0"/>
+      <stop offset="50%" stop-color="#E8B850"/>
+      <stop offset="100%" stop-color="#C89838"/>
+    </linearGradient>
+  </defs>
+  <!-- shackle outer (thick arch) -->
+  <path d="M15 22V16c0-5 4-9 9-9s9 4 9 9v6" fill="none" stroke="url(#shackleGrad)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- shackle inner (double line effect) -->
+  <path d="M19 22V17.5c0-2.8 2.2-5 5-5s5 2.2 5 5V22" fill="none" stroke="url(#shackleGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- body — LARGE filled rect with gradient -->
+  <rect x="10" y="22" width="28" height="20" rx="4" fill="url(#lockGrad)"/>
+  <!-- body top edge highlight -->
+  <rect x="10" y="22" width="28" height="1" rx="0.5" fill="rgba(255,255,255,0.15)"/>
+  <!-- keyhole circle -->
+  <circle cx="24" cy="31" r="3" fill="#2A2B30"/>
+  <!-- keyhole slot -->
+  <rect x="22.5" y="33" width="3" height="5" rx="1.2" fill="#2A2B30"/>
+</symbol>
+
+<!-- 14. dashboard — Monitor with bar/line chart -->
+<symbol id="i-dashboard" viewBox="0 0 48 48" fill="none">
+  <!-- monitor frame -->
+  <rect x="6" y="8" width="36" height="24" rx="2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- inner screen border -->
+  <rect x="9" y="11" width="30" height="18" rx="1" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+  <!-- horizontal grid lines -->
+  <line x1="10" y1="16" x2="38" y2="16" stroke="currentColor" stroke-width="0.4" stroke-linecap="round" opacity="0.35"/>
+  <line x1="10" y1="20" x2="38" y2="20" stroke="currentColor" stroke-width="0.4" stroke-linecap="round" opacity="0.35"/>
+  <line x1="10" y1="24" x2="38" y2="24" stroke="currentColor" stroke-width="0.4" stroke-linecap="round" opacity="0.35"/>
+  <!-- bar chart / line chart -->
+  <path d="M12 25l4-3 3 2 4-6 3 1 4-4 4 5 4-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- vertical bars (subtle) -->
+  <line x1="14" y1="26" x2="14" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+  <line x1="19" y1="26" x2="19" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+  <line x1="24" y1="26" x2="24" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+  <line x1="29" y1="26" x2="29" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+  <line x1="34" y1="26" x2="34" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+  <!-- stand -->
+  <path d="M20 32v3h8v-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="16" y1="38" x2="32" y2="38" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+</symbol>
+
+<!-- 15. crosshair — Target scope with diamond tips -->
+<symbol id="i-crosshair" viewBox="0 0 48 48" fill="none">
+  <!-- main circle -->
+  <circle cx="24" cy="24" r="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <!-- vertical crosshair (extends beyond circle) -->
+  <line x1="24" y1="6" x2="24" y2="42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <!-- horizontal crosshair (extends beyond circle) -->
+  <line x1="6" y1="24" x2="42" y2="24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <!-- diamond tips at ends -->
+  <path d="M24 5l1.2 2-1.2 1-1.2-1z" fill="currentColor"/>
+  <path d="M24 43l-1.2-2 1.2-1 1.2 1z" fill="currentColor"/>
+  <path d="M5 24l2-1.2 1 1.2-1 1.2z" fill="currentColor"/>
+  <path d="M43 24l-2 1.2-1-1.2 1-1.2z" fill="currentColor"/>
+  <!-- small dots on circle at cardinal points -->
+  <circle cx="24" cy="12" r="1" fill="currentColor"/>
+  <circle cx="24" cy="36" r="1" fill="currentColor"/>
+  <circle cx="12" cy="24" r="1" fill="currentColor"/>
+  <circle cx="36" cy="24" r="1" fill="currentColor"/>
+</symbol>
+
+<!-- 16. document — Customs document/declaration being processed -->
+<symbol id="i-document" viewBox="0 0 48 48" fill="none">
+  <!-- main document (angled) -->
+  <path d="M14 12l22-4v28l-22 4z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- text lines on document -->
+  <line x1="18" y1="17" x2="32" y2="14.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <line x1="18" y1="22" x2="30" y2="19.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <line x1="18" y1="27" x2="32" y2="24.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <line x1="18" y1="32" x2="28" y2="29.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <!-- stamp/pen tool (left side) -->
+  <path d="M8 28l3-14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <path d="M11 14l2-2 2 1-1 3z" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" opacity="0.5"/>
+  <!-- stamp mark -->
+  <circle cx="10" cy="32" r="2.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <path d="M10 35v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <!-- arrow indicating process -->
+  <path d="M34 20l6-2" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 2"/>
+</symbol>
+
+<!-- 17. calendar-check — LANDSCAPE calendar with checkmark -->
+<symbol id="i-calendar-check" viewBox="0 0 48 48" fill="none">
+  <!-- body (landscape) -->
+  <rect x="5" y="12" width="38" height="26" rx="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- top bar -->
+  <line x1="5" y1="19" x2="43" y2="19" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- pins (5 tabs) -->
+  <line x1="12" y1="8" x2="12" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <line x1="19" y1="8" x2="19" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <line x1="26" y1="8" x2="26" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <line x1="33" y1="8" x2="33" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <line x1="40" y1="8" x2="40" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <!-- grid lines -->
+  <line x1="15" y1="19" x2="15" y2="38" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" opacity="0.5"/>
+  <line x1="24" y1="19" x2="24" y2="38" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" opacity="0.5"/>
+  <line x1="33" y1="19" x2="33" y2="38" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" opacity="0.5"/>
+  <line x1="5" y1="26" x2="43" y2="26" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" opacity="0.5"/>
+  <line x1="5" y1="32" x2="43" y2="32" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" opacity="0.5"/>
+  <!-- large checkmark -->
+  <path d="M18 28l5 6 12-12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+</symbol>
+
+<!-- 18. van — Delivery van (side view, facing right) -->
+<symbol id="i-van" viewBox="0 0 48 48" fill="none">
+  <!-- cab (left) -->
+  <path d="M6 18c0-2 1-3 3-4h6v18H6z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- windshield -->
+  <path d="M9 14l4-2h2v6H9z" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- cargo box (right) -->
+  <rect x="15" y="12" width="24" height="20" rx="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- divider -->
+  <line x1="15" y1="12" x2="15" y2="32" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- windows on cargo (2×2) -->
+  <rect x="19" y="16" width="5" height="4.5" rx="1" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="26" y="16" width="5" height="4.5" rx="1" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="19" y="23" width="5" height="4.5" rx="1" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="26" y="23" width="5" height="4.5" rx="1" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- wheels -->
+  <circle cx="11" cy="35" r="3" stroke="currentColor" stroke-width="2"/>
+  <circle cx="11" cy="35" r="1" fill="currentColor" opacity="0.5"/>
+  <circle cx="33" cy="35" r="3" stroke="currentColor" stroke-width="2"/>
+  <circle cx="33" cy="35" r="1" fill="currentColor" opacity="0.5"/>
+  <!-- undercarriage -->
+  <line x1="6" y1="32" x2="39" y2="32" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+</symbol>
+
+<!-- ===================== ADDITIONAL 6 ICONS ===================== -->
+
+<!-- 19. fuel -->
+<symbol id="i-fuel" viewBox="0 0 48 48" fill="none">
+  <rect x="8" y="12" width="20" height="28" rx="2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="12" y="16" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M28 20h4c2 0 3 1 3 3v12c0 2 1 3 2.5 3s2.5-1 2.5-3V22c0-2-.5-3-1.5-4l-4.5-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="8" y1="40" x2="28" y2="40" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+</symbol>
+
+<!-- 20. engine -->
+<symbol id="i-engine" viewBox="0 0 48 48" fill="none">
+  <rect x="14" y="14" width="20" height="20" rx="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="20" y="6" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="24" y1="14" x2="24" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <line x1="14" y1="20" x2="10" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <line x1="14" y1="24" x2="10" y2="24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <line x1="14" y1="28" x2="10" y2="28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <line x1="34" y1="20" x2="38" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <line x1="34" y1="24" x2="38" y2="24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <line x1="34" y1="28" x2="38" y2="28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="18" cy="18" r="1.2" fill="currentColor" opacity="0.5"/>
+  <circle cx="30" cy="18" r="1.2" fill="currentColor" opacity="0.5"/>
+  <circle cx="18" cy="30" r="1.2" fill="currentColor" opacity="0.5"/>
+  <circle cx="30" cy="30" r="1.2" fill="currentColor" opacity="0.5"/>
+  <line x1="18" y1="34" x2="18" y2="40" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <line x1="30" y1="34" x2="30" y2="40" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <line x1="15" y1="40" x2="33" y2="40" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+</symbol>
+
+<!-- 21. key -->
+<symbol id="i-key" viewBox="0 0 48 48" fill="none">
+  <circle cx="16" cy="24" r="8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="16" cy="24" r="3" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <line x1="24" y1="24" x2="40" y2="24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <line x1="36" y1="24" x2="36" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <line x1="32" y1="24" x2="32" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="40" cy="24" r="2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+  <circle cx="40" cy="24" r="0.8" fill="currentColor"/>
+</symbol>
+
+<!-- 22. price-tag -->
+<symbol id="i-price-tag" viewBox="0 0 48 48" fill="none">
+  <path d="M8 8h14l18 18-14 14L8 22V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="17" cy="17" r="3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+  <circle cx="17" cy="17" r="1" fill="currentColor"/>
+  <path d="M8 8L4 4" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 2"/>
+</symbol>
+
+<!-- 23. route -->
+<symbol id="i-route" viewBox="0 0 48 48" fill="none">
+  <circle cx="10" cy="34" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="10" cy="34" r="1.5" fill="currentColor"/>
+  <path d="M38 10c3.5 3.5 3.5 9 0 12.5L34 27l-4-4.5c-3.5-3.5-3.5-9 0-12.5s9-3.5 12.5 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="34" cy="15" r="2" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <path d="M14 32c4-2 8-6 10-10s6-6 10-8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-dasharray="4 3"/>
+</symbol>
+
+<!-- 24. currency -->
+<symbol id="i-currency" viewBox="0 0 48 48" fill="none">
+  <path d="M36 14c-3-4-8-6-13-5.5S14 13 12 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12 34c3 4 8 6 13 5.5S34 35 36 31" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M36 14l3-3-4-1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12 34l-3 3 4 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="17" y="28" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="currentColor">$</text>
+  <text x="28" y="28" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="currentColor">₽</text>
+</symbol>
+
+</svg>
+
+<!-- ============================================ -->
+<!-- SECTION A: Main Grid 6×3 (18 from reference) -->
+<!-- ============================================ -->
+<div class="section-title">A · Основная сетка — 18 иконок с референса</div>
+<div class="grid">
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-car"/></svg></div><div class="tile-label">car</div></div>
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-container"/></svg></div><div class="tile-label">container</div></div>
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-forklift"/></svg></div><div class="tile-label">forklift</div></div>
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-ship-crane"/></svg></div><div class="tile-label">ship-crane</div></div>
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-ship"/></svg></div><div class="tile-label">ship</div></div>
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-truck"/></svg></div><div class="tile-label">truck</div></div>
+
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-calculator"/></svg></div><div class="tile-label">calculator</div></div>
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-shield-electric"/></svg></div><div class="tile-label">shield-electric</div></div>
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-container-load"/></svg></div><div class="tile-label">container-load</div></div>
+  <div class="tile-wrap"><div class="tile tile--fill"><svg><use href="#i-world-map"/></svg></div><div class="tile-label">world-map ★</div></div>
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-phone-app"/></svg></div><div class="tile-label">phone-app</div></div>
+  <div class="tile-wrap"><div class="tile tile--glow"><svg><use href="#i-globe"/></svg></div><div class="tile-label">globe ✦</div></div>
+
+  <div class="tile-wrap"><div class="tile tile--fill"><svg><use href="#i-lock"/></svg></div><div class="tile-label">lock ★</div></div>
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-dashboard"/></svg></div><div class="tile-label">dashboard</div></div>
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-crosshair"/></svg></div><div class="tile-label">crosshair</div></div>
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-document"/></svg></div><div class="tile-label">document</div></div>
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-calendar-check"/></svg></div><div class="tile-label">calendar-check</div></div>
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-van"/></svg></div><div class="tile-label">van</div></div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION B: Additional 6 icons -->
+<!-- ============================================ -->
+<div class="section-title">B · Дополнительные иконки (6)</div>
+<div class="grid">
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-fuel"/></svg></div><div class="tile-label">fuel</div></div>
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-engine"/></svg></div><div class="tile-label">engine</div></div>
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-key"/></svg></div><div class="tile-label">key</div></div>
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-price-tag"/></svg></div><div class="tile-label">price-tag</div></div>
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-route"/></svg></div><div class="tile-label">route</div></div>
+  <div class="tile-wrap"><div class="tile"><svg><use href="#i-currency"/></svg></div><div class="tile-label">currency</div></div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION C: Sizes -->
+<!-- ============================================ -->
+<div class="section-title">C · Размеры</div>
+<div class="sizes-row">
+  <div class="size-item"><svg style="width:16px;height:16px"><use href="#i-car"/></svg><span>16px</span></div>
+  <div class="size-item"><svg style="width:24px;height:24px"><use href="#i-car"/></svg><span>24px</span></div>
+  <div class="size-item"><svg style="width:32px;height:32px"><use href="#i-car"/></svg><span>32px</span></div>
+  <div class="size-item"><svg style="width:48px;height:48px"><use href="#i-car"/></svg><span>48px</span></div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION D: Color Variants -->
+<!-- ============================================ -->
+<div class="section-title">D · Цветовые варианты</div>
+<div class="color-row on-dark">
+  <span class="color-label">#F0C060 on dark</span>
+  <svg><use href="#i-car"/></svg><svg><use href="#i-container"/></svg><svg><use href="#i-forklift"/></svg><svg><use href="#i-ship-crane"/></svg><svg><use href="#i-ship"/></svg><svg><use href="#i-truck"/></svg>
+  <svg><use href="#i-calculator"/></svg><svg><use href="#i-shield-electric"/></svg><svg><use href="#i-container-load"/></svg><svg><use href="#i-world-map"/></svg><svg><use href="#i-phone-app"/></svg><svg><use href="#i-globe"/></svg>
+  <svg><use href="#i-lock"/></svg><svg><use href="#i-dashboard"/></svg><svg><use href="#i-crosshair"/></svg><svg><use href="#i-document"/></svg><svg><use href="#i-calendar-check"/></svg><svg><use href="#i-van"/></svg>
+  <svg><use href="#i-fuel"/></svg><svg><use href="#i-engine"/></svg><svg><use href="#i-key"/></svg><svg><use href="#i-price-tag"/></svg><svg><use href="#i-route"/></svg><svg><use href="#i-currency"/></svg>
+</div>
+<div class="color-row on-dark-white">
+  <span class="color-label">#E8E8E8 on dark</span>
+  <svg><use href="#i-car"/></svg><svg><use href="#i-container"/></svg><svg><use href="#i-forklift"/></svg><svg><use href="#i-ship-crane"/></svg><svg><use href="#i-ship"/></svg><svg><use href="#i-truck"/></svg>
+  <svg><use href="#i-calculator"/></svg><svg><use href="#i-shield-electric"/></svg><svg><use href="#i-container-load"/></svg><svg><use href="#i-world-map"/></svg><svg><use href="#i-phone-app"/></svg><svg><use href="#i-globe"/></svg>
+  <svg><use href="#i-lock"/></svg><svg><use href="#i-dashboard"/></svg><svg><use href="#i-crosshair"/></svg><svg><use href="#i-document"/></svg><svg><use href="#i-calendar-check"/></svg><svg><use href="#i-van"/></svg>
+  <svg><use href="#i-fuel"/></svg><svg><use href="#i-engine"/></svg><svg><use href="#i-key"/></svg><svg><use href="#i-price-tag"/></svg><svg><use href="#i-route"/></svg><svg><use href="#i-currency"/></svg>
+</div>
+<div class="color-row on-gold">
+  <span class="color-label">#1A1A1E on gold</span>
+  <svg><use href="#i-car"/></svg><svg><use href="#i-container"/></svg><svg><use href="#i-forklift"/></svg><svg><use href="#i-ship-crane"/></svg><svg><use href="#i-ship"/></svg><svg><use href="#i-truck"/></svg>
+  <svg><use href="#i-calculator"/></svg><svg><use href="#i-shield-electric"/></svg><svg><use href="#i-container-load"/></svg><svg><use href="#i-world-map"/></svg><svg><use href="#i-phone-app"/></svg><svg><use href="#i-globe"/></svg>
+  <svg><use href="#i-lock"/></svg><svg><use href="#i-dashboard"/></svg><svg><use href="#i-crosshair"/></svg><svg><use href="#i-document"/></svg><svg><use href="#i-calendar-check"/></svg><svg><use href="#i-van"/></svg>
+  <svg><use href="#i-fuel"/></svg><svg><use href="#i-engine"/></svg><svg><use href="#i-key"/></svg><svg><use href="#i-price-tag"/></svg><svg><use href="#i-route"/></svg><svg><use href="#i-currency"/></svg>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION E: States -->
+<!-- ============================================ -->
+<div class="section-title">E · Состояния</div>
+<div style="display:flex;gap:36px;flex-wrap:wrap">
+  <div>
+    <div style="font-size:10px;color:#505055;margin-bottom:6px;font-family:'JetBrains Mono',monospace">car</div>
+    <div class="states-row">
+      <div class="state-item"><div class="tile"><svg style="width:36px;height:36px"><use href="#i-car"/></svg></div><div class="state-label">default</div></div>
+      <div class="state-item"><div class="tile s-hover"><svg style="width:36px;height:36px"><use href="#i-car"/></svg></div><div class="state-label">hover</div></div>
+      <div class="state-item"><div class="tile s-active"><svg style="width:36px;height:36px"><use href="#i-car"/></svg></div><div class="state-label">active</div></div>
+      <div class="state-item"><div class="tile s-disabled"><svg style="width:36px;height:36px"><use href="#i-car"/></svg></div><div class="state-label">disabled</div></div>
+      <div class="state-item"><div class="tile s-error"><svg style="width:36px;height:36px"><use href="#i-car"/></svg></div><div class="state-label">error</div></div>
+    </div>
+  </div>
+  <div>
+    <div style="font-size:10px;color:#505055;margin-bottom:6px;font-family:'JetBrains Mono',monospace">calculator</div>
+    <div class="states-row">
+      <div class="state-item"><div class="tile"><svg style="width:36px;height:36px"><use href="#i-calculator"/></svg></div><div class="state-label">default</div></div>
+      <div class="state-item"><div class="tile s-hover"><svg style="width:36px;height:36px"><use href="#i-calculator"/></svg></div><div class="state-label">hover</div></div>
+      <div class="state-item"><div class="tile s-active"><svg style="width:36px;height:36px"><use href="#i-calculator"/></svg></div><div class="state-label">active</div></div>
+      <div class="state-item"><div class="tile s-disabled"><svg style="width:36px;height:36px"><use href="#i-calculator"/></svg></div><div class="state-label">disabled</div></div>
+      <div class="state-item"><div class="tile s-error"><svg style="width:36px;height:36px"><use href="#i-calculator"/></svg></div><div class="state-label">error</div></div>
+    </div>
+  </div>
+  <div>
+    <div style="font-size:10px;color:#505055;margin-bottom:6px;font-family:'JetBrains Mono',monospace">lock</div>
+    <div class="states-row">
+      <div class="state-item"><div class="tile tile--fill"><svg style="width:36px;height:36px"><use href="#i-lock"/></svg></div><div class="state-label">default</div></div>
+      <div class="state-item"><div class="tile s-hover"><svg style="width:36px;height:36px"><use href="#i-lock"/></svg></div><div class="state-label">hover</div></div>
+      <div class="state-item"><div class="tile s-active"><svg style="width:36px;height:36px"><use href="#i-lock"/></svg></div><div class="state-label">active</div></div>
+      <div class="state-item"><div class="tile s-disabled"><svg style="width:36px;height:36px"><use href="#i-lock"/></svg></div><div class="state-label">disabled</div></div>
+      <div class="state-item"><div class="tile s-error"><svg style="width:36px;height:36px"><use href="#i-lock"/></svg></div><div class="state-label">error</div></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

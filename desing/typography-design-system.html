@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car-Calc · Дизайн-система · Типографика и цвета</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Serif+Display&family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Serif+Display:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Manrope:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════
+   CAR-CALC DESIGN SYSTEM — TYPOGRAPHY & COLORS
+   Dashboard-style specification · v2.0
+   ═══════════════════════════════════════════════ */
+
+:root {
+  /* ═══ ФОНЫ ═══ */
+  --color-bg-deep: #0A0A0C;
+  --color-bg: #0E0E10;
+  --color-bg-elevated: #121214;
+  --color-surface: #1A1A1E;
+  --color-surface-raised: #222226;
+  --color-surface-overlay: #2A2A2E;
+  --color-surface-input: #161618;
+
+  /* ═══ БОРДЕРЫ ═══ */
+  --color-border-subtle: rgba(255, 255, 255, 0.04);
+  --color-border-default: rgba(255, 255, 255, 0.06);
+  --color-border-strong: rgba(255, 255, 255, 0.12);
+  --color-border-gold: rgba(196, 162, 101, 0.3);
+  --color-border-gold-active: #C4A265;
+
+  /* ═══ ЗОЛОТО (8 оттенков) ═══ */
+  --gold-50: #F0E4BA;
+  --gold-100: #E8D48A;
+  --gold-200: #DCBE7A;
+  --gold-300: #D4B876;
+  --gold-400: #C4A265;
+  --gold-500: #B49550;
+  --gold-600: #A88B4A;
+  --gold-700: #8A7238;
+  --gold-800: #6A5A28;
+  --gold-900: #4A3E1A;
+
+  /* ═══ НЕЙТРАЛЬНЫЕ ТЁПЛЫЕ ═══ */
+  --neutral-50: #F0EDE5;
+  --neutral-100: #E0DCD4;
+  --neutral-200: #D4C8A8;
+  --neutral-300: #B0A898;
+  --neutral-400: #8A8478;
+  --neutral-500: #6A665E;
+  --neutral-600: #5A5650;
+  --neutral-700: #4A4844;
+  --neutral-800: #3A3836;
+  --neutral-900: #2A2826;
+
+  /* ═══ ХОЛОДНЫЕ СЕРЫЕ ═══ */
+  --gray-400: #8A8A8E;
+  --gray-500: #6A6A6E;
+  --gray-600: #5A5A5E;
+  --gray-700: #4A4A4E;
+  --gray-800: #3A3A3E;
+  --gray-900: #2A2A2E;
+
+  /* ═══ СЕМАНТИЧЕСКИЕ ═══ */
+  --color-success: #4CAF50;
+  --color-success-muted: #3A8A3E;
+  --color-error: #E57373;
+  --color-error-muted: #B85555;
+  --color-warning: #FFB74D;
+  --color-info: #64B5F6;
+
+  /* ═══ ТЕКСТ ═══ */
+  --text-primary: var(--neutral-50);
+  --text-secondary: var(--neutral-200);
+  --text-tertiary: var(--neutral-300);
+  --text-muted: var(--gray-400);
+  --text-disabled: var(--gray-600);
+  --text-accent: var(--gold-400);
+  --text-on-gold: #1A1A1E;
+
+  /* ═══ ТЕНИ ═══ */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.5);
+  --shadow-gold: 0 4px 16px rgba(196, 162, 101, 0.2);
+  --shadow-gold-glow: 0 0 20px rgba(196, 162, 101, 0.3);
+  --shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--color-bg);
+  color: var(--neutral-50);
+  font-family: 'Manrope', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════
+   PAGE 1 — DASHBOARD SPEC (landscape)
+   ═══════════════════════════════════════ */
+
+.dashboard {
+  width: 1400px;
+  min-height: 780px;
+  margin: 0 auto;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  grid-template-rows: auto 1fr auto;
+  gap: 16px;
+  grid-template-areas:
+    "header   header"
+    "main     sidebar"
+    "bottom   bottom";
+}
+
+/* ═══ HEADER BAR ═══ */
+.dash-header {
+  grid-area: header;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px 16px;
+  border-bottom: 1px solid var(--color-border-default);
+}
+.dash-header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.dash-logo {
+  font-family: 'Manrope', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--neutral-50);
+  letter-spacing: -0.3px;
+}
+.dash-logo span {
+  color: var(--gold-400);
+}
+.dash-nav {
+  display: flex;
+  gap: 24px;
+}
+.dash-nav a {
+  font-family: 'Manrope', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray-400);
+  text-decoration: none;
+  letter-spacing: 0;
+  transition: color 0.2s;
+  cursor: default;
+}
+.dash-nav a.active {
+  color: var(--neutral-50);
+}
+.dash-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.dash-version {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--gray-600);
+  padding: 3px 8px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 6px;
+}
+
+/* ═══ MAIN CARD (left, ~60%) ═══ */
+.main-card {
+  grid-area: main;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-default);
+  border-radius: 20px;
+  padding: 36px 40px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.main-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle at center, rgba(196,162,101,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Hero title */
+.main-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--neutral-50);
+  letter-spacing: -0.3px;
+  margin-bottom: 4px;
+}
+.main-subtitle {
+  font-family: 'Manrope', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--gray-400);
+  margin-bottom: 32px;
+}
+
+/* ═══ 3D GOLDEN PRICE — HERO ═══ */
+.price-hero {
+  position: relative;
+  margin: auto 0;
+  padding: 20px 0;
+  user-select: none;
+}
+.price-3d {
+  position: relative;
+  font-family: 'Playfair Display', serif;
+  font-size: 120px;
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -3px;
+  font-feature-settings: 'tnum' 1;
+  color: transparent;
+}
+/* Back layer — dark extrusion */
+.price-3d::before {
+  content: attr(data-price);
+  position: absolute;
+  top: 4px;
+  left: 1px;
+  z-index: 0;
+  background: linear-gradient(180deg, #8A7238 0%, #6A5A28 40%, #4A3E1A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: blur(0.8px);
+}
+/* Front layer — bright gold gradient */
+.price-3d::after {
+  content: attr(data-price);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    #F0E4BA 0%,
+    #E8D48A 5%,
+    #D4B876 18%,
+    #C4A265 42%,
+    #A88B4A 62%,
+    #8A7238 78%,
+    #6A5A28 92%,
+    #4A3E1A 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter:
+    drop-shadow(0 1px 0 rgba(168, 139, 74, 0.7))
+    drop-shadow(0 3px 2px rgba(138, 114, 56, 0.5))
+    drop-shadow(0 6px 6px rgba(0, 0, 0, 0.3))
+    drop-shadow(0 12px 16px rgba(0, 0, 0, 0.18));
+}
+
+.price-currency {
+  position: relative;
+  z-index: 2;
+  font-family: 'Playfair Display', serif;
+  font-size: 72px;
+  font-weight: 600;
+  letter-spacing: -1px;
+  background: linear-gradient(180deg, #D4B876 0%, #A88B4A 60%, #8A7238 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0.7;
+  vertical-align: baseline;
+  margin-left: 4px;
+}
+
+.price-label {
+  font-family: 'Manrope', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #666666;
+  margin-top: 12px;
+}
+
+/* Typographic scale showcase inside main */
+.type-scale-mini {
+  margin-top: auto;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.type-row-mini {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+.type-row-mini .sample { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.type-row-mini .meta {
+  flex-shrink: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--gray-600);
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ═══ SIDEBAR (right, ~40%) ═══ */
+.sidebar {
+  grid-area: sidebar;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Sidebar card generic */
+.side-card {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-default);
+  border-radius: 16px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.side-card-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--gold-400);
+  margin-bottom: 16px;
+}
+
+/* ═══ PALETTE SWATCHES (sidebar) ═══ */
+.swatch-row {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.swatch-row:last-child { margin-bottom: 0; }
+.sw {
+  flex: 1;
+  height: 32px;
+  border-radius: 6px;
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.04);
+  cursor: default;
+  transition: transform 0.15s;
+}
+.sw:hover { transform: scale(1.08); z-index: 2; }
+.sw-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7px;
+  color: rgba(255,255,255,0.5);
+  position: absolute;
+  bottom: 2px;
+  left: 3px;
+  line-height: 1;
+  pointer-events: none;
+}
+.sw-label-dark {
+  color: rgba(0,0,0,0.4);
+}
+
+/* Palette detail row */
+.palette-detail {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.palette-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 6px;
+  padding: 3px 7px;
+}
+.palette-chip-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.palette-chip-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  color: var(--gray-400);
+}
+
+/* ═══ PARTICLE EFFECT (sidebar card) ═══ */
+.particles-card {
+  min-height: 140px;
+  position: relative;
+}
+.particles-canvas {
+  position: absolute;
+  inset: 0;
+  border-radius: 15px;
+  overflow: hidden;
+}
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  animation: float-particle linear infinite;
+  opacity: 0;
+}
+@keyframes float-particle {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.5); }
+  15% { opacity: 1; }
+  85% { opacity: 0.6; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.2); }
+}
+
+/* ═══ BOTTOM PANEL ═══ */
+.bottom-panel {
+  grid-area: bottom;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.data-card {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-default);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.data-card-label {
+  font-family: 'Manrope', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #666666;
+  margin-bottom: 6px;
+}
+.data-card-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--neutral-200);
+  letter-spacing: 0.3px;
+  font-feature-settings: 'tnum' 1;
+  line-height: 1.1;
+}
+.data-card-delta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-success);
+  margin-top: 2px;
+}
+.data-card-meta {
+  font-family: 'Manrope', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  color: #5A5A5E;
+  letter-spacing: 0.2px;
+  margin-top: 4px;
+}
+
+/* ═══════════════════════════════════════
+   PAGE 2 — FULL TYPE SCALE
+   ═══════════════════════════════════════ */
+
+.page-break {
+  width: 1400px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.section {
+  margin-bottom: 56px;
+}
+.section-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--gold-400);
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-border-strong), transparent);
+}
+
+/* Type scale rows */
+.type-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+  gap: 24px;
+}
+.type-row:last-child { border-bottom: none; }
+.type-sample { flex: 1; min-width: 0; }
+.type-meta {
+  flex-shrink: 0;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.type-meta-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gold-400);
+  letter-spacing: 0.3px;
+}
+.type-meta-spec {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--gray-600);
+  letter-spacing: 0.2px;
+}
+
+/* Display price (flat for type scale) */
+.display-price-flat {
+  font-family: 'Playfair Display', serif;
+  font-size: 72px;
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -2px;
+  background: linear-gradient(180deg, #E8D48A 0%, #D4B876 20%, #C4A265 45%, #A88B4A 65%, #8A7238 85%, #6A5A28 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter:
+    drop-shadow(0 1px 0 rgba(168, 139, 74, 0.8))
+    drop-shadow(0 2px 1px rgba(138, 114, 56, 0.5))
+    drop-shadow(0 4px 4px rgba(0, 0, 0, 0.3))
+    drop-shadow(0 8px 10px rgba(0, 0, 0, 0.15));
+  font-feature-settings: 'tnum' 1;
+}
+.display-price-flat .cur {
+  font-size: 0.6em;
+  opacity: 0.7;
+  margin-left: 0.05em;
+}
+
+.heading-1 { font-family: 'Manrope', sans-serif; font-size: 24px; font-weight: 700; line-height: 1.2; letter-spacing: -0.3px; color: #F0EDE5; }
+.heading-2 { font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 600; line-height: 1.3; color: #D4C8A8; }
+.heading-3 { font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600; line-height: 1.4; letter-spacing: 0.5px; text-transform: uppercase; color: #8A8A8E; }
+.body-text { font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 400; line-height: 1.5; color: #B0A898; }
+.body-small { font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 400; line-height: 1.4; color: #8A8A8E; }
+.caption-text { font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 500; line-height: 1.3; letter-spacing: 0.5px; text-transform: uppercase; color: #666666; }
+.micro-text { font-family: 'Manrope', sans-serif; font-size: 10px; font-weight: 400; line-height: 1.2; letter-spacing: 0.3px; color: #5A5A5E; }
+.data-number-lg { font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 600; line-height: 1.1; letter-spacing: 0.5px; font-feature-settings: 'tnum' 1; color: #D4C8A8; }
+.data-number-md { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 500; line-height: 1.2; letter-spacing: 0.3px; font-feature-settings: 'tnum' 1; color: #C4A265; }
+.data-number-sm { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 400; line-height: 1.3; letter-spacing: 0.5px; font-feature-settings: 'tnum' 1; color: #8A8A8E; }
+.button-text { font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600; line-height: 1; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-on-gold); background: var(--gold-400); padding: 10px 24px; border-radius: 24px; display: inline-block; }
+
+/* ═══ FULL PALETTE (page 2) ═══ */
+.full-palette-group {
+  margin-bottom: 28px;
+}
+.full-palette-label {
+  font-family: 'Manrope', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--neutral-300);
+  margin-bottom: 10px;
+}
+.full-swatches {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.full-swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.full-swatch-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: transform 0.15s;
+}
+.full-swatch-box:hover { transform: scale(1.06); }
+.full-swatch-hex {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--gray-500);
+}
+.full-swatch-role {
+  font-family: 'Manrope', sans-serif;
+  font-size: 8px;
+  color: var(--gray-700);
+  text-align: center;
+  max-width: 60px;
+  line-height: 1.2;
+}
+
+/* ═══ CONTRAST MATRIX ═══ */
+.combo-grid {
+  display: grid;
+  grid-template-columns: 130px repeat(4, 1fr);
+  gap: 3px;
+}
+.combo-header {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--gray-400);
+  padding: 8px;
+  text-align: center;
+}
+.combo-row-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--gray-400);
+  padding: 14px 8px;
+  display: flex;
+  align-items: center;
+  line-height: 1.4;
+}
+.combo-cell {
+  padding: 12px 10px;
+  border-radius: 8px;
+  min-height: 66px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  position: relative;
+}
+.combo-cell .cp {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+}
+.combo-cell .cb {
+  font-family: 'Manrope', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+}
+.combo-badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7px;
+  font-weight: 600;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+.badge-pass { background: rgba(76, 175, 80, 0.15); color: var(--color-success); }
+.badge-warn { background: rgba(255, 183, 77, 0.15); color: var(--color-warning); }
+.badge-fail { background: rgba(229, 115, 115, 0.15); color: var(--color-error); }
+
+/* ═══ FONT COMPARISON ═══ */
+.font-compare-item {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+}
+.font-compare-item:last-child { border-bottom: none; }
+
+.font-compare-price {
+  font-size: 64px;
+  font-weight: 600;
+  line-height: 1.0;
+  letter-spacing: -2px;
+  background: linear-gradient(180deg, #F0E4BA 0%, #E8D48A 5%, #D4B876 20%, #C4A265 45%, #A88B4A 65%, #8A7238 80%, #6A5A28 95%, #4A3E1A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter:
+    drop-shadow(0 1px 0 rgba(168, 139, 74, 0.8))
+    drop-shadow(0 2px 1px rgba(138, 114, 56, 0.6))
+    drop-shadow(0 4px 3px rgba(0, 0, 0, 0.35))
+    drop-shadow(0 8px 10px rgba(0, 0, 0, 0.18));
+  font-feature-settings: 'tnum' 1;
+  flex-shrink: 0;
+}
+.font-compare-price .cur {
+  font-size: 0.55em;
+  opacity: 0.65;
+}
+
+.font-compare-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-bottom: 8px;
+}
+.font-compare-name {
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--neutral-50);
+}
+.font-compare-rating {
+  font-size: 13px;
+  color: var(--gold-400);
+  letter-spacing: 2px;
+}
+.font-compare-note {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--gray-500);
+}
+
+/* ═══ COMPONENT DEMO ═══ */
+.component-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.demo-card {
+  background: var(--color-surface);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 18px 20px;
+  width: 240px;
+}
+.demo-card-label {
+  font-family: 'Manrope', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #666666;
+  margin-bottom: 8px;
+}
+.demo-card-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 600;
+  color: #D4C8A8;
+  letter-spacing: 0.3px;
+  font-feature-settings: 'tnum' 1;
+}
+.demo-card-delta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+.demo-card-meta {
+  font-family: 'Manrope', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  color: #5A5A5E;
+  margin-top: 8px;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     PAGE 1 — DASHBOARD-STYLE SPECIFICATION
+     ═══════════════════════════════════════════════ -->
+
+<div class="dashboard">
+
+  <!-- HEADER -->
+  <div class="dash-header">
+    <div class="dash-header-left">
+      <div class="dash-logo">Car<span>Calc</span></div>
+      <nav class="dash-nav">
+        <a href="#" class="active">Типографика</a>
+        <a href="#">Компоненты</a>
+        <a href="#">Экраны</a>
+      </nav>
+    </div>
+    <div class="dash-header-right">
+      <div class="dash-version">v2.0 · 01.03.2026</div>
+    </div>
+  </div>
+
+  <!-- MAIN CARD -->
+  <div class="main-card">
+    <div class="main-title">Стоимость доставки</div>
+    <div class="main-subtitle">Toyota Camry 2023 · США → Россия</div>
+
+    <div class="price-hero">
+      <div class="price-3d" data-price="3 972 000">3 972 000</div>
+      <span class="price-currency">₽</span>
+      <div class="price-label">Все сборы включены · upd 01.03.2026</div>
+    </div>
+
+    <div class="type-scale-mini">
+      <div class="type-row-mini">
+        <div class="sample heading-1" style="font-size:20px;">Стоимость доставки</div>
+        <div class="meta">H1 · Manrope 700 · 24px · #F0EDE5</div>
+      </div>
+      <div class="type-row-mini">
+        <div class="sample heading-2" style="font-size:16px;">Toyota Camry 2023</div>
+        <div class="meta">H2 · Manrope 600 · 18px · #D4C8A8</div>
+      </div>
+      <div class="type-row-mini">
+        <div class="sample heading-3" style="font-size:12px;">Направление</div>
+        <div class="meta">H3 · Manrope 600 · 14px · #8A8A8E</div>
+      </div>
+      <div class="type-row-mini">
+        <div class="sample body-text" style="font-size:14px;">Полная стоимость включает пошлины, утильсбор, доставку</div>
+        <div class="meta">Body · Manrope 400 · 15px · #B0A898</div>
+      </div>
+      <div class="type-row-mini">
+        <div class="sample body-small" style="font-size:12px;">Курсы обновлены 5 мин назад</div>
+        <div class="meta">Small · Manrope 400 · 13px · #8A8A8E</div>
+      </div>
+      <div class="type-row-mini">
+        <div class="sample caption-text" style="font-size:10px;">Все сборы включены</div>
+        <div class="meta">Caption · Manrope 500 · 11px · #666</div>
+      </div>
+      <div class="type-row-mini">
+        <div class="sample micro-text">upd: 01.03.2026 14:35</div>
+        <div class="meta">Micro · Manrope 400 · 10px · #5A5A5E</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- Palette Card -->
+    <div class="side-card">
+      <div class="side-card-title">Палитра</div>
+
+      <!-- Gold -->
+      <div style="margin-bottom:6px;">
+        <div style="font-family:'Manrope';font-size:9px;font-weight:500;color:#666;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:4px;">Gold</div>
+        <div class="swatch-row">
+          <div class="sw" style="background:#F0E4BA;"><span class="sw-label sw-label-dark">50</span></div>
+          <div class="sw" style="background:#E8D48A;"><span class="sw-label sw-label-dark">100</span></div>
+          <div class="sw" style="background:#DCBE7A;"><span class="sw-label sw-label-dark">200</span></div>
+          <div class="sw" style="background:#D4B876;"><span class="sw-label sw-label-dark">300</span></div>
+          <div class="sw" style="background:#C4A265;"><span class="sw-label sw-label-dark">400</span></div>
+          <div class="sw" style="background:#B49550;"><span class="sw-label">500</span></div>
+          <div class="sw" style="background:#A88B4A;"><span class="sw-label">600</span></div>
+          <div class="sw" style="background:#8A7238;"><span class="sw-label">700</span></div>
+          <div class="sw" style="background:#6A5A28;"><span class="sw-label">800</span></div>
+          <div class="sw" style="background:#4A3E1A;"><span class="sw-label">900</span></div>
+        </div>
+      </div>
+
+      <!-- Neutral -->
+      <div style="margin-bottom:6px;">
+        <div style="font-family:'Manrope';font-size:9px;font-weight:500;color:#666;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:4px;">Neutral</div>
+        <div class="swatch-row">
+          <div class="sw" style="background:#F0EDE5;"><span class="sw-label sw-label-dark">50</span></div>
+          <div class="sw" style="background:#E0DCD4;"><span class="sw-label sw-label-dark">100</span></div>
+          <div class="sw" style="background:#D4C8A8;"><span class="sw-label sw-label-dark">200</span></div>
+          <div class="sw" style="background:#B0A898;"><span class="sw-label sw-label-dark">300</span></div>
+          <div class="sw" style="background:#8A8478;"><span class="sw-label">400</span></div>
+          <div class="sw" style="background:#6A665E;"><span class="sw-label">500</span></div>
+          <div class="sw" style="background:#5A5650;"><span class="sw-label">600</span></div>
+          <div class="sw" style="background:#4A4844;"><span class="sw-label">700</span></div>
+          <div class="sw" style="background:#3A3836;"><span class="sw-label">800</span></div>
+          <div class="sw" style="background:#2A2826;"><span class="sw-label">900</span></div>
+        </div>
+      </div>
+
+      <!-- Surfaces -->
+      <div style="margin-bottom:6px;">
+        <div style="font-family:'Manrope';font-size:9px;font-weight:500;color:#666;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:4px;">Surfaces</div>
+        <div class="swatch-row">
+          <div class="sw" style="background:#0A0A0C;border-color:rgba(255,255,255,0.1);"><span class="sw-label">deep</span></div>
+          <div class="sw" style="background:#0E0E10;border-color:rgba(255,255,255,0.1);"><span class="sw-label">bg</span></div>
+          <div class="sw" style="background:#121214;border-color:rgba(255,255,255,0.1);"><span class="sw-label">elev</span></div>
+          <div class="sw" style="background:#1A1A1E;border-color:rgba(255,255,255,0.1);"><span class="sw-label">surf</span></div>
+          <div class="sw" style="background:#222226;border-color:rgba(255,255,255,0.1);"><span class="sw-label">raisd</span></div>
+          <div class="sw" style="background:#2A2A2E;border-color:rgba(255,255,255,0.1);"><span class="sw-label">over</span></div>
+          <div class="sw" style="background:#161618;border-color:rgba(255,255,255,0.1);"><span class="sw-label">input</span></div>
+        </div>
+      </div>
+
+      <!-- Semantic -->
+      <div>
+        <div style="font-family:'Manrope';font-size:9px;font-weight:500;color:#666;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:4px;">Semantic</div>
+        <div class="swatch-row" style="gap:6px;">
+          <div class="sw" style="background:#4CAF50;flex:1;"><span class="sw-label sw-label-dark">ok</span></div>
+          <div class="sw" style="background:#E57373;flex:1;"><span class="sw-label sw-label-dark">err</span></div>
+          <div class="sw" style="background:#FFB74D;flex:1;"><span class="sw-label sw-label-dark">warn</span></div>
+          <div class="sw" style="background:#64B5F6;flex:1;"><span class="sw-label sw-label-dark">info</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mono Showcase Card -->
+    <div class="side-card">
+      <div class="side-card-title">Monospace · JetBrains Mono</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div>
+          <div class="data-number-lg">78.50 ₽</div>
+          <div style="font-family:'JetBrains Mono';font-size:9px;color:var(--gray-600);margin-top:2px;">LG · 600 · 24px · #D4C8A8</div>
+        </div>
+        <div>
+          <div class="data-number-md">3 972 193 ₽</div>
+          <div style="font-family:'JetBrains Mono';font-size:9px;color:var(--gray-600);margin-top:2px;">MD · 500 · 18px · #C4A265</div>
+        </div>
+        <div>
+          <div class="data-number-sm">+1.50₽ коррекция</div>
+          <div style="font-family:'JetBrains Mono';font-size:9px;color:var(--gray-600);margin-top:2px;">SM · 400 · 13px · #8A8A8E</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Particles Card -->
+    <div class="side-card particles-card">
+      <div class="side-card-title" style="position:relative;z-index:2;">Golden Dust · Particles</div>
+      <div class="particles-canvas" id="particlesCanvas"></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM DATA CARDS -->
+  <div class="bottom-panel">
+    <div class="data-card">
+      <div class="data-card-label">Курс USDT</div>
+      <div class="data-card-value">78.50 ₽</div>
+      <div class="data-card-delta" style="color:var(--color-success);">+1.50 ₽</div>
+      <div class="data-card-meta">Bybit P2P · 5 мин назад</div>
+    </div>
+    <div class="data-card">
+      <div class="data-card-label">Пошлина</div>
+      <div class="data-card-value" style="color:var(--gold-400);">502 600 ₽</div>
+      <div class="data-card-delta" style="color:var(--color-error);">−12 400 ₽</div>
+      <div class="data-card-meta">ФТС · обновлено сегодня</div>
+    </div>
+    <div class="data-card">
+      <div class="data-card-label">Доставка</div>
+      <div class="data-card-value">3 200 $</div>
+      <div class="data-card-delta" style="color:var(--gray-400);">без изменений</div>
+      <div class="data-card-meta">LA → Владивосток</div>
+    </div>
+    <div class="data-card">
+      <div class="data-card-label">Утиль. сбор</div>
+      <div class="data-card-value">378 590 ₽</div>
+      <div class="data-card-delta" style="color:var(--color-warning);">+770 322 ₽</div>
+      <div class="data-card-meta">2023 · 2.5L · 200 л.с.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PAGE 2 — FULL TYPOGRAPHY SCALE
+     ═══════════════════════════════════════════════ -->
+
+<div class="page-break">
+
+  <!-- СЕКЦИЯ 1: Full Type Scale -->
+  <div class="section">
+    <div class="section-title">Типографическая шкала · Полная</div>
+
+    <div class="type-row" style="padding:20px 0 28px;">
+      <div class="type-sample">
+        <div class="display-price-flat">3 972 000<span class="cur"> ₽</span></div>
+      </div>
+      <div class="type-meta">
+        <span class="type-meta-name">Display Price</span>
+        <span class="type-meta-spec">Playfair Display 600</span>
+        <span class="type-meta-spec">72px / 0.95 / -2px</span>
+        <span class="type-meta-spec">Gold gradient + 3D shadow</span>
+      </div>
+    </div>
+
+    <div class="type-row">
+      <div class="type-sample"><div class="heading-1">Стоимость доставки</div></div>
+      <div class="type-meta"><span class="type-meta-name">H1</span><span class="type-meta-spec">Manrope 700 · 24px / 1.2 / -0.3px · #F0EDE5</span></div>
+    </div>
+    <div class="type-row">
+      <div class="type-sample"><div class="heading-2">Toyota Camry 2023</div></div>
+      <div class="type-meta"><span class="type-meta-name">H2</span><span class="type-meta-spec">Manrope 600 · 18px / 1.3 / 0 · #D4C8A8</span></div>
+    </div>
+    <div class="type-row">
+      <div class="type-sample"><div class="heading-3">Направление</div></div>
+      <div class="type-meta"><span class="type-meta-name">H3</span><span class="type-meta-spec">Manrope 600 · 14px / 1.4 / 0.5px · #8A8A8E · UP</span></div>
+    </div>
+    <div class="type-row">
+      <div class="type-sample"><div class="body-text">Полная стоимость включает таможенные пошлины, утилизационный сбор, доставку морем и все необходимые платежи.</div></div>
+      <div class="type-meta"><span class="type-meta-name">Body</span><span class="type-meta-spec">Manrope 400 · 15px / 1.5 / 0 · #B0A898</span></div>
+    </div>
+    <div class="type-row">
+      <div class="type-sample"><div class="body-small">Курсы обновлены 5 мин назад</div></div>
+      <div class="type-meta"><span class="type-meta-name">Body Small</span><span class="type-meta-spec">Manrope 400 · 13px / 1.4 / 0 · #8A8A8E</span></div>
+    </div>
+    <div class="type-row">
+      <div class="type-sample"><div class="caption-text">Все сборы включены</div></div>
+      <div class="type-meta"><span class="type-meta-name">Caption</span><span class="type-meta-spec">Manrope 500 · 11px / 1.3 / 0.5px · #666 · UP</span></div>
+    </div>
+    <div class="type-row">
+      <div class="type-sample"><div class="micro-text">upd: 01.03.2026 14:35</div></div>
+      <div class="type-meta"><span class="type-meta-name">Micro</span><span class="type-meta-spec">Manrope 400 · 10px / 1.2 / 0.3px · #5A5A5E</span></div>
+    </div>
+    <div class="type-row">
+      <div class="type-sample"><div class="data-number-lg">78.50 ₽</div></div>
+      <div class="type-meta"><span class="type-meta-name">Mono LG</span><span class="type-meta-spec">JetBrains Mono 600 · 24px · #D4C8A8 · tnum</span></div>
+    </div>
+    <div class="type-row">
+      <div class="type-sample"><div class="data-number-md">3 972 193 ₽</div></div>
+      <div class="type-meta"><span class="type-meta-name">Mono MD</span><span class="type-meta-spec">JetBrains Mono 500 · 18px · #C4A265 · tnum</span></div>
+    </div>
+    <div class="type-row">
+      <div class="type-sample"><div class="data-number-sm">+1.50₽ коррекция</div></div>
+      <div class="type-meta"><span class="type-meta-name">Mono SM</span><span class="type-meta-spec">JetBrains Mono 400 · 13px · #8A8A8E · tnum</span></div>
+    </div>
+    <div class="type-row">
+      <div class="type-sample"><div class="button-text">Рассчитать</div></div>
+      <div class="type-meta"><span class="type-meta-name">Button</span><span class="type-meta-spec">Manrope 600 · 14px / 1 / 0.5px · #1A1A1E on gold · UP</span></div>
+    </div>
+  </div>
+
+  <!-- СЕКЦИЯ 2: Full Palette -->
+  <div class="section">
+    <div class="section-title">Цветовая палитра · Полная</div>
+
+    <div class="full-palette-group">
+      <div class="full-palette-label">Gold · Акцентная шкала</div>
+      <div class="full-swatches">
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#F0E4BA;"></div><span class="full-swatch-hex">#F0E4BA</span><span class="full-swatch-role">50 · Блик</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#E8D48A;"></div><span class="full-swatch-hex">#E8D48A</span><span class="full-swatch-role">100 · Highlight</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#DCBE7A;"></div><span class="full-swatch-hex">#DCBE7A</span><span class="full-swatch-role">200 · Яркий</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#D4B876;"></div><span class="full-swatch-hex">#D4B876</span><span class="full-swatch-role">300 · Bright</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#C4A265;"></div><span class="full-swatch-hex">#C4A265</span><span class="full-swatch-role">400 · Default</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#B49550;"></div><span class="full-swatch-hex">#B49550</span><span class="full-swatch-role">500 · Medium</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#A88B4A;"></div><span class="full-swatch-hex">#A88B4A</span><span class="full-swatch-role">600 · Deep</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#8A7238;"></div><span class="full-swatch-hex">#8A7238</span><span class="full-swatch-role">700 · Dark</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#6A5A28;"></div><span class="full-swatch-hex">#6A5A28</span><span class="full-swatch-role">800 · V.Dark</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#4A3E1A;"></div><span class="full-swatch-hex">#4A3E1A</span><span class="full-swatch-role">900 · Deepest</span></div>
+      </div>
+    </div>
+
+    <div class="full-palette-group">
+      <div class="full-palette-label">Neutral · Тёплые нейтральные</div>
+      <div class="full-swatches">
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#F0EDE5;"></div><span class="full-swatch-hex">#F0EDE5</span><span class="full-swatch-role">50 · Primary</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#E0DCD4;"></div><span class="full-swatch-hex">#E0DCD4</span><span class="full-swatch-role">100 · Light</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#D4C8A8;"></div><span class="full-swatch-hex">#D4C8A8</span><span class="full-swatch-role">200 · Бежевый</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#B0A898;"></div><span class="full-swatch-hex">#B0A898</span><span class="full-swatch-role">300 · Body</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#8A8478;"></div><span class="full-swatch-hex">#8A8478</span><span class="full-swatch-role">400 · Hint</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#6A665E;"></div><span class="full-swatch-hex">#6A665E</span><span class="full-swatch-role">500 · Muted</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#5A5650;"></div><span class="full-swatch-hex">#5A5650</span><span class="full-swatch-role">600 · Caption</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#4A4844;"></div><span class="full-swatch-hex">#4A4844</span><span class="full-swatch-role">700 · Dim</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#3A3836;"></div><span class="full-swatch-hex">#3A3836</span><span class="full-swatch-role">800 · Subtle</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#2A2826;"></div><span class="full-swatch-hex">#2A2826</span><span class="full-swatch-role">900 · Micro</span></div>
+      </div>
+    </div>
+
+    <div class="full-palette-group">
+      <div class="full-palette-label">Gray · Холодные серые (UI)</div>
+      <div class="full-swatches">
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#8A8A8E;"></div><span class="full-swatch-hex">#8A8A8E</span><span class="full-swatch-role">400</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#6A6A6E;"></div><span class="full-swatch-hex">#6A6A6E</span><span class="full-swatch-role">500</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#5A5A5E;"></div><span class="full-swatch-hex">#5A5A5E</span><span class="full-swatch-role">600</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#4A4A4E;"></div><span class="full-swatch-hex">#4A4A4E</span><span class="full-swatch-role">700</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#3A3A3E;"></div><span class="full-swatch-hex">#3A3A3E</span><span class="full-swatch-role">800</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#2A2A2E;"></div><span class="full-swatch-hex">#2A2A2E</span><span class="full-swatch-role">900</span></div>
+      </div>
+    </div>
+
+    <div class="full-palette-group">
+      <div class="full-palette-label">Backgrounds · Фоновые поверхности</div>
+      <div class="full-swatches">
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#0A0A0C;border-color:rgba(255,255,255,0.12);"></div><span class="full-swatch-hex">#0A0A0C</span><span class="full-swatch-role">bg-deep</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#0E0E10;border-color:rgba(255,255,255,0.12);"></div><span class="full-swatch-hex">#0E0E10</span><span class="full-swatch-role">bg</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#121214;border-color:rgba(255,255,255,0.12);"></div><span class="full-swatch-hex">#121214</span><span class="full-swatch-role">elevated</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#1A1A1E;border-color:rgba(255,255,255,0.12);"></div><span class="full-swatch-hex">#1A1A1E</span><span class="full-swatch-role">surface</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#222226;border-color:rgba(255,255,255,0.12);"></div><span class="full-swatch-hex">#222226</span><span class="full-swatch-role">raised</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#2A2A2E;border-color:rgba(255,255,255,0.12);"></div><span class="full-swatch-hex">#2A2A2E</span><span class="full-swatch-role">overlay</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#161618;border-color:rgba(255,255,255,0.12);"></div><span class="full-swatch-hex">#161618</span><span class="full-swatch-role">input</span></div>
+      </div>
+    </div>
+
+    <div class="full-palette-group">
+      <div class="full-palette-label">Semantic · Семантические</div>
+      <div class="full-swatches">
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#4CAF50;"></div><span class="full-swatch-hex">#4CAF50</span><span class="full-swatch-role">Success</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#3A8A3E;"></div><span class="full-swatch-hex">#3A8A3E</span><span class="full-swatch-role">Success muted</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#E57373;"></div><span class="full-swatch-hex">#E57373</span><span class="full-swatch-role">Error</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#B85555;"></div><span class="full-swatch-hex">#B85555</span><span class="full-swatch-role">Error muted</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#FFB74D;"></div><span class="full-swatch-hex">#FFB74D</span><span class="full-swatch-role">Warning</span></div>
+        <div class="full-swatch"><div class="full-swatch-box" style="background:#64B5F6;"></div><span class="full-swatch-hex">#64B5F6</span><span class="full-swatch-role">Info</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- СЕКЦИЯ 3: Contrast Matrix -->
+  <div class="section">
+    <div class="section-title">Комбинации · Контраст · WCAG AA</div>
+
+    <div class="combo-grid">
+      <div class="combo-header"></div>
+      <div class="combo-header">bg-deep<br><span style="color:var(--gray-600);font-size:8px;">#0A0A0C</span></div>
+      <div class="combo-header">surface<br><span style="color:var(--gray-600);font-size:8px;">#1A1A1E</span></div>
+      <div class="combo-header">raised<br><span style="color:var(--gray-600);font-size:8px;">#222226</span></div>
+      <div class="combo-header">gold-400<br><span style="color:var(--gray-600);font-size:8px;">#C4A265</span></div>
+
+      <div class="combo-row-label">text-primary<br>#F0EDE5</div>
+      <div class="combo-cell" style="background:#0A0A0C;"><span class="cp" style="color:#F0EDE5;">3 972 000 ₽</span><span class="cb" style="color:#F0EDE5;">Стоимость доставки</span><span class="combo-badge badge-pass">14.8:1</span></div>
+      <div class="combo-cell" style="background:#1A1A1E;"><span class="cp" style="color:#F0EDE5;">3 972 000 ₽</span><span class="cb" style="color:#F0EDE5;">Стоимость доставки</span><span class="combo-badge badge-pass">12.1:1</span></div>
+      <div class="combo-cell" style="background:#222226;"><span class="cp" style="color:#F0EDE5;">3 972 000 ₽</span><span class="cb" style="color:#F0EDE5;">Стоимость доставки</span><span class="combo-badge badge-pass">10.8:1</span></div>
+      <div class="combo-cell" style="background:#C4A265;"><span class="cp" style="color:#F0EDE5;">3 972 000 ₽</span><span class="cb" style="color:#F0EDE5;">Стоимость доставки</span><span class="combo-badge badge-warn">2.1:1</span></div>
+
+      <div class="combo-row-label">text-secondary<br>#D4C8A8</div>
+      <div class="combo-cell" style="background:#0A0A0C;"><span class="cp" style="color:#D4C8A8;">3 972 000 ₽</span><span class="cb" style="color:#D4C8A8;">Стоимость доставки</span><span class="combo-badge badge-pass">10.6:1</span></div>
+      <div class="combo-cell" style="background:#1A1A1E;"><span class="cp" style="color:#D4C8A8;">3 972 000 ₽</span><span class="cb" style="color:#D4C8A8;">Стоимость доставки</span><span class="combo-badge badge-pass">8.6:1</span></div>
+      <div class="combo-cell" style="background:#222226;"><span class="cp" style="color:#D4C8A8;">3 972 000 ₽</span><span class="cb" style="color:#D4C8A8;">Стоимость доставки</span><span class="combo-badge badge-pass">7.7:1</span></div>
+      <div class="combo-cell" style="background:#C4A265;"><span class="cp" style="color:#D4C8A8;">3 972 000 ₽</span><span class="cb" style="color:#D4C8A8;">Стоимость доставки</span><span class="combo-badge badge-fail">1.5:1</span></div>
+
+      <div class="combo-row-label">text-muted<br>#8A8A8E</div>
+      <div class="combo-cell" style="background:#0A0A0C;"><span class="cp" style="color:#8A8A8E;">3 972 000 ₽</span><span class="cb" style="color:#8A8A8E;">Стоимость доставки</span><span class="combo-badge badge-pass">5.2:1</span></div>
+      <div class="combo-cell" style="background:#1A1A1E;"><span class="cp" style="color:#8A8A8E;">3 972 000 ₽</span><span class="cb" style="color:#8A8A8E;">Стоимость доставки</span><span class="combo-badge badge-warn">4.2:1</span></div>
+      <div class="combo-cell" style="background:#222226;"><span class="cp" style="color:#8A8A8E;">3 972 000 ₽</span><span class="cb" style="color:#8A8A8E;">Стоимость доставки</span><span class="combo-badge badge-warn">3.8:1</span></div>
+      <div class="combo-cell" style="background:#C4A265;"><span class="cp" style="color:#8A8A8E;">3 972 000 ₽</span><span class="cb" style="color:#8A8A8E;">Стоимость доставки</span><span class="combo-badge badge-fail">1.2:1</span></div>
+
+      <div class="combo-row-label">text-on-gold<br>#1A1A1E</div>
+      <div class="combo-cell" style="background:#0A0A0C;"><span class="cp" style="color:#1A1A1E;">3 972 000 ₽</span><span class="cb" style="color:#1A1A1E;">Стоимость доставки</span><span class="combo-badge badge-fail">1.2:1</span></div>
+      <div class="combo-cell" style="background:#1A1A1E;"><span class="cp" style="color:#1A1A1E;">3 972 000 ₽</span><span class="cb" style="color:#1A1A1E;">Стоимость доставки</span><span class="combo-badge badge-fail">1.0:1</span></div>
+      <div class="combo-cell" style="background:#222226;"><span class="cp" style="color:#1A1A1E;">3 972 000 ₽</span><span class="cb" style="color:#1A1A1E;">Стоимость доставки</span><span class="combo-badge badge-fail">1.1:1</span></div>
+      <div class="combo-cell" style="background:#C4A265;"><span class="cp" style="color:#1A1A1E;">3 972 000 ₽</span><span class="cb" style="color:#1A1A1E;">Стоимость доставки</span><span class="combo-badge badge-pass">6.9:1</span></div>
+    </div>
+  </div>
+
+  <!-- СЕКЦИЯ 4: Font Comparison -->
+  <div class="section">
+    <div class="section-title">Сравнение Serif-шрифтов · Display Price</div>
+
+    <div class="font-compare-item">
+      <div class="font-compare-price" style="font-family:'Playfair Display',serif;">3 972 000<span class="cur"> ₽</span></div>
+      <div class="font-compare-info">
+        <span class="font-compare-name">Playfair Display 600</span>
+        <span class="font-compare-rating">★★★★★</span>
+        <span class="font-compare-note">Рекомендация · Closest match к референсу</span>
+      </div>
+    </div>
+
+    <div class="font-compare-item">
+      <div class="font-compare-price" style="font-family:'DM Serif Display',serif;font-weight:400;">3 972 000<span class="cur"> ₽</span></div>
+      <div class="font-compare-info">
+        <span class="font-compare-name">DM Serif Display 400</span>
+        <span class="font-compare-rating">★★★★☆</span>
+        <span class="font-compare-note">Классический transitional serif</span>
+      </div>
+    </div>
+
+    <div class="font-compare-item">
+      <div class="font-compare-price" style="font-family:'Cormorant Garamond',serif;">3 972 000<span class="cur"> ₽</span></div>
+      <div class="font-compare-info">
+        <span class="font-compare-name">Cormorant Garamond 600</span>
+        <span class="font-compare-rating">★★★★☆</span>
+        <span class="font-compare-note">Утончённый high-contrast · может быть тонковат</span>
+      </div>
+    </div>
+
+    <div class="font-compare-item">
+      <div class="font-compare-price" style="font-family:'Noto Serif Display',serif;">3 972 000<span class="cur"> ₽</span></div>
+      <div class="font-compare-info">
+        <span class="font-compare-name">Noto Serif Display 600</span>
+        <span class="font-compare-rating">★★★☆☆</span>
+        <span class="font-compare-note">Стабильный, хорошая кириллица, менее luxury</span>
+      </div>
+    </div>
+
+    <div class="font-compare-item">
+      <div class="font-compare-price" style="font-family:'Libre Baskerville',serif;font-weight:700;">3 972 000<span class="cur"> ₽</span></div>
+      <div class="font-compare-info">
+        <span class="font-compare-name">Libre Baskerville 700</span>
+        <span class="font-compare-rating">★★★☆☆</span>
+        <span class="font-compare-note">Классический, менее контрастный</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- СЕКЦИЯ 5: Component Demo -->
+  <div class="section">
+    <div class="section-title">Компонент · Карточка данных</div>
+
+    <div class="component-row">
+      <div class="demo-card">
+        <div class="demo-card-label">Курс USDT</div>
+        <div class="demo-card-value">78.50 ₽</div>
+        <div class="demo-card-delta" style="color:var(--color-success);">+1.50 ₽</div>
+        <div class="demo-card-meta">Bybit P2P · 5 мин назад</div>
+      </div>
+      <div class="demo-card">
+        <div class="demo-card-label">Пошлина</div>
+        <div class="demo-card-value" style="color:var(--gold-400);">502 600 ₽</div>
+        <div class="demo-card-delta" style="color:var(--color-error);">−12 400 ₽</div>
+        <div class="demo-card-meta">ФТС · обновлено сегодня</div>
+      </div>
+      <div class="demo-card">
+        <div class="demo-card-label">Доставка</div>
+        <div class="demo-card-value">3 200 $</div>
+        <div class="demo-card-delta" style="color:var(--gray-400);">без изменений</div>
+        <div class="demo-card-meta">Лос-Анджелес → Владивосток</div>
+      </div>
+      <div class="demo-card">
+        <div class="demo-card-label">Утиль. сбор</div>
+        <div class="demo-card-value">378 590 ₽</div>
+        <div class="demo-card-delta" style="color:var(--color-warning);">+770 322 ₽</div>
+        <div class="demo-card-meta">2023 · 2.5L · 200 л.с.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ═══ GOLDEN PARTICLES ANIMATION ═══
+(function() {
+  const canvas = document.getElementById('particlesCanvas');
+  if (!canvas) return;
+  const goldColors = ['#F0E4BA', '#E8D48A', '#D4B876', '#C4A265', '#A88B4A', '#8A7238'];
+  const count = 35;
+
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 2.5 + 0.8;
+    const x = Math.random() * 100;
+    const y = Math.random() * 100;
+    const dx = (Math.random() - 0.3) * 80;
+    const dy = (Math.random() - 0.5) * 60;
+    const dur = Math.random() * 5 + 4;
+    const delay = Math.random() * 6;
+    const color = goldColors[Math.floor(Math.random() * goldColors.length)];
+
+    p.style.cssText = `
+      width: ${size}px;
+      height: ${size}px;
+      background: ${color};
+      left: ${x}%;
+      top: ${y}%;
+      --dx: ${dx}px;
+      --dy: ${dy}px;
+      animation-duration: ${dur}s;
+      animation-delay: ${delay}s;
+      box-shadow: 0 0 ${size * 2}px ${color};
+    `;
+    canvas.appendChild(p);
+  }
+})();
+</script>
+
+</body>
+</html>

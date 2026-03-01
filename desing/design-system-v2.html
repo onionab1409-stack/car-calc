@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=800">
+<title>Car-Calc · Design System v2 · Ultimate Spec</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=DM+Serif+Display&family=Lora:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ═══════════════════════════════════════════
+     CSS CUSTOM PROPERTIES — FROM REFERENCE
+     ═══════════════════════════════════════════ */
+  :root {
+    /* Backgrounds */
+    --bg-black: #000000;
+    --bg-primary: #0C0C0E;
+    --bg-card: #131313;
+    --bg-card-hover: #1A1A1E;
+    --bg-elevated: #1F1F1F;
+    --bg-input: #222226;
+
+    /* Borders */
+    --border: #2A2A2E;
+    --border-subtle: #1A1A1E;
+    --border-accent: #3A3530;
+
+    /* Gold Gradient Stops (from pixel analysis) */
+    --gold-lightest: #FFE2A9;
+    --gold-light: #FDDDA5;
+    --gold-mid: #F1C080;
+    --gold-core: #C4A265;
+    --gold-dark: #A08050;
+    --gold-bronze: #83582E;
+    --gold-deep: #634023;
+    --gold-shadow: #4B3423;
+    --gold-darkest: #2D1C13;
+
+    /* Text */
+    --text-white: #F5F5F5;
+    --text-cream: #DFDCD3;
+    --text-muted: #888888;
+    --text-hint: #666666;
+    --text-dim: #444444;
+
+    /* Semantic */
+    --accent: #C4A265;
+    --accent-light: #D4B87A;
+    --secondary: #8B9DAF;
+    --teal-dark: #354440;
+    --teal-mid: #4A6560;
+    --success: #4CAF50;
+    --error: #E57373;
+
+    /* Fonts */
+    --font-serif: 'Playfair Display', 'Cormorant Garamond', serif;
+    --font-sans: 'Inter', 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', 'Space Mono', monospace;
+
+    /* Radii */
+    --r-sm: 8px;
+    --r-md: 12px;
+    --r-lg: 16px;
+    --r-xl: 24px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-black);
+    font-family: var(--font-sans);
+    color: var(--text-white);
+    display: flex;
+    justify-content: center;
+    padding: 32px 0;
+    min-height: 100vh;
+  }
+
+  .spec {
+    width: 800px;
+    min-height: 1400px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    padding: 36px 44px 28px;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .header-title {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .header-title span {
+    background: linear-gradient(135deg, var(--gold-lightest), var(--gold-core));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header-meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-hint);
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    padding: 36px 44px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .section:last-child { border-bottom: none; }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--gold-core);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* ═══ SECTION 1: TYPOGRAPHY ═══ */
+  .type-row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 20px;
+    align-items: baseline;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.025);
+  }
+  .type-row:last-child { border-bottom: none; }
+
+  .type-meta {
+    padding-top: 4px;
+  }
+  .type-meta .level {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold-core);
+  }
+  .type-meta .details {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    line-height: 1.6;
+  }
+
+  /* Display — 3D Gold Gradient */
+  .t-display {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 58px;
+    letter-spacing: -0.02em;
+    line-height: 1.0;
+    background: linear-gradient(
+      180deg,
+      var(--gold-lightest) 0%,
+      var(--gold-light) 25%,
+      var(--gold-mid) 50%,
+      var(--gold-core) 75%,
+      var(--gold-dark) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 2px 4px rgba(196,162,101,0.15));
+  }
+
+  .t-h1 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 30px;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    color: var(--text-white);
+  }
+
+  .t-h2 {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 1.3;
+    color: var(--text-white);
+  }
+
+  .t-body {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--text-cream);
+  }
+
+  .t-caption {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 13px;
+    letter-spacing: 0.005em;
+    line-height: 1.4;
+    color: var(--text-muted);
+  }
+
+  .t-micro {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    line-height: 1.3;
+    color: var(--text-hint);
+    text-transform: uppercase;
+  }
+
+  .t-mono {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 0.03em;
+    line-height: 1.5;
+    color: var(--gold-core);
+  }
+
+  /* ═══ SECTION 2: COLORS ═══ */
+  .color-group-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-hint);
+    margin: 24px 0 12px;
+  }
+  .color-group-title:first-child { margin-top: 0; }
+
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .color-grid.wide {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .swatch {
+    border-radius: var(--r-sm);
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-card);
+  }
+  .swatch .preview {
+    height: 44px;
+    position: relative;
+  }
+  .swatch .preview.bordered {
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .swatch .label {
+    padding: 8px 10px;
+  }
+  .swatch .role {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-cream);
+    margin-bottom: 1px;
+  }
+  .swatch .hex {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-dim);
+  }
+
+  /* Gold gradient strip */
+  .gold-strip {
+    display: flex;
+    border-radius: var(--r-sm);
+    overflow: hidden;
+    height: 40px;
+    margin-top: 12px;
+    border: 1px solid var(--border-subtle);
+  }
+  .gold-strip div { flex: 1; }
+
+  /* ═══ SECTION 3: COMBINATIONS ═══ */
+  .combo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .combo-card {
+    border-radius: var(--r-md);
+    padding: 20px 22px;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .combo-tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.45;
+  }
+  .combo-title {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 26px;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+  .combo-body {
+    font-size: 12px;
+    line-height: 1.5;
+    opacity: 0.65;
+  }
+  .combo-data {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    margin-top: auto;
+    opacity: 0.4;
+  }
+
+  /* ═══ SECTION 4: PRICE VARIANTS ═══ */
+  .price-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-md);
+    padding: 24px 28px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .price-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 60% 50%, rgba(196,162,101,0.03), transparent 70%);
+    pointer-events: none;
+  }
+  .price-card:hover {
+    border-color: var(--gold-core);
+    box-shadow: 0 0 30px rgba(196,162,101,0.08);
+  }
+
+  .price-info {
+    width: 150px;
+    flex-shrink: 0;
+  }
+  .price-num {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-core);
+    margin-bottom: 8px;
+  }
+  .price-font-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-white);
+    margin-bottom: 4px;
+  }
+  .price-font-detail {
+    font-size: 10px;
+    color: var(--text-hint);
+    line-height: 1.5;
+  }
+
+  .price-display {
+    flex: 1;
+    text-align: center;
+    position: relative;
+  }
+
+  .price-amount {
+    font-size: 48px;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    background: linear-gradient(
+      180deg,
+      var(--gold-lightest) 0%,
+      var(--gold-light) 30%,
+      var(--gold-core) 70%,
+      var(--gold-dark) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 2px 6px rgba(196,162,101,0.12));
+  }
+  .price-amount .rub {
+    font-size: 0.65em;
+    opacity: 0.7;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    padding: 20px 44px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .footer span {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+  .footer .dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gold-core);
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  /* ── PARTICLES DECORATION ── */
+  .particles-bar {
+    height: 48px;
+    margin: 20px 0 0;
+    border-radius: var(--r-sm);
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+  }
+  .particles-bar canvas {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+</head>
+<body>
+
+<div class="spec">
+
+  <!-- ═══ HEADER ═══ -->
+  <div class="header">
+    <div class="header-title"><span>Car-Calc</span> &nbsp;· Design System</div>
+    <div class="header-meta">P5.2 · UI Kit<br>v2.0 · 28.02.2026</div>
+  </div>
+
+  <!-- ═══ SECTION 1: TYPOGRAPHY ═══ -->
+  <div class="section">
+    <div class="section-label">01 · Типографика</div>
+
+    <!-- Display -->
+    <div class="type-row">
+      <div class="type-meta">
+        <div class="level">Display</div>
+        <div class="details">58px / 400<br>Serif<br>ls: -0.02em<br>lh: 1.0<br>Gold gradient</div>
+      </div>
+      <div class="t-display">3 972 000 ₽</div>
+    </div>
+
+    <!-- H1 -->
+    <div class="type-row">
+      <div class="type-meta">
+        <div class="level">H1</div>
+        <div class="details">30px / 400<br>Serif<br>ls: -0.01em<br>lh: 1.2</div>
+      </div>
+      <div class="t-h1">Итоговая стоимость доставки</div>
+    </div>
+
+    <!-- H2 -->
+    <div class="type-row">
+      <div class="type-meta">
+        <div class="level">H2</div>
+        <div class="details">20px / 500<br>Sans<br>lh: 1.3</div>
+      </div>
+      <div class="t-h2">Выберите страну отправления</div>
+    </div>
+
+    <!-- Body -->
+    <div class="type-row">
+      <div class="type-meta">
+        <div class="level">Body</div>
+        <div class="details">15px / 400<br>Sans<br>lh: 1.55</div>
+      </div>
+      <div class="t-body">Стоимость включает все расходы: аукцион, логистику, таможню, утилизационный сбор и постановку на учёт в РФ. Курс USDT/RUB обновляется каждый час.</div>
+    </div>
+
+    <!-- Caption -->
+    <div class="type-row">
+      <div class="type-meta">
+        <div class="level">Caption</div>
+        <div class="details">13px / 400<br>Sans<br>lh: 1.4</div>
+      </div>
+      <div class="t-caption">Курс USDT/RUB обновлён 5 мин назад · Источник: Bybit P2P медиана</div>
+    </div>
+
+    <!-- Micro -->
+    <div class="type-row">
+      <div class="type-meta">
+        <div class="level">Micro</div>
+        <div class="details">10px / 500<br>Sans / UC<br>ls: +0.06em</div>
+      </div>
+      <div class="t-micro">Год выпуска · Объём двигателя · Мощность · Тип топлива</div>
+    </div>
+
+    <!-- Mono -->
+    <div class="type-row">
+      <div class="type-meta">
+        <div class="level">Mono</div>
+        <div class="details">14px / 400<br>Mono<br>ls: +0.03em</div>
+      </div>
+      <div class="t-mono">USDT 98.50 ₽ · KRW 0.0672 ₽ · CNY 13.40 ₽ · EUR 105.20 ₽</div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 2: COLOR PALETTE ═══ -->
+  <div class="section">
+    <div class="section-label">02 · Цветовая палитра</div>
+
+    <!-- Backgrounds -->
+    <div class="color-group-title">Фоны</div>
+    <div class="color-grid">
+      <div class="swatch">
+        <div class="preview" style="background:#000000;"></div>
+        <div class="label"><div class="role">Black</div><div class="hex">#000000</div></div>
+      </div>
+      <div class="swatch">
+        <div class="preview" style="background:#0C0C0E;"></div>
+        <div class="label"><div class="role">Primary BG</div><div class="hex">#0C0C0E</div></div>
+      </div>
+      <div class="swatch">
+        <div class="preview" style="background:#131313;"></div>
+        <div class="label"><div class="role">Card</div><div class="hex">#131313</div></div>
+      </div>
+      <div class="swatch">
+        <div class="preview" style="background:#1F1F1F;"></div>
+        <div class="label"><div class="role">Elevated</div><div class="hex">#1F1F1F</div></div>
+      </div>
+    </div>
+
+    <!-- Gold Gradient -->
+    <div class="color-group-title">Золотой градиент (accent)</div>
+    <div class="gold-strip">
+      <div style="background:#FFE2A9;"></div>
+      <div style="background:#FDDDA5;"></div>
+      <div style="background:#F1C080;"></div>
+      <div style="background:#C4A265;"></div>
+      <div style="background:#A08050;"></div>
+      <div style="background:#83582E;"></div>
+      <div style="background:#634023;"></div>
+      <div style="background:#4B3423;"></div>
+      <div style="background:#2D1C13;"></div>
+    </div>
+    <div class="color-grid wide" style="margin-top:8px;">
+      <div class="swatch">
+        <div class="preview" style="background:#FFE2A9;"></div>
+        <div class="label"><div class="role">Gold Lightest</div><div class="hex">#FFE2A9</div></div>
+      </div>
+      <div class="swatch">
+        <div class="preview" style="background:#FDDDA5;"></div>
+        <div class="label"><div class="role">Gold Light</div><div class="hex">#FDDDA5</div></div>
+      </div>
+      <div class="swatch">
+        <div class="preview" style="background:#F1C080;"></div>
+        <div class="label"><div class="role">Gold Mid</div><div class="hex">#F1C080</div></div>
+      </div>
+      <div class="swatch">
+        <div class="preview" style="background:#C4A265;"></div>
+        <div class="label"><div class="role">Gold Core</div><div class="hex">#C4A265</div></div>
+      </div>
+      <div class="swatch">
+        <div class="preview" style="background:#83582E;"></div>
+        <div class="label"><div class="role">Bronze</div><div class="hex">#83582E</div></div>
+      </div>
+    </div>
+
+    <!-- Text & UI -->
+    <div class="color-group-title">Текст и UI</div>
+    <div class="color-grid">
+      <div class="swatch">
+        <div class="preview" style="background:#F5F5F5;"></div>
+        <div class="label"><div class="role">Text White</div><div class="hex">#F5F5F5</div></div>
+      </div>
+      <div class="swatch">
+        <div class="preview" style="background:#DFDCD3;"></div>
+        <div class="label"><div class="role">Text Cream</div><div class="hex">#DFDCD3</div></div>
+      </div>
+      <div class="swatch">
+        <div class="preview" style="background:#888888;"></div>
+        <div class="label"><div class="role">Muted</div><div class="hex">#888888</div></div>
+      </div>
+      <div class="swatch">
+        <div class="preview" style="background:#666666;"></div>
+        <div class="label"><div class="role">Hint</div><div class="hex">#666666</div></div>
+      </div>
+    </div>
+
+    <!-- Semantic -->
+    <div class="color-group-title">Семантика + Акценты</div>
+    <div class="color-grid wide">
+      <div class="swatch">
+        <div class="preview" style="background:#8B9DAF;"></div>
+        <div class="label"><div class="role">Steel</div><div class="hex">#8B9DAF</div></div>
+      </div>
+      <div class="swatch">
+        <div class="preview" style="background:#354440;"></div>
+        <div class="label"><div class="role">Teal Dark</div><div class="hex">#354440</div></div>
+      </div>
+      <div class="swatch">
+        <div class="preview" style="background:#4CAF50;"></div>
+        <div class="label"><div class="role">Success</div><div class="hex">#4CAF50</div></div>
+      </div>
+      <div class="swatch">
+        <div class="preview" style="background:#E57373;"></div>
+        <div class="label"><div class="role">Error</div><div class="hex">#E57373</div></div>
+      </div>
+      <div class="swatch">
+        <div class="preview" style="background:#2A2A2E;"></div>
+        <div class="label"><div class="role">Border</div><div class="hex">#2A2A2E</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 3: COMBINATIONS ═══ -->
+  <div class="section">
+    <div class="section-label">03 · Комбинации текст + фон</div>
+
+    <div class="combo-grid">
+      <!-- 1: Black BG + Gold Display -->
+      <div class="combo-card" style="background:#0C0C0E; border:1px solid #1A1A1E;">
+        <div class="combo-tag" style="color:#C4A265;">На фоне · #0C0C0E</div>
+        <div class="combo-title" style="background:linear-gradient(180deg,#FFE2A9,#FDDDA5,#C4A265);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">3 972 000 ₽</div>
+        <div class="combo-body" style="color:#DFDCD3;">Полная стоимость доставки из США</div>
+        <div class="combo-data" style="color:#C4A265;">USDT 98.50 ₽ · $25,000</div>
+      </div>
+
+      <!-- 2: Card + White Text -->
+      <div class="combo-card" style="background:#131313; border:1px solid #1A1A1E;">
+        <div class="combo-tag" style="color:#666666;">На карточке · #131313</div>
+        <div class="combo-title" style="color:#F5F5F5;">Соединённые Штаты</div>
+        <div class="combo-body" style="color:#888888;">Аукционы Copart, IAAI. Доставка через порт Бремерхафен</div>
+        <div class="combo-data" style="color:#666666;">12–16 недель · от $15,000</div>
+      </div>
+
+      <!-- 3: Gold Button -->
+      <div class="combo-card" style="background:linear-gradient(135deg,#C4A265,#D4B87A); border:none; box-shadow:0 4px 20px rgba(196,162,101,0.25);">
+        <div class="combo-tag" style="color:rgba(12,12,14,0.4);">Кнопка · Gradient</div>
+        <div class="combo-title" style="color:#0C0C0E; font-family:var(--font-sans); font-weight:600; font-size:18px;">Рассчитать стоимость</div>
+        <div class="combo-body" style="color:rgba(12,12,14,0.6);">Узнайте полную цену за 30 секунд</div>
+      </div>
+
+      <!-- 4: Elevated + Mono Data -->
+      <div class="combo-card" style="background:#1F1F1F; border:1px solid #2A2A2E;">
+        <div class="combo-tag" style="color:#444444;">Панель данных · #1F1F1F</div>
+        <div class="combo-title" style="color:#C4A265; font-family:var(--font-mono); font-size:22px; font-weight:400;">378.59 ₽</div>
+        <div class="combo-body" style="color:#888888;">Курс обновлён автоматически</div>
+        <div class="combo-data" style="color:#354440;">+7.70% за 24 часа</div>
+      </div>
+    </div>
+
+    <!-- Gold particles decoration -->
+    <div class="particles-bar">
+      <canvas id="particles"></canvas>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 4: PRICE — 5 FONT VARIANTS ═══ -->
+  <div class="section">
+    <div class="section-label">04 · Цена — 5 вариантов шрифта</div>
+
+    <!-- V1: Playfair Display 400 -->
+    <div class="price-card">
+      <div class="price-info">
+        <div class="price-num">Вариант 01</div>
+        <div class="price-font-name">Playfair Display</div>
+        <div class="price-font-detail">Regular 400<br>Высокий контраст штрихов<br>Журнальный, элегантный</div>
+      </div>
+      <div class="price-display">
+        <div class="price-amount" style="font-family:'Playfair Display',serif; font-weight:400;">
+          3 972 000 <span class="rub">₽</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- V2: Playfair Display 500 -->
+    <div class="price-card">
+      <div class="price-info">
+        <div class="price-num">Вариант 02</div>
+        <div class="price-font-name">Playfair Display</div>
+        <div class="price-font-detail">Medium 500<br>Чуть плотнее, увереннее<br>Ближе к референсу</div>
+      </div>
+      <div class="price-display">
+        <div class="price-amount" style="font-family:'Playfair Display',serif; font-weight:500;">
+          3 972 000 <span class="rub">₽</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- V3: Cormorant Garamond 400 -->
+    <div class="price-card">
+      <div class="price-info">
+        <div class="price-num">Вариант 03</div>
+        <div class="price-font-name">Cormorant Garamond</div>
+        <div class="price-font-detail">Regular 400<br>Тонкие засечки, высокий<br>Классический, утончённый</div>
+      </div>
+      <div class="price-display">
+        <div class="price-amount" style="font-family:'Cormorant Garamond',serif; font-weight:400; font-size:52px;">
+          3 972 000 <span class="rub">₽</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- V4: DM Serif Display -->
+    <div class="price-card">
+      <div class="price-info">
+        <div class="price-num">Вариант 04</div>
+        <div class="price-font-name">DM Serif Display</div>
+        <div class="price-font-detail">Regular 400<br>Современный serif<br>Чистый, минимальный</div>
+      </div>
+      <div class="price-display">
+        <div class="price-amount" style="font-family:'DM Serif Display',serif; font-weight:400;">
+          3 972 000 <span class="rub">₽</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- V5: Lora 500 -->
+    <div class="price-card">
+      <div class="price-info">
+        <div class="price-num">Вариант 05</div>
+        <div class="price-font-name">Lora</div>
+        <div class="price-font-detail">Medium 500<br>Мягкие кривые, тёплый<br>Хорошая читаемость цифр</div>
+      </div>
+      <div class="price-display">
+        <div class="price-amount" style="font-family:'Lora',serif; font-weight:500;">
+          3 972 000 <span class="rub">₽</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span><span class="dot"></span>Car-Calc Design System · P5.2</span>
+    <span>Telegram Mini App · 2026</span>
+  </div>
+
+</div>
+
+<script>
+// Gold particles animation
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+const dpr = window.devicePixelRatio || 1;
+
+function resize() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  ctx.scale(dpr, dpr);
+}
+resize();
+
+const W = canvas.parentElement.clientWidth;
+const H = canvas.parentElement.clientHeight;
+const particles = [];
+const goldColors = ['#FFE2A9','#FDDDA5','#F1C080','#C4A265','#D4B87A','#A08050','#83582E'];
+
+for (let i = 0; i < 300; i++) {
+  particles.push({
+    x: Math.random() * W,
+    y: Math.random() * H,
+    r: Math.random() * 2 + 0.5,
+    color: goldColors[Math.floor(Math.random() * goldColors.length)],
+    alpha: Math.random() * 0.8 + 0.2,
+    vx: (Math.random() - 0.5) * 0.3,
+    vy: (Math.random() - 0.5) * 0.15,
+  });
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  for (const p of particles) {
+    ctx.globalAlpha = p.alpha;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fill();
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.x < 0) p.x = W;
+    if (p.x > W) p.x = 0;
+    if (p.y < 0) p.y = H;
+    if (p.y > H) p.y = 0;
+  }
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+</body>
+</html>

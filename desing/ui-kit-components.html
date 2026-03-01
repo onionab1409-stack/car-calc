@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=800">
+<title>Car-Calc · UI Kit Components · ref-20 · ULTIMATE</title>
+<style>
+:root {
+  --bg-top:#3c3d3c; --bg-mid:#2e2e2e; --bg-bot:#1a1a1a;
+  --sf-card:#313232; --sf-card-md:#2e2f2f; --sf-card-sm:#2a2a2a;
+  --sf-input:#454545; --sf-cta:#303030;
+  --gold-peak:#fffec0; --gold-hot:#d39a50; --gold-warm:#c98c4a;
+  --gold-med:#c1a372; --gold-sf:#fcd782; --gold-txt:#ffe9a1;
+  --gold-line:#a57644; --gold-sub:#8e8066; --gold-dim:#6b5a4c; --gold-mut:#544737;
+  --brd-card:#4b4c4b; --brd-badge:#5c4d40; --brd-sub:#3e3b37; --brd-compact:#c7a36b;
+  --txt-pri:#e8d5b0; --txt-gold:#c9a66b; --txt-mut:#8a8078; --txt-on-gold:#4a3d2e;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{width:800px;height:1200px;margin:0 auto;background:linear-gradient(170deg,var(--bg-top) 0%,var(--bg-mid) 40%,var(--bg-bot) 100%);color:var(--txt-pri);font-family:'Inter',sans-serif;padding:14px 20px;-webkit-font-smoothing:antialiased;overflow:hidden;}
+.st{font-family:'Cormorant Garamond',serif;font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold-dim);margin:10px 0 6px;padding-bottom:3px;border-bottom:1px solid rgba(107,90,76,0.2);}
+.st:first-child{margin-top:0;}
+.sp{font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:0.3px;color:var(--txt-mut);margin-top:2px;text-align:center;}
+.row{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;}
+.row-c{align-items:center;}
+
+/* ═══════════════════════════════════════════
+   INPUT — 3D MULTI-LAYER GOLD RING
+   Layers: outer-glow → gold-ring → highlight-ridge → surface → bottom-shadow
+   ═══════════════════════════════════════════ */
+.inp{position:relative;height:48px;border-radius:999px;
+  /* Surface: ref bright ridge 0-8% of height, then FAST falloff to body lum 65-68 */
+  background:linear-gradient(180deg,
+    #898a89 0%,    /* highlight ridge peak (ref lum 137) */
+    #6c6c6c 3%,    /* quick falloff */
+    #4f4f50 6%,    /* ref lum 79 */
+    var(--sf-input) 10%,  /* #454545 = lum 69 */
+    #434443 20%,   /* ref lum 67 */
+    #434343 35%,
+    #424242 50%,   /* ref lum 66 */
+    #414141 65%,
+    #404042 80%,   /* slight cool shift (ref lum 64) */
+    #3e3e42 92%,   /* ref lum 62 */
+    #3c3c40 100%   /* bottom cool */
+  );
+  padding:0 20px;display:flex;align-items:center;gap:8px;
+  /* 3D inner shadow from top */
+  box-shadow:
+    inset 0 4px 8px rgba(0,0,0,0.15),
+    inset 0 -1px 2px rgba(255,255,255,0.03);
+}
+/* Gold border ring — the PEAK glow layer */
+.inp::before{content:'';position:absolute;inset:-3px;border-radius:999px;
+  background:conic-gradient(from 180deg,
+    #6b5a4c 0deg,
+    #9d7c57 60deg,
+    #c98c4a 120deg,
+    #d39a50 160deg,
+    #fbe6b3 175deg,  /* approach peak */
+    var(--gold-peak) 180deg,  /* PEAK: lum 250! */
+    #fbe6b3 185deg,  /* exit peak */
+    #d39a50 200deg,
+    #c98c4a 240deg,
+    #9d7c57 300deg,
+    #6b5a4c 360deg
+  );z-index:-2;
+  box-shadow: 0 0 2px 0 rgba(255,254,192,0.3);
+}
+/* Outer glow aura */
+.inp::after{content:'';position:absolute;inset:-8px;border-radius:999px;
+  background:conic-gradient(from 180deg,
+    transparent 0deg,
+    rgba(201,140,74,0.08) 100deg,
+    rgba(255,230,179,0.25) 160deg,
+    rgba(255,254,192,0.45) 178deg,
+    rgba(255,254,192,0.5) 180deg,
+    rgba(255,254,192,0.45) 182deg,
+    rgba(255,230,179,0.25) 200deg,
+    rgba(201,140,74,0.08) 260deg,
+    transparent 360deg
+  );filter:blur(5px);z-index:-3;}
+.inp-cur{width:1.5px;height:18px;background:var(--gold-warm);opacity:0.8;flex-shrink:0;}
+.inp-txt{font-size:11px;letter-spacing:1.5px;color:var(--gold-dim);text-transform:uppercase;}
+.inp-err::before{background:conic-gradient(from 180deg,#5a3535 0deg,#7a4040 90deg,#9d4545 170deg,#b43c32 180deg,#9d4545 190deg,#7a4040 270deg,#5a3535 360deg);}
+.inp-err{box-shadow:inset 0 4px 8px rgba(0,0,0,0.15),0 0 12px rgba(180,60,50,0.3);}
+
+/* ═══════════════════════════════════════════
+   CARDS — 3D RAISED WITH BORDER CHANNEL
+   Layers: outer-shadow → gold-frame → dark-void → surface(convex)
+   ref analysis: highlight ridge at y=95-110, void at y=190-200
+   ═══════════════════════════════════════════ */
+.card{position:relative;border-radius:14px;
+  /* ref CARD TAZL: top warm approach → gold frame zone → dark interior → warm body → highlight bottom */
+  background:linear-gradient(180deg,
+    #403c3a 0%,    /* ref top: warm approach, lum 60 */
+    #3a3836 6%,
+    #353434 12%,
+    var(--sf-card) 22%,  /* #313232 = dark interior, lum 49 */
+    var(--sf-card) 42%,
+    #323231 50%,   /* stay dark through 50% (ref y=267: lum 43) */
+    #353433 58%,   /* gentle warm up (ref y=286: lum 58) */
+    #3a3836 64%,   /* ref y=292: lum 59, warm +7 */
+    #3c3a38 70%,   /* ref y=298: lum 60, warm +6 */
+    #6c6c6c 82%,   /* ref y=310: highlight ridge, lum 108 */
+    #736e6a 87%,   /* ref y=320: lum 111 */
+    #3b3939 93%,   /* quick falloff */
+    #2e2e2e 100%
+  );
+  display:flex;align-items:center;justify-content:center;overflow:visible;
+  /* 3D: inner shadow top + outer drop shadow */
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.2),
+    0 8px 20px rgba(0,0,0,0.4),
+    0 2px 6px rgba(0,0,0,0.3);
+}
+/* Gold border frame (sits in channel around card) */
+.card::before{content:'';position:absolute;inset:-2px;border-radius:16px;
+  background:linear-gradient(180deg,
+    #998e75 0%,     /* top: warm gold (lum 142) */
+    #6c6c6c 15%,    /* sides: neutral */
+    var(--brd-card) 40%,
+    var(--brd-card) 60%,
+    #9d6b3d 90%,   /* bottom: warm gold accent */
+    #cea66e 100%    /* bottom peak (lum 172) */
+  );z-index:-1;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+}
+/* Dark void between frame and background */
+.card::after{content:'';position:absolute;inset:-5px;border-radius:18px;
+  border:2px solid rgba(0,0,0,0.6);z-index:-2;pointer-events:none;}
+.cl{font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--txt-mut);}
+
+/* Card Selected — brighter gold frame + glow */
+.card-sel::before{
+  background:linear-gradient(180deg,
+    #c98c4a 0%,
+    #9d7c57 20%,
+    var(--gold-warm) 50%,
+    #9d7c57 80%,
+    #c98c4a 100%
+  );
+  box-shadow:0 0 15px rgba(201,140,74,0.4),0 8px 25px rgba(0,0,0,0.5);
+}
+
+/* Card with gold accent line */
+.card-acc{overflow:visible;}
+.card-gl{position:absolute;bottom:20px;left:15%;right:15%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold-line) 20%,#ffea8d 50%,var(--gold-line) 80%,transparent);
+  box-shadow:0 0 8px rgba(255,234,141,0.4);}
+
+/* ═══════════════════════════════════════════
+   TALL CARDS — VERTICAL 3D
+   ═══════════════════════════════════════════ */
+.tc{position:relative;border-radius:14px;width:115px;height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;overflow:visible;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,0.2),0 8px 20px rgba(0,0,0,0.4),0 2px 6px rgba(0,0,0,0.3);}
+.tc::before{content:'';position:absolute;inset:-2px;border-radius:16px;z-index:-1;
+  box-shadow:0 12px 30px rgba(0,0,0,0.5);}
+
+/* Tall card with gold lines — warm surface */
+.tc-l{background:linear-gradient(180deg,
+    #7a6650 0%,     /* top highlight */
+    #68543d 10%,
+    #5a4a38 30%,
+    #4f4539 50%,
+    #443c34 70%,
+    #3b3735 100%
+  );}
+.tc-l::before{background:linear-gradient(180deg,
+    #998060 0%, #765e41 20%, #604d38 50%, #765e41 80%, #998060 100%);}
+
+.gb{display:flex;gap:6px;}.gb-i{width:2.5px;height:26px;border-radius:2px;
+  background:linear-gradient(180deg,var(--gold-warm),var(--gold-line));
+  box-shadow:0 0 6px rgba(201,140,74,0.5);}
+.tc-v{font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:3px;color:var(--gold-dim);}
+.tc-d{width:6px;height:6px;border-radius:50%;border:1px solid var(--gold-dim);}
+
+/* Tall card glow toggle */
+.tc-g{background:linear-gradient(180deg,
+    #4a3525 0%,   /* warm top */
+    #3b2c21 15%,
+    #32271e 40%,
+    #2a231c 60%,
+    #25221f 80%,
+    #201f1f 100%
+  );}
+.tc-g::before{background:linear-gradient(180deg,
+    #5a4535 0%, #413121 20%, #302520 50%, #413121 80%, #222222 100%);}
+.tgl{width:22px;height:30px;border-radius:11px;
+  background:radial-gradient(ellipse at center,
+    #ffdf94 0%,#ffe0a0 15%,#c98c4a 35%,#8a5a28 55%,#4a2e15 75%,transparent 100%);
+  box-shadow:0 0 20px rgba(255,223,148,0.7),0 0 40px rgba(201,140,74,0.4),0 0 60px rgba(165,118,68,0.2),0 2px 4px rgba(0,0,0,0.3);}
+.tgl-t{width:8px;height:18px;border-radius:4px;border:1px solid var(--gold-dim);background:#1f1f1f;position:relative;box-shadow:0 -8px 16px rgba(201,140,74,0.15);}
+.tgl-k{width:6px;height:6px;border-radius:50%;background:var(--gold-dim);position:absolute;bottom:1px;left:50%;transform:translateX(-50%);}
+
+/* ═══════════════════════════════════════════
+   CTA BUTTONS — 3D RAISED + GOLD TOP LINE
+   ref: highlight ridge at y=595-610, dark body y=620-670
+   ═══════════════════════════════════════════ */
+.cta{position:relative;height:44px;border-radius:12px;
+  /* ref: gold line at y=596 (lum 223), WIDE highlight ridge y=600-614 (lum 98-111), body y=620+ (lum 47-49) */
+  background:linear-gradient(180deg,
+    #6f6e69 0%,     /* highlight ridge start (ref lum 109) */
+    #696968 3%,     /* ref y=604: lum 104 */
+    #656564 6%,     /* ref y=607: lum 100 */
+    #6f6f70 9%,     /* secondary peak (ref y=611: lum 111) */
+    #515252 13%,    /* ref y=615: fast drop lum 81 */
+    #3f3f3f 17%,    /* ref y=617: lum 63 */
+    #333332 22%,    /* ref y=621: lum 50 */
+    var(--sf-cta) 30%,  /* #303030 = lum 48 */
+    #303030 50%,
+    #2f3030 70%,
+    #2e2f2f 90%,    /* ref y=661: lum 46 */
+    #2d2d2d 100%
+  );
+  display:flex;align-items:center;justify-content:space-between;padding:0 18px;overflow:visible;
+  box-shadow:
+    inset 0 2px 3px rgba(0,0,0,0.2),
+    0 6px 16px rgba(0,0,0,0.4),
+    0 2px 4px rgba(0,0,0,0.3);
+}
+/* Gold border frame */
+.cta::before{content:'';position:absolute;inset:-2px;border-radius:14px;
+  background:linear-gradient(180deg,
+    var(--gold-warm) 0%,   /* bright gold top */
+    #6b5540 10%,
+    var(--brd-sub) 30%,
+    var(--brd-sub) 80%,
+    #4a3d30 100%
+  );z-index:-1;
+  box-shadow:0 8px 22px rgba(0,0,0,0.45);}
+/* Gold top glow accent */
+.cta-glow{position:absolute;top:-2px;left:15%;right:15%;height:3px;
+  background:linear-gradient(90deg,transparent,var(--gold-warm) 20%,var(--gold-hot) 45%,var(--gold-peak) 50%,var(--gold-hot) 55%,var(--gold-warm) 80%,transparent);
+  box-shadow:0 0 8px rgba(211,154,80,0.5);border-radius:2px;z-index:1;}
+.cta-l{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--txt-mut);}
+.cta-v{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:1.5px;color:var(--txt-mut);}
+
+/* Secondary CTA — no gold top glow, dimmer frame */
+.cta-s{background:linear-gradient(180deg,#504a44 0%,#3a3836 20%,#353433 100%);
+  box-shadow:inset 0 1px 2px rgba(0,0,0,0.15),0 4px 10px rgba(0,0,0,0.3);}
+.cta-s::before{background:linear-gradient(180deg,#5a5040 0%,var(--brd-sub) 30%,var(--brd-sub) 100%);}
+.cta-d{opacity:0.4;}
+
+/* ═══════════════════════════════════════════
+   PILL BADGES — 3D MINI CARDS
+   DINDI: bright gold surface with warm border frame
+   ═══════════════════════════════════════════ */
+.pill{display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 14px;border-radius:8px;font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;position:relative;overflow:visible;}
+.pill-g{
+  background:linear-gradient(180deg,
+    #ffe598 0%,     /* top bright (lum 228) */
+    #ffeca3 15%,
+    var(--gold-txt) 30%,
+    var(--gold-sf) 60%,
+    #e8c06a 90%,
+    #d4a855 100%
+  );color:var(--txt-on-gold);
+  box-shadow:inset 0 1px 2px rgba(255,255,255,0.3),0 4px 12px rgba(201,140,74,0.3),0 2px 4px rgba(0,0,0,0.2);}
+.pill-g::before{content:'';position:absolute;inset:-2px;border-radius:10px;
+  background:linear-gradient(180deg,#745b44 0%,var(--brd-badge) 30%,var(--brd-badge) 70%,#745b44 100%);
+  z-index:-1;box-shadow:0 6px 14px rgba(0,0,0,0.4);}
+
+.pill-d{
+  background:linear-gradient(180deg,
+    #28241f 0%,#3a3428 30%,#443c33 60%,#5a5040 90%,#7e6d56 100%
+  );color:var(--gold-dim);
+  box-shadow:inset 0 2px 3px rgba(0,0,0,0.3),0 4px 10px rgba(0,0,0,0.3);}
+.pill-d::before{content:'';position:absolute;inset:-1.5px;border-radius:9px;
+  background:linear-gradient(180deg,#1d1916 0%,var(--brd-sub) 30%,var(--brd-sub) 70%,#776754 100%);
+  z-index:-1;}
+
+/* ═══════════════════════════════════════════
+   BADGE BUTTON — 3D with warm interior gradient
+   ref: dark top (lum 20) → rising warm (lum 73) → gold accent line (lum 206)
+   ═══════════════════════════════════════════ */
+.bb{position:relative;height:44px;border-radius:12px;
+  /* ref BLARD: gold top line, then highlight ridge lum 110-122, body lum 56-60, gold bottom accent */
+  background:linear-gradient(180deg,
+    #6f6e6c 0%,     /* highlight ridge (ref lum 110) */
+    #7a7a7b 5%,     /* peak (ref lum 122) */
+    #5b5b5b 10%,    /* fast falloff */
+    #494949 15%,    /* ref y=446: lum 73 */
+    #3e3e3e 22%,    /* ref y=449: lum 61 */
+    #3b3b3b 30%,    /* ref y=454: lum 58 */
+    #3a3a3a 40%,    /* body flat: lum 58 */
+    #393939 55%,    /* ref y=462: lum 56 */
+    #383838 70%,
+    #373737 85%,    /* bottom body: lum 55 */
+    #363636 100%
+  );
+  display:flex;align-items:center;padding:0 16px;gap:10px;overflow:visible;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,0.3),0 6px 16px rgba(0,0,0,0.4);}
+.bb::before{content:'';position:absolute;inset:-2px;border-radius:14px;
+  background:linear-gradient(180deg,
+    #ede6c1 0%,     /* gold top line (ref lum 227) */
+    #7f6a52 4%,     /* fast falloff */
+    #4b4540 10%,
+    var(--brd-sub) 30%,
+    var(--brd-sub) 70%,
+    #b1966c 90%,    /* gold bottom accent (ref lum 153) */
+    #ffdf86 100%    /* bottom peak (ref lum 222) */
+  );
+  z-index:-1;box-shadow:0 8px 20px rgba(0,0,0,0.45);}
+.bb-l{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);}
+.bb-d{display:flex;gap:5px;}.bb-di{width:7px;height:7px;border-radius:50%;background:var(--gold-warm);box-shadow:0 0 5px rgba(201,140,74,0.6);}
+
+/* ═══════════════════════════════════════════
+   ICON BUTTON — 3D: dark top inset → rising gradient → gold bottom glow
+   ref: top lum 15→ mid lum 50→ bottom lum 81→ PEAK lum 205!
+   ═══════════════════════════════════════════ */
+.ib{width:44px;height:44px;border-radius:8px;position:relative;overflow:visible;
+  background:linear-gradient(180deg,
+    #101010 0%,      /* very dark top (inset shadow) */
+    #1a1818 10%,
+    #242323 25%,
+    #2d2d2d 40%,
+    #323232 50%,
+    #3d3d3d 60%,
+    #3a3836 70%,
+    #403c39 80%,
+    #47413c 90%,
+    #5c4f3f 100%     /* warm bottom */
+  );
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,0.4),0 6px 14px rgba(0,0,0,0.4);}
+.ib::before{content:'';position:absolute;inset:-1.5px;border-radius:10px;
+  background:linear-gradient(180deg,#141313 0%,#3e3b37 40%,#5c4f3f 80%,#dbcbb2 100%);
+  z-index:-1;
+  box-shadow:0 3px 6px rgba(219,203,178,0.15);}
+.ib-b{display:flex;gap:3px;}.ib-i{width:2px;border-radius:1px;background:var(--gold-dim);}
+
+/* ═══════════════════════════════════════════
+   CIRCLE — 3D with gold ring at bottom
+   ═══════════════════════════════════════════ */
+.ce{width:44px;height:44px;border-radius:50%;position:relative;overflow:visible;
+  background:linear-gradient(180deg,
+    #171616 0%,#2a2827 30%,#34322f 50%,#5a4d3c 80%,#866d4e 100%
+  );
+  box-shadow:inset 0 2px 4px rgba(0,0,0,0.4),0 4px 12px rgba(134,109,78,0.3);}
+.ce::before{content:'';position:absolute;inset:-2px;border-radius:50%;
+  background:linear-gradient(180deg,#171616 0%,var(--gold-dim) 50%,#815d32 90%,#866d4e 100%);
+  z-index:-1;box-shadow:0 6px 12px rgba(0,0,0,0.4);}
+
+/* ═══════════════════════════════════════════
+   PROGRESS BAR + DOTS
+   ═══════════════════════════════════════════ */
+.pw{display:flex;align-items:center;gap:10px;width:100%;}
+.pl{font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold-dim);min-width:36px;}
+.pt{flex:1;height:8px;border-radius:4px;background:#363737;position:relative;overflow:hidden;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,0.3);}
+.pf{position:absolute;left:0;top:0;bottom:0;border-radius:4px;
+  background:linear-gradient(90deg,var(--gold-mut),var(--gold-dim),var(--gold-sub));
+  box-shadow:0 0 4px rgba(142,128,102,0.3);}
+.pd{display:flex;gap:6px;}.pdi{width:8px;height:8px;border-radius:50%;background:#3a3735;border:1px solid var(--gold-dim);
+  box-shadow:0 1px 3px rgba(0,0,0,0.3);}
+.pdi.a{background:var(--gold-warm);border-color:var(--gold-hot);
+  box-shadow:0 0 6px rgba(201,140,74,0.5),0 1px 3px rgba(0,0,0,0.3);}
+
+/* ═══════════════════════════════════════════
+   COMPACT BAR — FULL GOLD 3D
+   ref: top border zone (lum 33→55), PEAK gold entry (lum 212), body (lum 160-166), bottom glow
+   ═══════════════════════════════════════════ */
+.cb{position:relative;height:46px;border-radius:12px;
+  /* ref: body is NEAR BLACK lum 9-15 with very dark warm gradient */
+  background:linear-gradient(180deg,
+    #0d0600 0%,     /* ref y=710: lum 7, warm +13 */
+    #0a0908 10%,    /* ref y=720: lum 9 */
+    #0b0b09 30%,    /* ref y=730: lum 10 */
+    #0d0c0a 50%,    /* ref y=740: lum 12 */
+    #100f0d 65%,    /* ref y=750: lum 15 */
+    #131110 80%,    /* ref y=755: lum 17 */
+    #161514 90%,
+    #191818 100%    /* ref y=760: lum 23 */
+  );
+  display:flex;align-items:center;justify-content:center;gap:10px;padding:0 18px;overflow:visible;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,0.4),0 6px 16px rgba(0,0,0,0.5);}
+/* Gold top border line - BRIGHT gold (ref y=698: lum 217) */
+.cb::before{content:'';position:absolute;inset:-2px;border-radius:14px;
+  background:linear-gradient(180deg,
+    #f3d7a0 0%,     /* PEAK gold top (ref lum 217, warm +83) */
+    #e1c999 3%,     /* ref y=707: lum 202 */
+    #3a2f20 10%,    /* quick falloff to dark */
+    #1a1510 30%,
+    #131210 60%,
+    #161413 80%,
+    #1a1918 100%
+  );z-index:-1;
+  box-shadow:0 10px 24px rgba(0,0,0,0.5);}
+/* Gold top glow accent */
+.cb::after{content:'';position:absolute;top:-4px;left:10%;right:10%;height:6px;
+  background:linear-gradient(90deg,transparent,rgba(243,215,160,0.3) 20%,rgba(243,215,160,0.6) 50%,rgba(243,215,160,0.3) 80%,transparent);
+  filter:blur(4px);z-index:-2;}
+.cb-l{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold-sub);}
+.cb-d{width:7px;height:7px;border-radius:50%;background:var(--gold-dim);box-shadow:0 0 4px rgba(107,90,76,0.4);}
+
+/* GOLD CTA BAR — ref right side: full gold body lum 170 */
+.cta-gold{position:relative;height:44px;border-radius:12px;
+  background:linear-gradient(180deg,
+    #cbac79 0%,     /* top: lum 175 */
+    #c8aa78 5%,
+    #c5a774 15%,
+    #c4a573 30%,
+    #c4a674 50%,
+    #c7a876 70%,
+    #c9aa78 85%,
+    #cbab75 95%,
+    #cca870 100%    /* bottom: lum 172 */
+  );
+  display:flex;align-items:center;justify-content:center;gap:10px;padding:0 18px;overflow:visible;
+  box-shadow:inset 0 1px 2px rgba(255,255,255,0.15),inset 0 -1px 2px rgba(0,0,0,0.1),
+    0 6px 16px rgba(0,0,0,0.35);}
+.cta-gold::before{content:'';position:absolute;inset:-2px;border-radius:14px;
+  background:linear-gradient(180deg,
+    #e9d0a3 0%,     /* top peak (lum 210) */
+    #d09f58 8%,
+    #a07040 20%,
+    #8a5a28 40%,
+    #8a5a28 60%,
+    #a07040 80%,
+    #d5a86a 95%,
+    #ecc068 100%    /* bottom glow */
+  );z-index:-1;
+  box-shadow:0 8px 20px rgba(0,0,0,0.4),0 0 6px rgba(202,162,101,0.2);}
+.cta-gold-l{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--txt-on-gold);}
+
+/* ═══════════════════════════════════════════
+   SECONDARY BAR
+   ═══════════════════════════════════════════ */
+.sb{position:relative;height:44px;border-radius:12px;
+  /* ref LEHD: highlight ridge lum 124 at top, body lum 56-60, cool shift at bottom */
+  background:linear-gradient(180deg,
+    #7d7c7c 0%,    /* highlight ridge peak (ref lum 124) */
+    #5e5f5f 4%,    /* fast falloff */
+    #434343 8%,    /* ref lum 67 */
+    #3d3d3d 15%,   /* ref y=449: lum 61 */
+    #3b3b3b 25%,   /* ref y=455: lum 58 */
+    #3a3a3a 40%,   /* ref y=458: lum 58 */
+    #393939 55%,   /* ref y=462: lum 56 */
+    #38393a 70%,   /* ref y=468: cool shift, warm -2 */
+    #37383a 85%,   /* ref y=473: warm -3 */
+    #363638 100%   /* bottom: lum 54 */
+  );
+  display:flex;align-items:center;justify-content:center;padding:0 18px;overflow:visible;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,0.2),0 4px 12px rgba(0,0,0,0.35);}
+.sb::before{content:'';position:absolute;inset:-1.5px;border-radius:13px;
+  background:linear-gradient(180deg,#4a4540 0%,var(--brd-sub) 20%,var(--brd-sub) 100%);
+  z-index:-1;box-shadow:0 6px 14px rgba(0,0,0,0.4);}
+/* Subtle gold top accent */
+.sb-glow{position:absolute;top:-1.5px;left:5%;width:35%;height:2px;
+  background:linear-gradient(90deg,var(--gold-sub),transparent);border-radius:1px;z-index:1;}
+.sb-l{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--txt-mut);}
+
+/* ═══════════════════════════════════════════
+   COLOR SWATCHES
+   ═══════════════════════════════════════════ */
+.cg{display:flex;gap:4px;flex-wrap:wrap;}
+.cs{width:48px;height:22px;border-radius:4px;display:flex;align-items:flex-end;padding:2px 3px;font-size:6.5px;font-family:'JetBrains Mono',monospace;
+  box-shadow:inset 0 1px 1px rgba(255,255,255,0.08),0 2px 4px rgba(0,0,0,0.3);}
+.cs.lt{color:var(--txt-pri);}.cs.dk{color:#2a2218;}
+
+/* SPACING + RADII */
+.sd{display:flex;gap:5px;align-items:flex-end;}
+.si{background:var(--gold-dim);border-radius:2px;width:22px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:1px;font-size:7px;font-family:'JetBrains Mono',monospace;color:#1a1a1a;box-shadow:0 1px 3px rgba(0,0,0,0.3);}
+.rd{display:flex;gap:8px;align-items:center;}
+.ri{height:28px;border-radius:12px;display:flex;align-items:center;justify-content:center;padding:0 8px;
+  background:linear-gradient(180deg,#505050 0%,var(--sf-card) 15%,var(--sf-card) 100%);
+  box-shadow:inset 0 1px 2px rgba(0,0,0,0.2),0 3px 8px rgba(0,0,0,0.3);}
+.ri::before{content:'';position:absolute;inset:-1.5px;border-radius:inherit;}
+.ri .sp{margin:0;font-size:7px;}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- 1 · INPUT -->
+<div class="st">1 · Input Field — 3D Gold Ring</div>
+<div style="margin-bottom:8px;">
+  <div class="inp"><div class="inp-cur"></div><span class="inp-txt">Введите марку...</span></div>
+  <div class="sp">Focused · pill · multi-layer gold ring · highlight ridge · inset shadow · outer glow aura</div>
+</div>
+<div class="row" style="gap:8px;margin-bottom:6px;">
+  <div style="flex:1"><div class="inp" style="height:36px;opacity:0.6;"><span class="inp-txt" style="color:var(--txt-mut);font-size:9px;">Empty</span></div><div class="sp">Empty</div></div>
+  <div style="flex:1"><div class="inp" style="height:36px;"><span class="inp-txt" style="color:var(--txt-gold);font-size:9px;">Toyota Camry</span></div><div class="sp">Filled</div></div>
+  <div style="flex:1"><div class="inp inp-err" style="height:36px;"><span class="inp-txt" style="color:#b85050;font-size:9px;">Ошибка</span></div><div class="sp">Error</div></div>
+</div>
+
+<!-- 2 · CARDS -->
+<div class="st">2 · Cards — 3D Raised + Border Channel</div>
+<div class="row" style="gap:10px;margin-bottom:6px;">
+  <div><div class="card" style="width:155px;height:105px;"><span class="cl">Default XL</span></div><div class="sp">3D raised · gold frame · void · drop-shadow</div></div>
+  <div><div class="card card-acc" style="width:140px;height:100px;"><span class="cl">Accent</span><div class="card-gl"></div></div><div class="sp">+ gold line glow</div></div>
+  <div><div class="card" style="width:130px;height:95px;background:linear-gradient(180deg,#3a3836 0%,var(--sf-card-md) 12%,var(--sf-card-md) 80%,#262626 100%);"><span class="cl">Medium</span></div><div class="sp">#323333</div></div>
+  <div><div class="card card-sel" style="width:130px;height:95px;"><span class="cl">Selected</span></div><div class="sp">gold frame + glow</div></div>
+</div>
+
+<!-- 3 · TALL CARDS + CTA -->
+<div class="st">3 · Tall Cards + Buttons</div>
+<div class="row" style="gap:8px;margin-bottom:6px;">
+  <div><div class="tc tc-l"><div class="gb"><div class="gb-i"></div><div class="gb-i"></div><div class="gb-i"></div></div><div class="tc-v">1630</div><div class="tc-d"></div></div><div class="sp">Gold bars · warm 3D</div></div>
+  <div><div class="tc tc-g"><div class="tgl"></div><div class="tgl-t"><div class="tgl-k"></div></div></div><div class="sp">Glow light · radial</div></div>
+  <div><div class="tc" style="background:linear-gradient(180deg,#555 0%,var(--sf-card-sm) 10%,var(--sf-card-sm) 100%);box-shadow:inset 0 2px 4px rgba(0,0,0,0.2),0 6px 14px rgba(0,0,0,0.4);"><span class="cl" style="position:relative;z-index:1;">Neutral</span>
+    <div style="position:absolute;inset:-1.5px;border-radius:16px;background:var(--brd-card);z-index:-1;box-shadow:0 8px 18px rgba(0,0,0,0.45);"></div>
+  </div><div class="sp">Simple</div></div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+    <div class="cta" style="width:100%;"><span class="cta-l">Рассчитать</span><span class="cta-v">1909</span><div class="cta-glow"></div></div>
+    <div class="sp">Primary CTA · 3D + gold top glow</div>
+    <div class="cta cta-s" style="width:100%;height:36px;"><span class="cta-l">Назад</span></div>
+    <div class="sp">Secondary · dim frame</div>
+  </div>
+</div>
+
+<!-- 4 · BADGES & PILLS -->
+<div class="st">4 · Badges & Pills — 3D Mini Components</div>
+<div class="row row-c" style="gap:8px;margin-bottom:6px;">
+  <div><div class="cta cta-d" style="width:120px;height:34px;"><span class="cta-l">Disabled</span></div><div class="sp">40%</div></div>
+  <div><div class="pill pill-g">Premium</div><div class="sp">#fcd782 · 3D gold</div></div>
+  <div><div class="pill pill-d">Стандарт</div><div class="sp">Dark warm 3D</div></div>
+  <div><div class="pill pill-g" style="height:24px;font-size:8px;padding:0 10px;">XS</div><div class="sp">Small</div></div>
+</div>
+
+<!-- 5 · COMPOSITE -->
+<div class="st">5 · Composite — Badge Btn · Icon · Circle · Progress</div>
+<div class="row row-c" style="gap:8px;margin-bottom:6px;">
+  <div><div class="bb" style="width:170px;height:40px;"><span class="bb-l">Фильтр</span><div class="bb-d"><div class="bb-di"></div><div class="bb-di"></div></div></div><div class="sp">Warm 3D gradient + gold line</div></div>
+  <div><div class="ib" style="width:40px;height:40px;"><div class="ib-b"><div class="ib-i" style="height:12px;"></div><div class="ib-i" style="height:16px;"></div><div class="ib-i" style="height:10px;"></div></div></div><div class="sp">3D inset→warm</div></div>
+  <div><div class="ce" style="width:40px;height:40px;"></div><div class="sp">Gold ring</div></div>
+  <div style="flex:1;">
+    <div class="pw"><span class="pl">Шаг 2</span><div class="pt"><div class="pf" style="width:45%;"></div></div></div>
+    <div class="pw" style="margin-top:4px;"><span class="pl">Done</span><div class="pt"><div class="pf" style="width:100%;"></div></div></div>
+  </div>
+</div>
+
+<!-- 6 · DOTS + BARS -->
+<div class="st">6 · Dots · Compact · Gold CTA · Secondary</div>
+<div class="row row-c" style="gap:10px;margin-bottom:6px;">
+  <div><div class="pd"><div class="pdi a"></div><div class="pdi a"></div><div class="pdi"></div><div class="pdi"></div><div class="pdi"></div></div><div class="sp">2/5</div></div>
+  <div><div class="pd"><div class="pdi a"></div><div class="pdi a"></div><div class="pdi a"></div><div class="pdi a"></div><div class="pdi a"></div></div><div class="sp">5/5</div></div>
+  <div style="flex:1;"><div class="sb"><span class="sb-l">Подробнее</span><div class="sb-glow"></div></div><div class="sp">Secondary 3D · gold accent</div></div>
+</div>
+<div class="row" style="gap:8px;margin-bottom:6px;">
+  <div style="flex:1;"><div class="cb"><span class="cb-l">Результат</span><div style="display:flex;gap:5px;"><div class="cb-d"></div><div class="cb-d"></div><div class="cb-d"></div></div></div><div class="sp">Compact dark · near-black body · gold top line</div></div>
+  <div style="flex:1;"><div class="cta-gold"><span class="cta-gold-l">Итого: 2,450,000 ₽</span></div><div class="sp">Gold CTA · #c5a774 · full gold body</div></div>
+</div>
+
+<!-- 7 · PALETTE -->
+<div class="st">7 · Color Palette</div>
+<div style="font-size:7px;color:var(--txt-mut);margin-bottom:3px;letter-spacing:1px;">GOLD</div>
+<div class="cg" style="margin-bottom:4px;">
+  <div class="cs dk" style="background:#fffec0;">fffec0</div>
+  <div class="cs dk" style="background:#ffe9a1;">ffe9a1</div>
+  <div class="cs dk" style="background:#fcd782;">fcd782</div>
+  <div class="cs dk" style="background:#ead3a3;">ead3a3</div>
+  <div class="cs dk" style="background:#d39a50;">d39a50</div>
+  <div class="cs dk" style="background:#c98c4a;">c98c4a</div>
+  <div class="cs dk" style="background:#c1a372;">c1a372</div>
+  <div class="cs dk" style="background:#a57644;">a57644</div>
+  <div class="cs lt" style="background:#8e8066;">8e8066</div>
+  <div class="cs lt" style="background:#6b5a4c;">6b5a4c</div>
+  <div class="cs lt" style="background:#544737;">544737</div>
+</div>
+<div style="font-size:7px;color:var(--txt-mut);margin-bottom:3px;letter-spacing:1px;">SURFACES · BORDERS</div>
+<div class="cg" style="margin-bottom:4px;">
+  <div class="cs lt" style="background:#3c3d3c;">3c3d3c</div>
+  <div class="cs lt" style="background:#353636;">353636</div>
+  <div class="cs lt" style="background:#323333;">323333</div>
+  <div class="cs lt" style="background:#2d2d2d;">2d2d2d</div>
+  <div class="cs lt" style="background:#1a1a1a;">1a1a1a</div>
+  <div class="cs lt" style="background:#6c6c6c;">6c6c6c</div>
+  <div class="cs lt" style="background:#5c4d40;">5c4d40</div>
+  <div class="cs lt" style="background:#4b4c4b;">4b4c4b</div>
+  <div class="cs lt" style="background:#3e3b37;">3e3b37</div>
+  <div class="cs dk" style="background:#c7a36b;">c7a36b</div>
+</div>
+
+<!-- 8 · SPACING + RADII -->
+<div class="st">8 · Spacing & Radii</div>
+<div class="row row-c" style="gap:16px;">
+  <div>
+    <div class="sd">
+      <div class="si" style="height:4px;">4</div><div class="si" style="height:8px;">8</div>
+      <div class="si" style="height:12px;">12</div><div class="si" style="height:16px;">16</div>
+      <div class="si" style="height:20px;">20</div><div class="si" style="height:24px;">24</div>
+      <div class="si" style="height:32px;">32</div><div class="si" style="height:48px;">48</div>
+    </div>
+    <div class="sp" style="text-align:left;">Base 4px grid</div>
+  </div>
+  <div>
+    <div class="rd">
+      <div class="ri" style="border-radius:999px;width:44px;"><span class="sp">pill</span></div>
+      <div class="ri" style="border-radius:14px;width:36px;"><span class="sp">14</span></div>
+      <div class="ri" style="border-radius:12px;width:36px;"><span class="sp">12</span></div>
+      <div class="ri" style="border-radius:8px;width:36px;"><span class="sp">8</span></div>
+    </div>
+    <div class="sp" style="text-align:left;">Radii scale</div>
+  </div>
+</div>
+
+</body>
+</html>

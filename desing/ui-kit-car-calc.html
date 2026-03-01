@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car-Calc UI Kit — Pixel-Perfect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+/* ══════════ PAGE BACKGROUND ══════════
+   Parsed: top ~#3c3c3c, center ~#262524, bottom ~#1e1e1e
+   Gradient + radial vignette + noise
+*/
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  min-height:100vh;
+  display:flex;justify-content:center;
+  padding:28px 20px 40px;
+  background:linear-gradient(180deg,#363636 0%,#2a2a2a 30%,#1e1e1e 100%);
+  position:relative;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse 85% 75% at 50% 35%,transparent 0%,rgba(0,0,0,0.3) 100%);
+  pointer-events:none;z-index:0;
+}
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:0.025;pointer-events:none;mix-blend-mode:overlay;z-index:10000;
+}
+
+.kit{position:relative;z-index:1;width:890px;display:flex;flex-direction:column;gap:12px;}
+
+/* ══════════ SHARED: gradient gold border pseudo ══════════ */
+.gb{position:relative;}
+.gb::before{
+  content:'';position:absolute;pointer-events:none;z-index:2;
+  inset:-1.5px;border-radius:inherit;padding:1.5px;
+  background:linear-gradient(165deg,#b89848 0%,#907838 30%,#6a5828 65%,#453818 100%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+}
+
+/* ══════════ ROW 1 ══════════ */
+.r1{display:flex;gap:10px;height:86px;}
+
+/* INPUT */
+.inp-w{flex:0 0 332px;border-radius:26px;position:relative;}
+.inp-w .glow{
+  position:absolute;inset:-16px;border-radius:42px;pointer-events:none;z-index:0;
+  box-shadow:
+    0 -8px 30px rgba(240,200,100,0.38),
+    -6px 0 25px rgba(220,180,80,0.22),
+    6px 0 22px rgba(220,180,80,0.16),
+    0 6px 20px rgba(200,160,70,0.10),
+    0 -14px 50px rgba(250,220,120,0.18),
+    0 0 60px rgba(230,190,90,0.08);
+}
+/* Thick gold tube border */
+.inp-w::before{
+  content:'';position:absolute;inset:-3px;border-radius:30px;padding:3.5px;
+  background:linear-gradient(158deg,#ffe8a0 0%,#e8c878 8%,#d4b060 18%,#c09848 30%,#a88040 46%,#906830 62%,#785828 78%,#5a4018 100%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;z-index:2;
+}
+/* Top tube highlight — bright white-gold streak */
+.inp-w::after{
+  content:'';position:absolute;top:-6px;left:5%;right:10%;height:7px;
+  border-radius:50%;z-index:3;pointer-events:none;
+  background:linear-gradient(90deg,transparent 3%,rgba(255,240,180,0.7) 18%,rgba(255,250,220,0.9) 42%,rgba(255,248,210,0.85) 58%,rgba(255,235,170,0.5) 82%,transparent 97%);
+  filter:blur(2.5px);
+}
+.inp{
+  width:100%;height:100%;border:none;outline:none;
+  background:linear-gradient(180deg,#4e4c4a 0%,#424040 30%,#3a3836 100%);
+  border-radius:26px;padding:0 22px;position:relative;z-index:1;
+  font-family:'Inter',sans-serif;font-size:13px;font-weight:400;
+  letter-spacing:1.5px;color:#d0a858;caret-color:#d0a858;
+  text-shadow:0 0 6px rgba(210,170,80,0.25);
+  box-shadow:inset 0 2px 6px rgba(0,0,0,0.3),inset 0 -1px 2px rgba(255,255,255,0.02),0 4px 16px rgba(0,0,0,0.45);
+}
+.inp::placeholder{color:#a08848;letter-spacing:2px;text-shadow:0 0 8px rgba(210,170,80,0.2);}
+
+/* CARD TA2L */
+.b-ct{
+  flex:0 0 210px;border-radius:18px;border:none;cursor:pointer;
+  background:linear-gradient(180deg,#4e4e4e 0%,#3c3c3c 50%,#343434 100%);
+  color:#c8a868;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;
+  letter-spacing:2.5px;text-transform:uppercase;text-shadow:0 0 8px rgba(210,170,80,0.3);position:relative;
+  box-shadow:inset 0 1px 1px rgba(255,255,255,0.05),inset 0 -2px 4px rgba(0,0,0,0.2),0 4px 14px rgba(0,0,0,0.45);
+}
+.b-ct::before{
+  content:'';position:absolute;inset:-1.5px;border-radius:20px;padding:1.5px;
+  background:linear-gradient(165deg,#b09048 0%,#887838 35%,#605828 70%,#3a3818 100%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:2;
+}
+
+/* VIELAX / DUIST square */
+.b-sq{
+  flex:0 0 72px;border-radius:16px;border:none;cursor:pointer;
+  background:linear-gradient(180deg,#484848 0%,#383838 50%,#303030 100%);
+  color:#a89068;font-family:'Inter',sans-serif;font-size:10.5px;font-weight:500;
+  letter-spacing:1.8px;text-transform:uppercase;position:relative;
+  display:flex;align-items:flex-end;justify-content:center;padding-bottom:16px;
+  box-shadow:inset 0 1px 1px rgba(255,255,255,0.04),inset 0 -2px 4px rgba(0,0,0,0.2),0 4px 14px rgba(0,0,0,0.4);
+}
+.b-sq::before{
+  content:'';position:absolute;inset:-1.5px;border-radius:18px;padding:1.5px;
+  background:linear-gradient(165deg,#a08040 0%,#806530 40%,#5a4520 80%,#3a2a12 100%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;
+}
+
+/* Top-right large card */
+.c-tr{
+  flex:1;border-radius:18px;position:relative;
+  background:linear-gradient(180deg,#424242 0%,#353535 50%,#2c2c2c 100%);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,0.04),inset 0 -2px 4px rgba(0,0,0,0.2),0 4px 16px rgba(0,0,0,0.45);
+}
+.c-tr::before{
+  content:'';position:absolute;inset:-1.5px;border-radius:20px;padding:1.5px;
+  background:linear-gradient(165deg,#8a7038 0%,#6a5528 45%,#4a3a1a 100%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;
+}
+
+/* ══════════ ROW 2 ══════════ */
+.r2{display:flex;gap:10px;height:78px;}
+
+/* LEHD progress (concave/inset) */
+.lehd{
+  flex:0 0 280px;border-radius:10px;
+  background:linear-gradient(180deg,#2a2828 0%,#323030 100%);
+  display:flex;align-items:center;padding:0 16px;
+  border:1px solid rgba(255,255,255,0.02);
+  box-shadow:inset 0 3px 8px rgba(0,0,0,0.55),inset 0 1px 3px rgba(0,0,0,0.35);
+}
+.lehd-t{font-size:12px;font-weight:500;color:#ddb868;letter-spacing:2px;text-transform:uppercase;text-shadow:0 0 12px rgba(220,180,90,0.55),0 0 22px rgba(200,160,80,0.25);margin-right:16px;flex-shrink:0;}
+.lehd-tk{flex:1;height:7px;background:rgba(255,255,255,0.04);border-radius:4px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,0.3);}
+.lehd-fl{width:55%;height:100%;background:linear-gradient(90deg,#4a4a48,#5a5a58);border-radius:4px;}
+
+/* DINDI */
+.b-din{
+  flex:0 0 118px;border-radius:14px;border:none;cursor:pointer;
+  background:linear-gradient(180deg,#3e3e3e 0%,#333333 50%,#2c2c2c 100%);
+  display:flex;align-items:center;justify-content:center;position:relative;
+  box-shadow:inset 0 1px 1px rgba(255,255,255,0.04),inset 0 -2px 4px rgba(0,0,0,0.2),0 3px 12px rgba(0,0,0,0.4);
+}
+.b-din::before{
+  content:'';position:absolute;inset:-1.5px;border-radius:16px;padding:1.5px;
+  background:linear-gradient(165deg,#8a7038 0%,#6a5528 45%,#4a3a1a 100%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:2;
+}
+.din-t{font-size:12px;font-weight:500;color:#ddb868;letter-spacing:2px;text-transform:uppercase;text-shadow:0 0 12px rgba(220,180,90,0.5),0 0 22px rgba(200,160,80,0.2);position:relative;z-index:1;}
+
+/* Small EQ icon */
+.b-eq{
+  flex:0 0 50px;border-radius:12px;
+  background:linear-gradient(180deg,#383838 0%,#2e2e2e 100%);
+  border:1px solid rgba(140,110,60,0.15);
+  display:flex;align-items:flex-end;justify-content:center;gap:4px;padding-bottom:14px;
+  box-shadow:inset 0 1px 1px rgba(255,255,255,0.03),0 3px 10px rgba(0,0,0,0.35);
+}
+.eq-b{width:2.5px;background:#c8a860;border-radius:1.5px;box-shadow:0 0 4px rgba(200,168,96,0.25);}
+
+/* STINISS pill */
+.b-stn{
+  flex:0 0 100px;border-radius:14px;position:relative;
+  background:linear-gradient(180deg,#484440 0%,#3a3632 50%,#302c28 100%);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:inset 0 1px 1px rgba(255,255,255,0.04),inset 0 -2px 4px rgba(0,0,0,0.2),0 3px 12px rgba(0,0,0,0.4);
+}
+.b-stn::before{
+  content:'';position:absolute;inset:-1.5px;border-radius:16px;padding:1.5px;
+  background:linear-gradient(165deg,#a08848 0%,#806830 45%,#5a4820 100%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;
+}
+.stn-t{font-size:11px;font-weight:500;color:#d4b468;letter-spacing:2px;text-transform:uppercase;text-shadow:0 0 10px rgba(220,180,90,0.45),0 0 20px rgba(200,160,80,0.15);position:relative;z-index:1;}
+
+/* Glass card lines + 1630 */
+.gc{
+  flex:0 0 108px;border-radius:14px;position:relative;overflow:hidden;
+  box-shadow:0 4px 20px rgba(0,0,0,0.35);
+}
+.gc-bg{
+  position:absolute;inset:0;border-radius:14px;
+  background:linear-gradient(180deg,rgba(80,65,40,0.5) 0%,rgba(110,85,50,0.45) 40%,rgba(90,70,40,0.35) 100%);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.gc::before{
+  content:'';position:absolute;inset:-1.5px;border-radius:16px;padding:1.5px;
+  background:linear-gradient(165deg,#b09050 0%,#806830 45%,#504020 100%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:2;
+}
+.gc::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:35%;border-radius:14px 14px 0 0;
+  background:linear-gradient(180deg,rgba(255,255,255,0.04),transparent);pointer-events:none;z-index:1;
+}
+.gc-in{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:6px;}
+.gc-ls{display:flex;gap:6px;align-items:flex-end;height:28px;}
+.gc-l{width:2px;background:linear-gradient(180deg,#ddb868,#c8a860);border-radius:1px;box-shadow:0 0 5px rgba(200,168,96,0.35);}
+.gc-n{font-family:'JetBrains Mono',monospace;font-size:13px;color:#b89858;letter-spacing:2px;text-shadow:0 0 6px rgba(200,168,96,0.2);}
+
+/* Dark card with orb */
+.dc{
+  flex:1;border-radius:14px;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,#2e2c2a 0%,#242220 100%);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,0.03),0 4px 16px rgba(0,0,0,0.4);
+}
+.dc::before{
+  content:'';position:absolute;inset:-1.5px;border-radius:16px;padding:1.5px;
+  background:linear-gradient(165deg,#706040 0%,#504030 50%,#302010 100%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:1;
+}
+.orb{
+  position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+  width:28px;height:28px;border-radius:50%;z-index:2;
+  background:radial-gradient(circle,#f0d888 0%,#d0a850 30%,#a08040 60%,rgba(80,60,30,0.4) 100%);
+  box-shadow:0 0 20px rgba(220,180,80,0.5),0 0 40px rgba(200,160,70,0.25),0 0 60px rgba(180,140,60,0.1);
+}
+
+/* ══════════ ROW 3 ══════════ */
+.r3{display:flex;gap:10px;height:78px;}
+
+/* BLARD */
+.b-bl{
+  flex:0 0 225px;border-radius:16px;position:relative;cursor:pointer;border:none;
+  background:linear-gradient(180deg,#444240 0%,#383634 50%,#302e2c 100%);
+  display:flex;align-items:center;padding:0 20px;gap:12px;
+  box-shadow:inset 0 1px 1px rgba(255,255,255,0.05),inset 0 -2px 4px rgba(0,0,0,0.2),0 4px 16px rgba(0,0,0,0.45);
+}
+.b-bl::before{
+  content:'';position:absolute;inset:-2px;border-radius:18px;padding:2.5px;
+  background:linear-gradient(158deg,#d4b060 0%,#b89848 15%,#a08040 30%,#887038 52%,#685828 72%,#4a4018 100%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:2;
+}
+.b-bl::after{
+  content:'';position:absolute;inset:-8px;border-radius:24px;pointer-events:none;z-index:0;
+  box-shadow:-4px -3px 18px rgba(220,180,80,0.20),8px 5px 25px rgba(220,180,80,0.16),0 8px 22px rgba(210,170,70,0.14),0 0 40px rgba(200,160,70,0.06);
+}
+.bl-t{font-size:12.5px;font-weight:500;color:#ddb868;letter-spacing:2.5px;text-transform:uppercase;text-shadow:0 0 12px rgba(220,180,90,0.5),0 0 22px rgba(200,160,80,0.2);position:relative;z-index:3;}
+.bl-ds{display:flex;gap:6px;position:relative;z-index:3;}
+.bl-d{width:8px;height:8px;border-radius:50%;background:radial-gradient(circle,#e0c070,#c8a858);box-shadow:0 0 6px rgba(200,168,96,0.4);}
+
+/* Circle toggle */
+.circ-w{flex:0 0 56px;display:flex;align-items:center;justify-content:center;}
+.circ{
+  width:50px;height:50px;border-radius:50%;position:relative;
+  background:linear-gradient(180deg,#a08a66 0%,#8a7454 30%,#7a6448 60%,#685840 100%);
+  box-shadow:inset 0 3px 6px rgba(255,255,255,0.1),inset 0 -3px 6px rgba(0,0,0,0.3),0 3px 12px rgba(0,0,0,0.4);
+}
+.circ::before{
+  content:'';position:absolute;inset:-2.5px;border-radius:50%;padding:2.5px;
+  background:linear-gradient(160deg,#d4b468 0%,#b89850 25%,#907840 55%,#685030 100%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;z-index:1;
+}
+.circ::after{
+  content:'';position:absolute;inset:-6px;border-radius:50%;
+  box-shadow:0 0 12px rgba(200,168,96,0.15);pointer-events:none;
+}
+
+/* ══════════ ROW 4 — LEB / DOTS / STERESS ══════════ */
+.r4{display:flex;gap:10px;height:46px;}
+
+.r4-c{
+  border-radius:12px;position:relative;display:flex;align-items:center;
+  background:linear-gradient(180deg,#2c2a28 0%,#242220 100%);
+  box-shadow:inset 0 1px 3px rgba(0,0,0,0.35);
+}
+.r4-c::before{
+  content:'';position:absolute;inset:-1px;border-radius:13px;padding:1px;
+  background:linear-gradient(165deg,#8a7038 0%,#604820 50%,#3a2a10 100%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;
+}
+.r4-a{flex:0 0 200px;padding:0 18px;gap:20px;justify-content:flex-start;}
+.r4-b{flex:0 0 180px;justify-content:center;gap:10px;}
+.r4-s{flex:1;justify-content:center;}
+.r4t{font-size:11px;font-weight:500;color:#b09050;letter-spacing:2px;text-transform:uppercase;text-shadow:0 0 6px rgba(180,144,80,0.2);}
+.r4t-m{font-family:'JetBrains Mono',monospace;}
+.pd{width:8px;height:8px;border-radius:50%;background:#3a3530;box-shadow:inset 0 1px 2px rgba(0,0,0,0.3);}
+.pd.a{background:radial-gradient(circle,#c8a860,#a08840);box-shadow:0 0 6px rgba(200,168,96,0.35);}
+
+/* ══════════ ROW 5 — GOLD PRIMARY ══════════ */
+.r5{display:flex;gap:10px;height:82px;}
+.r5-sp{flex:1;}
+.g-btn{
+  flex:0 0 420px;border-radius:14px;position:relative;cursor:pointer;border:none;overflow:hidden;
+  display:flex;align-items:center;padding:0 26px;gap:6px;
+  background:linear-gradient(175deg,#dcc888 0%,#d0b878 8%,#c4a868 20%,#b89858 38%,#ac8e50 52%,#a08446 66%,#907840 80%,#806830 100%);
+  box-shadow:inset 0 2px 3px rgba(255,255,255,0.22),inset 0 -2px 4px rgba(0,0,0,0.15),0 5px 20px rgba(0,0,0,0.45),0 0 25px rgba(190,155,85,0.15);
+}
+.g-btn::before{
+  content:'';position:absolute;inset:-1.5px;border-radius:16px;padding:1.5px;
+  background:linear-gradient(165deg,#e8d090 0%,#d0b070 25%,#b89850 55%,#a08040 100%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:2;
+}
+.g-btn::after{
+  content:'';position:absolute;inset:0;border-radius:inherit;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:0.035;pointer-events:none;mix-blend-mode:overlay;z-index:1;
+}
+.g-hl{position:absolute;top:0;left:8%;right:8%;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(255,240,200,0.2),transparent);z-index:3;}
+.g-t{font-family:'Inter',sans-serif;font-size:12px;font-weight:500;color:#4a3820;letter-spacing:3px;text-transform:uppercase;position:relative;z-index:3;}
+.g-dd{display:flex;gap:6px;margin-left:auto;position:relative;z-index:3;}
+.g-d{width:7px;height:7px;border-radius:50%;background:#6a5830;box-shadow:inset 0 1px 2px rgba(0,0,0,0.3);}
+.g-circ{width:8px;height:8px;border-radius:50%;background:#6a5830;position:relative;z-index:3;box-shadow:inset 0 1px 2px rgba(0,0,0,0.3);}
+</style>
+</head>
+<body>
+<div class="kit">
+
+  <!-- ROW 1: Input + CardTa2l + Vielax + Duist + TopRight card -->
+  <div class="r1">
+    <div class="inp-w">
+      <div class="glow"></div>
+      <input type="text" class="inp" placeholder="DXDHG">
+    </div>
+    <button class="b-ct">CARD TA2L</button>
+    <button class="b-sq">VIELAIX</button>
+    <button class="b-sq">DUIST</button>
+    <div class="c-tr"></div>
+  </div>
+
+  <!-- ROW 2: LEHD + DINDI + EQ + STINISS + Glass + DarkOrb -->
+  <div class="r2">
+    <div class="lehd">
+      <span class="lehd-t">LEHD</span>
+      <div class="lehd-tk"><div class="lehd-fl"></div></div>
+    </div>
+    <button class="b-din"><span class="din-t">DINDI</span></button>
+    <div class="b-eq">
+      <div class="eq-b" style="height:10px"></div>
+      <div class="eq-b" style="height:18px"></div>
+      <div class="eq-b" style="height:14px"></div>
+    </div>
+    <div class="b-stn"><span class="stn-t">STINISS</span></div>
+    <div class="gc">
+      <div class="gc-bg"></div>
+      <div class="gc-in">
+        <div class="gc-ls">
+          <div class="gc-l" style="height:18px"></div>
+          <div class="gc-l" style="height:26px"></div>
+          <div class="gc-l" style="height:22px"></div>
+        </div>
+        <span class="gc-n">1630</span>
+      </div>
+    </div>
+    <div class="dc"><div class="orb"></div></div>
+  </div>
+
+  <!-- ROW 3: BLARD + EQ + Circle + STINISS + Glass1630 + DarkRing -->
+  <div class="r3">
+    <div class="b-bl">
+      <span class="bl-t">BLARD</span>
+      <div class="bl-ds"><div class="bl-d"></div><div class="bl-d"></div></div>
+    </div>
+    <div class="b-eq">
+      <div class="eq-b" style="height:8px"></div>
+      <div class="eq-b" style="height:16px"></div>
+      <div class="eq-b" style="height:12px"></div>
+    </div>
+    <div class="circ-w"><div class="circ"></div></div>
+    <div class="b-stn" style="flex:0 0 112px"><span class="stn-t">STINISS</span></div>
+    <div class="gc" style="flex:0 0 112px">
+      <div class="gc-bg"></div>
+      <div class="gc-in">
+        <span class="gc-n">1630</span>
+        <div style="width:14px;height:14px;border-radius:50%;border:1px solid rgba(160,128,64,0.3);background:rgba(60,50,35,0.5)"></div>
+      </div>
+    </div>
+    <div class="dc dc-ring">
+      <!-- Bright point light at top -->
+      <div style="position:absolute;top:10px;left:50%;transform:translateX(-50%);width:10px;height:10px;border-radius:50%;z-index:3;background:radial-gradient(circle,#ffe8b0 0%,#e8c878 30%,rgba(200,160,70,0.4) 70%,transparent 100%);box-shadow:0 0 16px rgba(240,200,100,0.7),0 0 30px rgba(220,180,80,0.4),0 0 50px rgba(200,160,70,0.2)"></div>
+      <!-- Vertical light ray -->
+      <div style="position:absolute;top:18px;left:50%;transform:translateX(-50%);width:1px;height:28px;z-index:2;background:linear-gradient(180deg,rgba(220,180,80,0.5),rgba(200,160,70,0.1),transparent);box-shadow:0 0 4px rgba(220,180,80,0.3)"></div>
+      <!-- Gold ring (outline only) -->
+      <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);width:22px;height:22px;border-radius:50%;z-index:2;border:1.5px solid rgba(200,168,96,0.6);box-shadow:0 0 8px rgba(200,168,96,0.2),inset 0 0 4px rgba(200,168,96,0.1)"></div>
+    </div>
+  </div>
+
+  <!-- ROW 4: LEB 1909 | dots | STERESS -->
+  <div class="r4">
+    <div class="r4-c r4-a">
+      <span class="r4t">LEB</span>
+      <span class="r4t r4t-m">1909</span>
+    </div>
+    <div class="r4-c r4-b">
+      <div class="pd a"></div><div class="pd a"></div><div class="pd a"></div><div class="pd a"></div><div class="pd a"></div>
+    </div>
+    <div class="r4-c r4-s">
+      <span class="r4t" style="letter-spacing:3px">STERESS</span>
+    </div>
+  </div>
+
+  <!-- ROW 5: Gold primary (NOICOS) -->
+  <div class="r5">
+    <div class="r5-sp"></div>
+    <button class="g-btn">
+      <div class="g-hl"></div>
+      <span class="g-t">K</span>
+      <span class="g-circ"></span>
+      <span class="g-t">ICOS</span>
+      <div class="g-dd">
+        <div class="g-d"></div><div class="g-d"></div>
+      </div>
+    </button>
+  </div>
+
+</div>
+</body>
+</html>
