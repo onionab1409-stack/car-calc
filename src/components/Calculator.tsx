@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback } from 'react';
 import type { Country, Destination } from '@/types';
-import { StepCountry, StepCar, StepDestination, StepLoading, StepResult } from '@/components/wizard';
+import { StepCountry, StepCar, StepDestination, StepLoading, StepResult, StepLead } from '@/components/wizard';
 import type { CarFormData } from '@/components/wizard';
 
 /**
@@ -92,6 +92,7 @@ export function Calculator() {
   const handleBackToCountry = useCallback(() => setStep('country'), []);
   const handleBackToCar = useCallback(() => setStep('car'), []);
   const handleBackToDestination = useCallback(() => setStep('destination'), []);
+  const handleBackToResult = useCallback(() => setStep('result'), []);
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -152,21 +153,19 @@ export function Calculator() {
         />
       )}
 
-      {/* ─── Step: Заявка (placeholder — P6.6) ─── */}
-      {step === 'lead' && (
-        <div className="flex-1 flex items-center justify-center p-6">
-          <div className="text-center space-y-4 animate-fade-in">
-            <div className="text-4xl">📩</div>
-            <h2 className="font-serif text-xl text-gold-100">Оставить заявку</h2>
-            <div className="pill-gold mx-auto w-fit">P6.6 — в разработке</div>
-            <button
-              onClick={() => setStep('result')}
-              className="text-sm text-gold-400 underline underline-offset-4 mt-4"
-            >
-              ← Назад к результату
-            </button>
-          </div>
-        </div>
+      {/* ─── Step 6: Заявка ─── */}
+      {step === 'lead' && state.country && state.destination && state.totalRUB && (
+        <StepLead
+          totalRUB={state.totalRUB}
+          country={state.country}
+          destination={state.destination}
+          price={state.price}
+          year={state.year}
+          engineType={state.engineType}
+          horsePower={state.horsePower}
+          onBack={handleBackToResult}
+          onNewCalc={handleNewCalc}
+        />
       )}
 
       {/* ─── Ошибка ─── */}

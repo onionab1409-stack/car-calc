@@ -3,4 +3,5 @@ export { StepCar } from './StepCar';
 export { StepDestination } from './StepDestination';
 export { StepLoading } from './StepLoading';
 export { StepResult } from './StepResult';
+export { StepLead } from './StepLead';
 export type { CarFormData } from './StepCar';
