@@ -68,6 +68,7 @@ export async function POST(request: NextRequest) {
       firstName: data.name,
       phone: data.phone,
       comment: `${data.comment}\n---\n${data.country}→${data.destination} | ${data.price} | ${data.year} | ${data.engineType} | ${data.horsePower}лс | ИТОГО: ${data.totalRUB}₽`,
+      calculationId: `calc-${Date.now()}`,
     });
 
     logInfo('API/lead', `Lead saved: ${leadId} | ${data.name} | ${data.phone} | ${data.totalRUB}₽`);

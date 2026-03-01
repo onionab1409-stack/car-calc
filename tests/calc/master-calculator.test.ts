@@ -233,7 +233,7 @@ describe('calculateQuick — роутер', () => {
 describe('calculate — ошибки', () => {
   it('неизвестная страна → ошибка', () => {
     const car = {
-      country: 'Japan' as any, destination: 'RU', price: 1000, currency: 'JPY' as any,
+      country: 'Japan' as any, destination: 'RU' as const, price: 1000, currency: 'JPY' as any,
       year: 2024, engineType: 'petrol' as const, horsePower: 150,
     };
     expect(() => calculate(car, TEST_RATES)).toThrow('Неизвестная страна');
