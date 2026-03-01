@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car-Calc · Midjourney V7 Prompts · Gold Luxury</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #08080a;
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ═══ HEADER ═══ */
+.header {
+  text-align: center;
+  padding: 56px 20px 12px;
+  position: relative;
+}
+.header::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 300px;
+  background: radial-gradient(ellipse at center top, rgba(212,175,55,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #D4AF37, #F4D972, #D4AF37);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  z-index: 1;
+}
+.header .sub {
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  color: #555;
+  margin-top: 6px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+}
+.header .desc {
+  font-size: 14px;
+  color: #777;
+  margin-top: 14px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══ STATS ═══ */
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  padding: 28px 20px;
+  position: relative;
+  z-index: 1;
+}
+.stat {
+  text-align: center;
+}
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  color: #D4AF37;
+}
+.stat-label {
+  font-size: 10px;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-top: 2px;
+}
+
+/* ═══ DIVIDER ═══ */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,175,55,0.2), transparent);
+  margin: 0 40px;
+}
+
+/* ═══ SECTION ═══ */
+.section {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px 0;
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.section-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  background: rgba(212,175,55,0.08);
+  border: 1px solid rgba(212,175,55,0.15);
+  flex-shrink: 0;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  color: #fff;
+}
+.section-desc {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 20px;
+  padding-left: 52px;
+}
+
+/* ═══ PROMPT CARD ═══ */
+.prompt-card {
+  background: #0e0e10;
+  border: 1px solid #1a1a1c;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+.prompt-card:hover {
+  border-color: rgba(212,175,55,0.25);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 18px 12px;
+}
+.card-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card-num {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  color: #D4AF37;
+  background: rgba(212,175,55,0.08);
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 1px;
+}
+.card-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ddd;
+}
+.card-screen {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  color: #444;
+  letter-spacing: 0.5px;
+}
+
+.card-actions {
+  display: flex;
+  gap: 6px;
+}
+.btn-copy {
+  padding: 7px 16px;
+  background: rgba(212,175,55,0.08);
+  border: 1px solid rgba(212,175,55,0.2);
+  border-radius: 8px;
+  color: #D4AF37;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.5px;
+}
+.btn-copy:hover {
+  background: rgba(212,175,55,0.15);
+  border-color: rgba(212,175,55,0.4);
+}
+.btn-copy.copied {
+  background: rgba(74,222,128,0.1);
+  border-color: rgba(74,222,128,0.3);
+  color: #4ade80;
+}
+
+.card-tags {
+  display: flex;
+  gap: 6px;
+  padding: 0 18px 10px;
+  flex-wrap: wrap;
+}
+.tag {
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 5px;
+  background: #141416;
+  color: #555;
+  letter-spacing: 0.5px;
+}
+.tag.ar { color: #6366F1; background: rgba(99,102,241,0.08); }
+.tag.screen { color: #22c55e; background: rgba(34,197,94,0.08); }
+.tag.priority { color: #f59e0b; background: rgba(245,158,11,0.08); }
+
+.prompt-body {
+  background: #0a0a0c;
+  padding: 16px 18px;
+  border-top: 1px solid #141416;
+}
+.prompt-text {
+  font-family: 'Geist Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.8;
+  color: #bbb;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.prompt-text .highlight {
+  color: #D4AF37;
+  font-weight: 500;
+}
+.prompt-text .param {
+  color: #6366F1;
+}
+
+.card-note {
+  padding: 10px 18px 14px;
+  border-top: 1px solid #141416;
+  font-size: 12px;
+  color: #555;
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+.card-note .note-icon { flex-shrink: 0; }
+
+/* ═══ VARIATION BLOCK ═══ */
+.variation {
+  margin-top: 8px;
+  padding: 10px 14px;
+  background: #0c0c0e;
+  border: 1px solid #1a1a1c;
+  border-radius: 10px;
+}
+.variation-label {
+  font-size: 10px;
+  color: #D4AF37;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.variation-text {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: #888;
+}
+
+/* ═══ WORKFLOW ═══ */
+.workflow {
+  max-width: 900px;
+  margin: 48px auto 0;
+  padding: 0 20px 60px;
+}
+.workflow-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  margin-bottom: 16px;
+  text-align: center;
+  color: #ddd;
+}
+.workflow-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+.w-step {
+  background: #0e0e10;
+  border: 1px solid #1a1a1c;
+  border-radius: 14px;
+  padding: 18px;
+  text-align: center;
+}
+.w-step .w-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  color: #D4AF37;
+  margin-bottom: 6px;
+}
+.w-step .w-text {
+  font-size: 13px;
+  color: #888;
+}
+.w-step .w-text strong { color: #ccc; }
+
+/* ═══ FOOTER ═══ */
+.footer {
+  text-align: center;
+  padding: 20px;
+  border-top: 1px solid #141416;
+  margin-top: 48px;
+}
+.footer p {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  color: #333;
+  letter-spacing: 1px;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Midjourney V7 Prompts</h1>
+  <div class="sub">Car-Calc · Gold Luxury · Complete Set</div>
+  <div class="desc">27 промптов для генерации всех визуальных элементов Mini App. Каждый промпт оптимизирован под Midjourney V7 с точными параметрами стиля, освещения и композиции.</div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num">27</div><div class="stat-label">Промптов</div></div>
+  <div class="stat"><div class="stat-num">7</div><div class="stat-label">Экранов</div></div>
+  <div class="stat"><div class="stat-num">4</div><div class="stat-label">Категории</div></div>
+</div>
+
+<div class="divider"></div>
+
+<div id="content"></div>
+
+<!-- WORKFLOW -->
+<div class="workflow">
+  <div class="divider" style="margin: 0 0 32px 0;"></div>
+  <div class="workflow-title">Workflow</div>
+  <div class="workflow-steps">
+    <div class="w-step">
+      <div class="w-num">1</div>
+      <div class="w-text"><strong>Копируй промпт</strong><br>Нажми Copy → вставь в Midjourney</div>
+    </div>
+    <div class="w-step">
+      <div class="w-num">2</div>
+      <div class="w-text"><strong>Генерируй</strong><br>V7 даст 4 варианта, выбери лучший</div>
+    </div>
+    <div class="w-step">
+      <div class="w-num">3</div>
+      <div class="w-text"><strong>Upscale</strong><br>U1–U4, потом Upscale (Subtle)</div>
+    </div>
+    <div class="w-step">
+      <div class="w-num">4</div>
+      <div class="w-text"><strong>Загрузи в GitHub</strong><br>design/midjourney/ → скажи «готово»</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>car-calc · p5 design · midjourney v7 · gold luxury</p>
+</div>
+
+<script>
+const sections = [
+  {
+    icon: '🌑',
+    title: 'Основные фоны',
+    desc: 'Главные фоновые изображения для всего приложения. Используются за контентом на каждом экране.',
+    prompts: [
+      {
+        num: '01',
+        name: 'Главный фон приложения',
+        screen: 'Все экраны',
+        priority: '🔴 CRITICAL',
+        tags: ['9:20', 'Все экраны', 'Критический'],
+        prompt: `Ethereal dark void background, pure black (#0C0C0E) base, a single diagonal shaft of warm golden light cutting softly through deep space from upper-left corner, the light beam has volumetric fog quality with microscopic gold dust particles suspended in the air catching the light, creating a subtle Tyndall effect, the particles are sparse and organic not uniform, extreme depth of field with closest particles slightly blurred, the golden light gradually dissolves into absolute darkness, no surface no horizon no objects, just light matter and void, the feeling of looking into an infinite dark room where one beam of sunlight has found its way through, cinematic color grading with deep blacks never lifting above #1A1A1A in shadows, the gold tone is warm antique brass not yellow, atmosphere of a luxury vault or museum after hours --ar 9:20 --v 7 --s 300 --q 2`,
+        note: 'Это ГЛАВНЫЙ фон. Будет использоваться на всех экранах. Золотой луч создаёт глубину и премиальное ощущение. Важно: фон должен быть ОЧЕНЬ тёмным — контент будет белым поверх.',
+        variations: [
+          {
+            label: 'Вариация — более минимальная',
+            text: `Deep black void background (#0C0C0E), extremely subtle golden atmospheric haze in upper portion, barely visible warm light diffusion, microscopic floating particles catching faint gold illumination, ultra minimal almost entirely dark with just a whisper of warm light, no objects no surfaces, cinematic black negative space, luxury darkness --ar 9:20 --v 7 --s 250 --q 2`
+          }
+        ]
+      },
+      {
+        num: '02',
+        name: 'Фон с золотыми частицами — плотный',
+        screen: 'Экран 1 (страны)',
+        priority: '🔴 HIGH',
+        tags: ['9:20', 'Экран 1', 'Высокий'],
+        prompt: `Floating golden dust particles suspended in absolute darkness, extreme macro photography perspective, the particles are irregular organic shapes like real gold leaf flakes — some flat catching light as bright points, some edge-on appearing as thin lines, some slightly out of focus creating soft golden bokeh circles, particle density is medium — enough to feel magical but sky between them is pure black, each particle has its own micro-reflection creating warm amber and antique gold tones, depth layers — foreground particles large and soft-focused, midground particles sharp and detailed, background particles tiny pinpoints, the overall impression is standing inside a snow globe filled with gold dust in a pitch-black room, no surfaces no horizon no objects, zero blue tones everything warm --ar 9:20 --v 7 --s 350 --q 2`,
+        note: 'Для экрана выбора страны. Частицы создают атмосферу за карточками. Важно чтобы между частицами был чистый чёрный — текст должен читаться.',
+      },
+      {
+        num: '03',
+        name: 'Фон с мягким свечением',
+        screen: 'Экран 2 (направление)',
+        priority: '🟡 MED',
+        tags: ['9:20', 'Экран 2', 'Средний'],
+        prompt: `Abstract dark background, deep black base (#0C0C0E), two very soft warm light sources — one upper-left emitting pale gold glow, one lower-right emitting deeper amber tone, the lights are extremely diffused like distant nebulae, they create a barely perceptible warm gradient across the darkness, where the two light fields overlap in center there is a slightly warmer zone but still very dark, scattered ultra-fine gold particles like distant stars, the overall brightness never exceeds 15% — this is darkness with a memory of gold, atmospheric depth fog, no objects no surfaces no geometric shapes, pure atmospheric light painting --ar 9:20 --v 7 --s 200 --q 2`,
+        note: 'Мягче чем основной фон. Два тёплых источника создают ощущение пространства для выбора РФ/РБ.',
+      },
+    ]
+  },
+  {
+    icon: '🏆',
+    title: 'Экран результата',
+    desc: 'Самый важный экран — здесь клиент видит итоговую цену. Фон должен создавать wow-эффект и фокусировать внимание на цифре.',
+    prompts: [
+      {
+        num: '04',
+        name: 'Spotlight — золотой луч сверху',
+        screen: 'Экран 5 (результат)',
+        priority: '🔴 CRITICAL',
+        tags: ['9:20', 'Экран 5', 'Критический'],
+        prompt: `Dramatic single spotlight from directly above illuminating empty dark space, the light is warm antique gold color falling straight down as a perfect cone, where the light hits there is a soft circular pool of golden illumination on an implied dark surface, volumetric light rays visible in the cone with microscopic dust particles creating god-ray effect, the edges of the light cone are soft and feathered not sharp, around the spotlight is absolute darkness (#0C0C0E), the golden light pool in center has subtle caustic-like patterns — ripples of lighter and darker gold, atmosphere of a theater stage or luxury showroom where a single precious object would be displayed, the spotlight occupies roughly the center-upper portion of the frame with the glow pool in the center, dramatic chiaroscuro lighting, photorealistic volumetric rendering --ar 9:20 --v 7 --s 400 --q 2`,
+        note: 'КЛЮЧЕВОЙ промпт. Цифра цены будет точно в центре светового пятна. Spotlight = фокус = «вот ваша цена». Театральный эффект.',
+        variations: [
+          {
+            label: 'Вариация — двойной spotlight',
+            text: `Two overlapping golden spotlights from above in dark void, the main larger light is centered warm gold, a secondary smaller accent light slightly offset creating depth, where they overlap the gold intensifies, volumetric fog in light cones, gold dust particles, dark surroundings (#0C0C0E), theatrical luxury atmosphere, the combined light creates an elliptical glow zone perfect for displaying important information --ar 9:20 --v 7 --s 350 --q 2`
+          }
+        ]
+      },
+      {
+        num: '05',
+        name: 'Radial gold explosion — triumph',
+        screen: 'Экран 5 (результат alt)',
+        priority: '🔴 HIGH',
+        tags: ['9:20', 'Экран 5', 'Высокий'],
+        prompt: `Radial burst of warm golden light emanating from center of frame outward into surrounding darkness, like a controlled explosion of gold energy frozen in time, rays are not sharp geometric lines but soft organic tendrils of light with varying thickness and opacity, some rays dissolve quickly into darkness others stretch to frame edges, between the rays is pure black void, at the very center is the brightest point — white-gold transitioning to antique gold then amber then darkness at edges, microscopic gold particles scattered throughout catching and reflecting the radial light, the overall effect is celebratory and triumphant like a moment of revelation, no objects no surfaces, pure light phenomenon against void --ar 9:20 --v 7 --s 350 --q 2`,
+        note: 'Альтернативный вариант для результата. Более торжественный — лучи во все стороны из центра. Если клиент увидит дорогую цену, лучи создают позитивное восприятие.',
+      },
+      {
+        num: '06',
+        name: 'Парящий золотой туман',
+        screen: 'Экран 5 (результат alt 2)',
+        priority: '🟡 MED',
+        tags: ['9:20', 'Экран 5', 'Средний'],
+        prompt: `Dense golden atmospheric fog hovering in the center of dark void, the fog is concentrated in a horizontal band across the middle of the frame like a golden cloud layer, it is warmly illuminated from within — self-luminous gold mist, the fog has realistic volumetric detail with wisps and tendrils at its edges dissolving into pure black above and below, through the densest part of the fog there are hints of brighter golden light like a hidden sun, sparse individual gold particles drift above and below the main fog bank, the contrast between the warm golden middle zone and the cold black void above and below creates a strong focal band, no objects no horizon line — this cloud exists in infinite space, atmospheric cinematic mood --ar 9:20 --v 7 --s 300 --q 2`,
+        note: 'Третий вариант. Туманная полоса посередине = зона для цены. Более мистический, менее агрессивный.',
+      },
+    ]
+  },
+  {
+    icon: '🚗',
+    title: 'Тематические элементы',
+    desc: 'Автомобильная тематика — текстуры, детали, атмосфера. Для карточек, декора и брендинга.',
+    prompts: [
+      {
+        num: '07',
+        name: 'Карбон + золотая нить',
+        screen: 'Декор / карточки',
+        priority: '🟡 MED',
+        tags: ['1:1', 'Текстура', 'Средний'],
+        prompt: `Extreme macro photography of luxury carbon fiber weave material, the carbon fibers are deep matte black with subtle reflective highlights, woven through the carbon pattern are thin threads of real gold — not painted but actual metallic gold filaments catching light, the gold threads appear at regular intervals creating a subtle grid pattern within the carbon weave, dramatic side lighting from left creating shadow depth in the weave texture, ultra sharp focus showing individual fiber strands, the color palette is exclusively black carbon and warm gold — no other colors, the material looks like something from a Pagani Huayra or Bugatti interior, professional product photography macro lens --ar 1:1 --v 7 --s 200 --q 2`,
+        note: 'Квадратный формат — для карточек стран или фон секций. Автомобильная текстура = подсознательная связь с авто-бизнесом.',
+        variations: [
+          {
+            label: 'Вариация — кожа + прострочка',
+            text: `Extreme macro of premium black automotive leather, fine grain texture visible, a single line of gold contrast stitching running diagonally through frame, the stitching is precise and even — typical luxury car interior quality, dramatic lighting revealing leather texture depth, oil-like subtle sheen on leather surface, ultra detailed 8K macro photography, Hermès or Rolls-Royce interior quality --ar 1:1 --v 7 --s 200 --q 2`
+          }
+        ]
+      },
+      {
+        num: '08',
+        name: 'Золотой жидкий метал',
+        screen: 'Загрузка / анимация',
+        priority: '🟡 MED',
+        tags: ['9:20', 'Экран 4', 'Средний'],
+        prompt: `Abstract liquid gold in zero gravity, a flowing stream of molten gold metal floating through pitch-black void, the gold has realistic fluid dynamics — stretching, forming droplets, creating thin connecting filaments between larger masses, surface of the liquid gold is mirror-reflective showing distorted reflections of its own light, the gold emits soft warm illumination into surrounding darkness, some smaller gold droplets have separated and float independently like golden planets, the fluid motion is frozen at a beautiful moment — organic curves and tension in the stretching metal, the deepest blacks surround the gold creating extreme contrast, no other elements just molten gold and void, the gold color ranges from bright yellow-white at thinnest points to deep amber in thickest pools --ar 9:20 --v 7 --s 400 --q 2`,
+        note: 'Для экрана загрузки. Жидкое золото = динамика, процесс, трансформация. Можно анимировать через CSS (parallax scroll или subtle movement).',
+      },
+      {
+        num: '09',
+        name: 'Золотая пыль — close-up',
+        screen: 'Декор / оверлей',
+        priority: '🟢 LOW',
+        tags: ['1:1', 'Оверлей', 'Низкий'],
+        prompt: `Ultra close-up macro of gold dust explosion frozen in time against pure black background, individual gold particles in extreme detail — some are flat flakes with mirror surfaces, some are rough nugget shapes, some are fine powder, dramatic rim lighting from behind creating golden halos around each particle, shallow depth of field with sharp focus on middle layer and beautiful bokeh on near and far particles, the particles are dispersing outward from center in an organic pattern, some particles catch light as brilliant white-gold points, others show deep amber shadows, professional jewelry photography lighting, studio black background --ar 1:1 --v 7 --s 300 --q 2`,
+        note: 'Можно использовать как полупрозрачный оверлей (CSS opacity) поверх тёмного фона для wow-эффекта.',
+      },
+      {
+        num: '10',
+        name: 'Абстрактные золотые волны',
+        screen: 'Разделители / декор',
+        priority: '🟢 LOW',
+        tags: ['16:9', 'Декор', 'Низкий'],
+        prompt: `Abstract golden sine wave ribbons flowing horizontally through dark void, three parallel undulating ribbons of thin gold — one bright gold, one deeper amber, one pale champagne, the ribbons have slight transparency and where they cross or overlap the gold intensifies, the ribbons are smooth and polished like liquid metal frozen mid-flow, subtle light bloom along the ribbon edges, between and around the ribbons is absolute black, the wave motion is gentle and elegant not chaotic, each ribbon has slightly different wave frequency creating moiré-like visual rhythm, professional 3D render quality, minimal and refined --ar 16:9 --v 7 --s 250 --q 2`,
+        note: 'Горизонтальный формат — для разделителей между секциями или декоративных полос.',
+      },
+    ]
+  },
+  {
+    icon: '🏴',
+    title: 'Фоны для карточек стран',
+    desc: 'Индивидуальные фоны для каждой из 4 стран. Тонкие визуальные подсказки без флагов и очевидных символов.',
+    prompts: [
+      {
+        num: '11',
+        name: '🇺🇸 США — городские огни',
+        screen: 'Экран 1 / карточка',
+        priority: '🟡 MED',
+        tags: ['3:4', 'Экран 1', 'Средний'],
+        prompt: `Abstract out-of-focus city lights at night shot through rain-covered glass, warm amber and gold bokeh circles of varying sizes scattered across dark background, the lights suggest a distant American urban skyline — mostly warm tones with occasional cool blue accent, heavy vignette darkening all edges to near-black, the rain drops on glass create streaks and distortion adding organic texture, the overall mood is cinematic noir meets luxury — like looking through a limousine window at Manhattan at night, everything is soft and defocused — no recognizable shapes just light and shadow and color, predominantly dark with punctuated golden light points --ar 3:4 --v 7 --s 250 --q 2`,
+        note: 'Абстрактные огни города = США. Не буквально — не статуя свободы, а настроение.',
+        variations: [
+          {
+            label: 'Вариация — неон и хром',
+            text: `Abstract defocused American car auction atmosphere, warm industrial lighting reflected on wet chrome and glass surfaces, golden and amber light reflections on dark surface, out-of-focus automotive shapes in deep background, cinematic night atmosphere, dark and moody with punctuated warm highlights, noir aesthetic --ar 3:4 --v 7 --s 200 --q 2`
+          }
+        ]
+      },
+      {
+        num: '12',
+        name: '🇰🇷 Корея — неон ханок',
+        screen: 'Экран 1 / карточка',
+        priority: '🟡 MED',
+        tags: ['3:4', 'Экран 1', 'Средний'],
+        prompt: `Abstract atmosphere inspired by Korean urban nightscape, soft golden light filtering through the geometric lattice pattern of a traditional hanok window (창호지), the lattice creates a regular grid of small illuminated squares in warm gold tones, the background is deep black, the lattice pattern is slightly out of focus creating soft-edged geometric bokeh, some squares are brighter than others creating organic light variation, very subtle warm fog or mist softening the overall image, the feeling is traditional Korean craft meeting modern luxury, the grid pattern gradually fades into darkness at the edges of frame, contemplative and refined atmosphere --ar 3:4 --v 7 --s 250 --q 2`,
+        note: 'Решётка ханок = узнаваемый корейский элемент без клише. Золотой свет через паттерн.',
+      },
+      {
+        num: '13',
+        name: '🇦🇪 ОАЭ — пустыня и золото',
+        screen: 'Экран 1 / карточка',
+        priority: '🟡 MED',
+        tags: ['3:4', 'Экран 1', 'Средний'],
+        prompt: `Abstract desert atmosphere at golden hour rendered in extreme dark tones, gentle sand dune curves as soft organic shapes barely visible against near-black sky, the sky has a thin band of deep amber light along a distant horizon line — the last light of sunset, fine desert sand particles floating in the air catching this golden light as scattered bright points, the sand dune surfaces have subtle wind-carved ripple patterns catching faint light, the overall image is 80% darkness with the golden light confined to a narrow atmospheric band, the mood is vast empty luxury — like the Arabian desert at night from a penthouse balcony, no stars no moon no man-made objects, just sand curves and fading golden light --ar 3:4 --v 7 --s 300 --q 2`,
+        note: 'Пустыня = ОАЭ. Не Бурдж-Халифа, а атмосфера — песок, закат, золото.',
+      },
+      {
+        num: '14',
+        name: '🇨🇳 Китай — алый и золото',
+        screen: 'Экран 1 / карточка',
+        priority: '🟡 MED',
+        tags: ['3:4', 'Экран 1', 'Средний'],
+        prompt: `Abstract dark atmosphere with deep crimson red and gold color story, a single vertical stroke of deep red light — like a distant Chinese lantern glow — illuminating swirling gold dust particles in darkness, the red is not bright cherry but deep aged cinnabar (#8B0000) — the red of traditional Chinese lacquer, gold particles concentrate around the red light source creating a warm corona, the contrast between the deep red and surrounding black is dramatic, subtle suggestion of silk fabric texture in the background — very faint diagonal weave pattern, the gold and red together are quintessentially Chinese luxury without being literal, atmospheric fog adds depth, no objects no symbols just color light and texture --ar 3:4 --v 7 --s 300 --q 2`,
+        note: 'Красный + золото = Китай. Не дракон и не пагода — цвет, свет и фактура.',
+      },
+      {
+        num: '15',
+        name: '🇷🇺 Россия — для экрана результата',
+        screen: 'Экран 5 / декор',
+        priority: '🟢 LOW',
+        tags: ['3:4', 'Экран 5', 'Низкий'],
+        prompt: `Abstract dark atmosphere evoking winter luxury, very subtle impression of frost crystals on dark glass, the frost patterns catch faint golden light creating delicate branching geometric structures, ice crystal edges glow with warm amber light against deep black, the frost coverage is sparse — mostly dark with isolated crystal formations, the crystals have natural dendritic branching patterns, a faint warm golden mist behind the glass suggests interior warmth contrasting with the cold crystal surface, the mood is Russian winter luxury — warmth behind glass, gold through ice, extreme contrast and refinement --ar 3:4 --v 7 --s 250 --q 2`,
+        note: 'Опционально — для обозначения маршрута «→ Россия». Зимний мотив + золото.',
+      },
+      {
+        num: '16',
+        name: '🇧🇾 Беларусь — для экрана результата',
+        screen: 'Экран 5 / декор',
+        priority: '🟢 LOW',
+        tags: ['3:4', 'Экран 5', 'Низкий'],
+        prompt: `Abstract dark nature atmosphere, very subtle silhouette of birch tree branches against deep dark sky, the branches are delicate and organic barely visible against black, where branches catch light they show warm gold tones on bark texture, a few scattered gold leaf-like particles floating — suggestion of autumn birch leaves, the overall image is extremely dark and minimal with the birch elements as quiet organic accents, soft golden backlighting from behind creating rim light on branch edges, forest depth with atmospheric perspective fading to black, peaceful refined natural luxury feeling --ar 3:4 --v 7 --s 200 --q 2`,
+        note: 'Опционально — для обозначения маршрута «→ Беларусь». Берёзы — мягкий символ.',
+      },
+    ]
+  },
+  {
+    icon: '⚡',
+    title: 'Экран загрузки и UI-элементы',
+    desc: 'Фоны для состояний загрузки, переходов между экранами и мелких декоративных элементов.',
+    prompts: [
+      {
+        num: '17',
+        name: 'Загрузка — воронка света',
+        screen: 'Экран 4 (loading)',
+        priority: '🟡 MED',
+        tags: ['9:20', 'Экран 4', 'Средний'],
+        prompt: `Abstract golden light vortex spiraling downward through dark void, a gentle tornado of gold light particles rotating in a wide helix pattern, the spiral is centered in frame and viewed from slightly above, light particles are denser at the outer edge of the spiral and sparser toward center creating a hollow core, the rotation direction is clockwise when viewed from top, at the bottom of the vortex the particles compress and glow brighter suggesting energy concentration, the spiral has 2-3 visible complete rotations, volumetric golden fog fills the spiral path, surrounding space is pure black, the motion is frozen at an elegant moment — graceful and controlled not chaotic, luxury scientific visualization aesthetic --ar 9:20 --v 7 --s 300 --q 2`,
+        note: 'Для экрана загрузки. Спираль = движение, процесс. Можно наложить CSS-анимацию вращения.',
+      },
+      {
+        num: '18',
+        name: 'Загрузка — пульсация',
+        screen: 'Экран 4 (loading alt)',
+        priority: '🟢 LOW',
+        tags: ['9:20', 'Экран 4', 'Низкий'],
+        prompt: `Concentric golden rings pulsating outward from center point in dark void, five rings of golden light at different stages of expansion — innermost is small bright and sharp, outermost is large dim and soft, the rings have realistic light falloff — brighter where concentrated thinner where stretched, the rings are not perfect circles but slightly organic with minute irregularities, golden light illuminates fine dust particles between rings, at the very center is a bright golden point source, the overall pattern resembles a top-down view of ripples in dark water illuminated by golden light, absolute black between and beyond the rings, meditative and rhythmic visual pattern --ar 9:20 --v 7 --s 250 --q 2`,
+        note: 'Альтернативный вариант загрузки. Пульсация = ожидание, расчёт в процессе.',
+      },
+      {
+        num: '19',
+        name: 'Разделитель — золотая линия',
+        screen: 'UI-элемент',
+        priority: '🟢 LOW',
+        tags: ['16:1', 'UI', 'Низкий'],
+        prompt: `Single thin horizontal golden light line stretching across pure black frame, the line is not uniform — it has organic variations in brightness, thicker in center tapering to nothing at both ends, subtle golden glow halo around the line bleeding into darkness, a few stray gold particles floating near the line, the line has a slight warm golden to amber gradient along its length, extreme minimal composition — just this one line element in vast blackness, refined and precious like a gold wire suspended in space --ar 16:1 --v 7 --s 200 --q 2`,
+        note: 'Узкий горизонтальный формат. Для разделителей между секциями в приложении.',
+      },
+    ]
+  },
+  {
+    icon: '💎',
+    title: 'Премиум-элементы и текстуры',
+    desc: 'Дополнительные текстуры и декор для финальной полировки дизайна.',
+    prompts: [
+      {
+        num: '20',
+        name: 'Нойз-текстура — золотая зернистость',
+        screen: 'CSS оверлей',
+        priority: '🟡 MED',
+        tags: ['1:1', 'Текстура', 'Средний'],
+        prompt: `Extremely subtle fine film grain noise texture on pure black background, the grain is barely visible — perhaps 3-5% opacity equivalent, the grain particles have a very slight warm gold tint rather than neutral grey, uniform distribution across entire frame with no patterns or gradients, the effect resembles high-ISO film photography grain or analog television static, shot on Kodak Vision3 500T film stock, the grain should be fine not coarse — individual particles barely resolvable, clinical pure black with only the grain texture visible, no other elements --ar 1:1 --v 7 --s 100 --q 2`,
+        note: 'Экспортируй как PNG с прозрачностью (если MJ позволит) или используй как CSS overlay: mix-blend-mode: overlay; opacity: 0.3. Зернистость = аналоговый премиум.',
+      },
+      {
+        num: '21',
+        name: 'Виньетка — мягкие тёмные края',
+        screen: 'CSS оверлей',
+        priority: '🟢 LOW',
+        tags: ['9:20', 'Оверлей', 'Низкий'],
+        prompt: `Pure vignette overlay for mobile app, center of frame is completely transparent black (0% opacity visually), edges gradually darken to absolute opaque black, the vignette is oval-shaped matching mobile screen proportions, the falloff is very smooth and gradual — no hard edges, the darkest zone is the four corners, the vignette intensity is strong — center 30% of frame is light, outer 40% is progressively darker, pure utility overlay no decorative elements, technical gradient mask --ar 9:20 --v 7 --s 50`,
+        note: 'Чистая виньетка для наложения поверх любого фона. CSS: mix-blend-mode: multiply.',
+      },
+      {
+        num: '22',
+        name: 'Шёлк — для форм заявки',
+        screen: 'Экран 6',
+        priority: '🟢 LOW',
+        tags: ['9:20', 'Экран 6', 'Низкий'],
+        prompt: `Dark silk fabric with gentle flowing folds, the silk is deep black with a subtle warm sheen catching golden light from side, the folds are soft and organic creating gentle shadows and highlights, where light catches the silk surface it shows deep gold-tinted reflections, the fabric fills the entire frame — extreme close-up of draped silk, the texture is ultra smooth with characteristic silk luster, lighting is dramatic side-light creating deep contrast between folds, the mood is intimate luxury — like the interior lining of a premium case, no objects only fabric, deep rich darkness with golden silk highlights --ar 9:20 --v 7 --s 250 --q 2`,
+        note: 'Для экрана формы заявки — создаёт ощущение «вы уже внутри премиум-сервиса».',
+      },
+      {
+        num: '23',
+        name: 'Мрамор + золотые прожилки',
+        screen: 'Альтернативная текстура',
+        priority: '🟢 LOW',
+        tags: ['1:1', 'Текстура', 'Низкий'],
+        prompt: `Extreme close-up of dark Nero Marquina marble texture, near-black marble base with natural gold-tinted veining, the veins are thin and organic — branching like lightning or river deltas, the gold color in veins ranges from pale champagne to rich amber, the marble surface has a polished mirror finish reflecting soft light, dramatic raking light from side revealing the depth and translucency of the stone, the vein pattern is natural and asymmetric not artificial, ultra high resolution showing mineral crystal structure in the marble, luxury interior material photography --ar 1:1 --v 7 --s 200 --q 2`,
+        note: 'Текстура мрамора — для альтернативного фона карточек или декора. Роскошь через материал.',
+      },
+      {
+        num: '24',
+        name: 'Градиент — золото в чёрный (seamless)',
+        screen: 'CSS фон',
+        priority: '🟡 MED',
+        tags: ['9:20', 'Фон', 'Средний'],
+        prompt: `Smooth vertical gradient from warm golden glow at top to absolute black at bottom, the gold is not a solid color but has organic atmospheric variation — subtle clouds and wisps within the golden zone, the transition from gold to black is very gradual occupying 70% of the frame height, the top 15% is the warmest — antique gold tone, by middle of frame it has faded to barely perceptible warm darkness, bottom 30% is pure black, the golden area has fine grain texture adding analog quality, no objects no particles — pure gradient atmosphere, the gold tone matches antique brass (#D4AF37) at its brightest --ar 9:20 --v 7 --s 150 --q 2`,
+        note: 'Градиент сверху вниз — для фона header-зоны приложения. Создаёт световой акцент наверху.',
+      },
+    ]
+  },
+  {
+    icon: '🎭',
+    title: 'Бонус — креативные промпты',
+    desc: 'Экспериментальные промпты для особых элементов. Используй если останется время — не обязательные.',
+    prompts: [
+      {
+        num: '25',
+        name: 'Золотой ключ (success icon)',
+        screen: 'Заявка отправлена',
+        priority: '🟢 BONUS',
+        tags: ['1:1', 'Иконка', 'Бонус'],
+        prompt: `Single ornate golden key floating in dark void, the key is antique luxury design with intricate baroque handle featuring scrollwork and filigree, the key metal is warm antique gold — slightly tarnished with patina adding character, dramatic spotlight from above creating sharp highlights on key edges and soft shadow below, the key rotates slightly showing dimensional depth, fine gold dust particles scatter from the key as if it has just materialized, pure black background, the key is centered and occupies about 30% of frame, professional product photography with jewelry-grade lighting, photorealistic 3D render quality --ar 1:1 --v 7 --s 300 --q 2`,
+        note: 'Иконка для экрана «Заявка отправлена» или «Успех». Ключ = доступ к вашему авто.',
+      },
+      {
+        num: '26',
+        name: 'Золотой компас (навигация)',
+        screen: 'Логотип / декор',
+        priority: '🟢 BONUS',
+        tags: ['1:1', 'Иконка', 'Бонус'],
+        prompt: `Minimalist golden compass rose symbol floating in dark void, the compass is rendered as thin gold lines and points — north south east west, the design is geometric and modern not ornate, the gold lines have soft glow aura, the compass slowly rotating suggested by slight motion blur on outer ring, fine gold particles orbit the compass like a tiny solar system, pure black background, the compass represents navigation and direction — finding the way to your car, centered composition, professional icon design quality, refined and modern not vintage --ar 1:1 --v 7 --s 250 --q 2`,
+        note: 'Может стать основой логотипа Car Calculator. Компас = маршрут доставки.',
+      },
+      {
+        num: '27',
+        name: 'Коллаж — 4 страны в одном',
+        screen: 'Маркетинг / OG image',
+        priority: '🟢 BONUS',
+        tags: ['16:9', 'Маркетинг', 'Бонус'],
+        prompt: `Dark cinematic composition split into four vertical panels, each panel represents a different country through abstract atmospheric light, LEFT: warm amber urban bokeh lights (USA), CENTER-LEFT: geometric golden lattice light pattern (Korea), CENTER-RIGHT: deep gold desert horizon glow (UAE), RIGHT: crimson and gold vertical light accent (China), the four panels blend seamlessly into each other at their borders with soft transitions, a thin horizontal golden line connects all four panels across the middle, overall palette is black with warm gold accents unique to each panel, no text no flags no literal symbols — just light atmospheres, widescreen cinematic format --ar 16:9 --v 7 --s 300 --q 2`,
+        note: 'Широкоформатный — для OG-image (превью при шаринге в Telegram), маркетинговых материалов.',
+      },
+    ]
+  }
+];
+
+// ═══ RENDER ═══
+const content = document.getElementById('content');
+
+sections.forEach(sec => {
+  let html = `
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">${sec.icon}</div>
+        <div class="section-title">${sec.title}</div>
+      </div>
+      <div class="section-desc">${sec.desc}</div>
+  `;
+
+  sec.prompts.forEach(p => {
+    const tagsHtml = p.tags.map((t, i) => {
+      const cls = i === 0 ? 'tag ar' : i === 1 ? 'tag screen' : 'tag priority';
+      return `<span class="${cls}">${t}</span>`;
+    }).join('');
+
+    let variationsHtml = '';
+    if (p.variations) {
+      variationsHtml = p.variations.map(v => `
+        <div class="variation">
+          <div class="variation-label">${v.label}</div>
+          <div class="variation-text">${v.text}</div>
+        </div>
+      `).join('');
+    }
+
+    html += `
+      <div class="prompt-card">
+        <div class="card-top">
+          <div class="card-left">
+            <span class="card-num">#${p.num}</span>
+            <div>
+              <div class="card-name">${p.name}</div>
+              <div class="card-screen">${p.screen} · ${p.priority}</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn-copy" onclick="copyPrompt(this, 'p${p.num}')">Copy</button>
+          </div>
+        </div>
+        <div class="card-tags">${tagsHtml}</div>
+        <div class="prompt-body">
+          <div class="prompt-text" id="p${p.num}">${p.prompt}</div>
+          ${variationsHtml}
+        </div>
+        <div class="card-note">
+          <span class="note-icon">💡</span>
+          <span>${p.note}</span>
+        </div>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+  content.innerHTML += html;
+});
+
+// ═══ COPY ═══
+function copyPrompt(btn, id) {
+  const el = document.getElementById(id);
+  const text = el.textContent.trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>
