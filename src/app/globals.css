@@ -2,23 +2,199 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --surface-primary: #0c0c0e;
-  --surface-secondary: #1a1a1e;
-  --surface-tertiary: #2a2a2e;
+/* ═══════════════════════════════════════════
+   Car-Calc · Global Styles
+   Unified Design System
+   ═══════════════════════════════════════════ */
+
+@layer base {
+  :root {
+    /* ── Золотой бордер для focus ── */
+    --gold-core: #C4A265;
+    --gold-glow: rgba(196,162,101,0.25);
+    --border-gold-subtle: rgba(196,162,101,0.08);
+    --border-gold-default: rgba(196,162,101,0.14);
+    --border-gold-hover: rgba(196,162,101,0.25);
+  }
+
+  html {
+    background: #0C0C0E;
+    color-scheme: dark;
+  }
+
+  body {
+    background: #0C0C0E;
+    color: #F5F5F5;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── Убираем auto-zoom на iOS при focus на input ── */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+
+  /* ── Скроллбар ── */
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(196,162,101,0.2);
+    border-radius: 4px;
+  }
+
+  /* ── Focus ring — золотой ── */
+  *:focus-visible {
+    outline: 2px solid var(--gold-core);
+    outline-offset: 2px;
+  }
 }
 
-/* Telegram Mini App overrides */
-body {
-  overflow-x: hidden;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-  user-select: none;
+@layer components {
+  /* ── Золотой градиент для кнопок ── */
+  .btn-gold {
+    background: linear-gradient(135deg, #D4B876, #C4A265, #A08050);
+    color: #1A1208;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    height: 52px;
+    padding: 0 24px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 250ms ease-out;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-gold:hover {
+    box-shadow: 0 6px 28px rgba(196,162,101,0.25);
+    transform: translateY(-1px);
+  }
+  .btn-gold:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  /* ── Ghost-кнопка ── */
+  .btn-ghost {
+    background: transparent;
+    color: #C4A265;
+    font-weight: 500;
+    border: 1px solid rgba(196,162,101,0.14);
+    border-radius: 12px;
+    height: 48px;
+    padding: 0 20px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 250ms ease-out;
+  }
+  .btn-ghost:hover {
+    border-color: rgba(196,162,101,0.25);
+    background: rgba(196,162,101,0.06);
+  }
+
+  /* ── Карточка с золотым бордером ── */
+  .card-gold {
+    background: #141418;
+    border: 1px solid rgba(196,162,101,0.14);
+    border-radius: 16px;
+    padding: 16px;
+    transition: all 250ms ease-out;
+  }
+  .card-gold:hover {
+    border-color: rgba(196,162,101,0.25);
+    box-shadow: 0 4px 20px rgba(196,162,101,0.08);
+    transform: translateY(-2px);
+  }
+
+  /* ── Инпут ── */
+  .input-gold {
+    background: #141413;
+    border: 1px solid rgba(196,162,101,0.08);
+    border-radius: 12px;
+    height: 52px;
+    padding: 0 16px;
+    font-size: 16px;
+    color: #F5F5F5;
+    width: 100%;
+    transition: border-color 250ms ease-out, box-shadow 250ms ease-out;
+  }
+  .input-gold::placeholder {
+    color: #666666;
+  }
+  .input-gold:focus {
+    border-color: #C4A265;
+    box-shadow: 0 0 0 3px rgba(196,162,101,0.12);
+    outline: none;
+  }
+
+  /* ── Pill/Badge ── */
+  .pill-gold {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(196,162,101,0.12);
+    color: #D4B876;
+    border: 1px solid rgba(196,162,101,0.08);
+    border-radius: 9999px;
+    height: 32px;
+    padding: 0 12px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  /* ── Цена — главный элемент ── */
+  .price-display {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 400;
+    font-size: 48px;
+    line-height: 1;
+    color: #FFE2A9;
+    text-shadow: 0 0 60px rgba(196,162,101,0.3);
+  }
+
+  /* ── Золотой разделитель ── */
+  .divider-gold {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196,162,101,0.3), transparent);
+    border: none;
+  }
+
+  /* ── Shimmer-эффект загрузки ── */
+  .shimmer {
+    background: linear-gradient(90deg,
+      #141418 25%,
+      rgba(196,162,101,0.08) 50%,
+      #141418 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+  }
 }
 
-/* Плавные анимации */
-* {
-  transition-property: background-color, border-color, color, opacity, transform;
-  transition-duration: 150ms;
-  transition-timing-function: ease-out;
+@layer utilities {
+  /* ── Золотой текстовый градиент ── */
+  .text-gold-gradient {
+    background: linear-gradient(135deg, #FFE2A9, #C4A265);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Золотое свечение фоном ── */
+  .glow-gold {
+    box-shadow: 0 0 40px rgba(196,162,101,0.12);
+  }
+
+  /* ── Telegram safe area ── */
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
 }

@@ -1,5 +1,26 @@
 import type { Metadata, Viewport } from 'next';
+import { DM_Sans, Playfair_Display, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
+
+const dmSans = DM_Sans({
+  subsets: ['latin', 'latin-ext'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+
+const playfair = Playfair_Display({
+  subsets: ['latin', 'cyrillic'],
+  variable: '--font-serif',
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin', 'cyrillic'],
+  variable: '--font-mono',
+  weight: ['300', '400', '500'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'Car-Calc — Калькулятор доставки авто',
@@ -10,8 +31,8 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  userScalable: false, // Telegram Mini App не должен зумиться
-  themeColor: '#0c0c0e',
+  userScalable: false,
+  themeColor: '#0C0C0E',
 };
 
 export default function RootLayout({
@@ -20,12 +41,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ru">
+    <html
+      lang="ru"
+      className={`${dmSans.variable} ${playfair.variable} ${jetbrainsMono.variable}`}
+    >
       <head>
-        {/* Telegram WebApp SDK */}
         <script src="https://telegram.org/js/telegram-web-app.js" />
       </head>
-      <body className="bg-surface-primary text-white min-h-screen">
+      <body className="bg-bg-app text-white min-h-screen font-sans antialiased">
         {children}
       </body>
     </html>
