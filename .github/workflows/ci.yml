@@ -1,0 +1,147 @@
+# ============================================
+# 🚀 P8.1 · GitHub Actions CI Pipeline
+# Car-Calc · Telegram Mini App
+# ============================================
+# Запускается при:
+#   - push в main
+#   - pull request в main
+#
+# 4 этапа:
+#   1. Lint (ESLint) — проверка кода
+#   2. Type-check (TypeScript) — типы
+#   3. Unit tests (Vitest) — 394 теста
+#   4. E2E tests (Playwright) — 82 теста UI
+# ============================================
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Отменяем предыдущие запуски для того же PR/ветки
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  # ─────────────────────────────────────────
+  # 1. Lint + Type-check (быстрые проверки)
+  # ─────────────────────────────────────────
+  lint:
+    name: 🔍 Lint & Types
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 📥 Install dependencies
+        run: npm ci
+
+      - name: 🔄 Generate Prisma client
+        run: npx prisma generate
+
+      - name: 🔍 ESLint
+        run: npm run lint
+
+      - name: 🏷️ TypeScript type-check
+        run: npm run type-check
+
+  # ─────────────────────────────────────────
+  # 2. Unit tests (Vitest — 394 теста)
+  # ─────────────────────────────────────────
+  test-unit:
+    name: 🧪 Unit Tests (Vitest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: lint
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 📥 Install dependencies
+        run: npm ci
+
+      - name: 🔄 Generate Prisma client
+        run: npx prisma generate
+
+      - name: 🧪 Run Vitest
+        run: npm run test -- --reporter=verbose
+
+  # ─────────────────────────────────────────
+  # 3. E2E tests (Playwright — 82 теста)
+  # ─────────────────────────────────────────
+  test-e2e:
+    name: 🎭 E2E Tests (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: lint
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 📥 Install dependencies
+        run: npm ci
+
+      - name: 🔄 Generate Prisma client
+        run: npx prisma generate
+
+      - name: 🎭 Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: 🗄️ Initialize test database
+        run: npx prisma db push --skip-generate
+        env:
+          DATABASE_URL: 'file:./test.db'
+
+      - name: 🏗️ Build Next.js
+        run: npm run build
+        env:
+          # CI заглушки — реальные значения не нужны для build
+          DATABASE_URL: 'file:./test.db'
+          BYBIT_API_URL: https://api2.bybit.com
+          CBR_API_URL: https://www.cbr-xml-daily.ru
+          USDT_CORRECTION: '1.50'
+          VTB_SPREAD_KRW: '0.00050'
+          VTB_SPREAD_CNY: '0.30'
+
+      - name: 🎭 Run Playwright tests
+        run: npx playwright test --project=mobile-chrome
+        env:
+          CI: true
+          DATABASE_URL: 'file:./test.db'
+
+      - name: 📊 Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
