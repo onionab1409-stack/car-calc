@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car-Calc · Midjourney V7 · ULTIMATE Prompts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --void:#060608;
+  --surface:#0b0b0e;
+  --card:#0e0e12;
+  --border:#18181e;
+  --gold:#D4AF37;
+  --gold-dim:rgba(212,175,55,0.12);
+  --gold-ghost:rgba(212,175,55,0.04);
+  --text:#e8e8e8;
+  --text-2:#888;
+  --text-3:#555;
+  --red:#ef4444;
+  --green:#22c55e;
+  --blue:#6366f1;
+}
+body{
+  background:var(--void);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--gold);color:#000}
+
+/* ═══ HERO ═══ */
+.hero{
+  min-height:45vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:60px 24px 40px;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';
+  position:absolute;
+  top:-20%;left:50%;transform:translateX(-50%);
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(212,175,55,0.05) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-badge{
+  font-family:'Geist Mono',monospace;
+  font-size:10px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--gold);
+  background:var(--gold-ghost);
+  border:1px solid rgba(212,175,55,0.12);
+  padding:6px 16px;
+  border-radius:100px;
+  margin-bottom:24px;
+  position:relative;
+}
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(32px,6vw,52px);
+  font-weight:700;
+  letter-spacing:-1px;
+  line-height:1.1;
+  max-width:700px;
+  position:relative;
+}
+.hero h1 .gold{
+  background:linear-gradient(135deg,#D4AF37 0%,#F4D972 40%,#D4AF37 70%,#B8942E 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.hero-desc{
+  font-size:15px;
+  color:var(--text-2);
+  max-width:560px;
+  margin-top:20px;
+  position:relative;
+}
+.hero-stats{
+  display:flex;
+  gap:40px;
+  margin-top:32px;
+  position:relative;
+}
+.hero-stat-num{
+  font-family:'Playfair Display',serif;
+  font-size:32px;
+  font-weight:700;
+  color:var(--gold);
+}
+.hero-stat-label{
+  font-size:10px;
+  color:var(--text-3);
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  margin-top:2px;
+}
+
+/* ═══ NAV ═══ */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(6,6,8,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:0 24px;
+  display:flex;
+  justify-content:center;
+  gap:2px;
+  overflow-x:auto;
+}
+.nav-item{
+  padding:14px 16px;
+  font-size:12px;
+  font-weight:500;
+  color:var(--text-3);
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  transition:all 0.2s;
+  white-space:nowrap;
+}
+.nav-item:hover{color:var(--text-2)}
+.nav-item.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* ═══ SECTION ═══ */
+.section{
+  max-width:880px;
+  margin:0 auto;
+  padding:48px 20px 0;
+}
+.section-head{
+  margin-bottom:28px;
+}
+.section-num{
+  font-family:'Geist Mono',monospace;
+  font-size:11px;
+  color:var(--gold);
+  letter-spacing:2px;
+  margin-bottom:6px;
+}
+.section-title{
+  font-family:'Playfair Display',serif;
+  font-size:26px;
+  font-weight:600;
+  color:#fff;
+  letter-spacing:-0.3px;
+}
+.section-desc{
+  font-size:14px;
+  color:var(--text-3);
+  margin-top:6px;
+  max-width:600px;
+}
+
+/* ═══ PROMPT CARD ═══ */
+.p-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  margin-bottom:20px;
+  overflow:hidden;
+  transition:all 0.3s;
+}
+.p-card:hover{border-color:rgba(212,175,55,0.2)}
+
+.p-header{
+  padding:18px 20px 14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+.p-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.p-num{
+  font-family:'Geist Mono',monospace;
+  font-size:10px;
+  color:var(--gold);
+  background:var(--gold-ghost);
+  border:1px solid rgba(212,175,55,0.1);
+  padding:3px 9px;
+  border-radius:6px;
+  letter-spacing:1px;
+}
+.p-priority{
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  padding:3px 8px;
+  border-radius:5px;
+}
+.p-priority.critical{background:rgba(239,68,68,0.1);color:var(--red)}
+.p-priority.high{background:rgba(245,158,11,0.1);color:#f59e0b}
+.p-priority.med{background:rgba(99,102,241,0.1);color:var(--blue)}
+.p-priority.bonus{background:rgba(34,197,94,0.08);color:var(--green)}
+
+.p-title{
+  font-size:16px;
+  font-weight:600;
+  color:#fff;
+  margin-top:6px;
+}
+.p-screen{
+  font-family:'Geist Mono',monospace;
+  font-size:11px;
+  color:var(--text-3);
+  margin-top:3px;
+}
+
+.p-copy-btn{
+  padding:8px 18px;
+  background:var(--gold-ghost);
+  border:1px solid rgba(212,175,55,0.18);
+  border-radius:8px;
+  color:var(--gold);
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.2s;
+  flex-shrink:0;
+  font-family:'DM Sans',sans-serif;
+}
+.p-copy-btn:hover{background:rgba(212,175,55,0.12);border-color:rgba(212,175,55,0.35)}
+.p-copy-btn.ok{background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.3);color:var(--green)}
+
+/* tags */
+.p-tags{
+  display:flex;gap:5px;padding:0 20px 12px;flex-wrap:wrap;
+}
+.p-tag{
+  font-family:'Geist Mono',monospace;
+  font-size:9.5px;
+  padding:3px 8px;
+  border-radius:5px;
+  letter-spacing:0.5px;
+}
+.p-tag.ar{background:rgba(99,102,241,0.06);color:#818cf8}
+.p-tag.tech{background:rgba(212,175,55,0.05);color:#c9a833}
+.p-tag.use{background:rgba(34,197,94,0.05);color:#4ade80}
+
+/* prompt text */
+.p-body{
+  background:var(--void);
+  border-top:1px solid var(--border);
+  padding:18px 20px;
+}
+.p-text{
+  font-family:'Geist Mono',monospace;
+  font-size:12.5px;
+  line-height:1.85;
+  color:#bbb;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+
+/* note */
+.p-note{
+  padding:12px 20px 16px;
+  border-top:1px solid rgba(255,255,255,0.03);
+  display:flex;gap:8px;align-items:flex-start;
+  font-size:12.5px;color:var(--text-3);
+}
+.p-note b{color:var(--text-2)}
+
+/* variation */
+.p-var{
+  margin:10px 20px 16px;
+  padding:14px 16px;
+  background:rgba(212,175,55,0.02);
+  border:1px solid rgba(212,175,55,0.08);
+  border-radius:10px;
+}
+.p-var-label{
+  font-size:10px;font-weight:700;color:var(--gold);
+  text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;
+}
+.p-var-text{
+  font-family:'Geist Mono',monospace;
+  font-size:11.5px;line-height:1.75;color:var(--text-2);
+  white-space:pre-wrap;word-break:break-word;
+}
+
+/* ═══ TECHNIQUE BOX ═══ */
+.tech-box{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px;
+  margin:12px 0 24px;
+}
+.tech-box h3{
+  font-size:14px;font-weight:600;color:var(--gold);margin-bottom:10px;
+}
+.tech-box p{
+  font-size:13px;color:var(--text-2);line-height:1.7;
+}
+.tech-box code{
+  font-family:'Geist Mono',monospace;
+  font-size:11.5px;
+  background:rgba(212,175,55,0.06);
+  padding:2px 6px;
+  border-radius:4px;
+  color:var(--gold);
+}
+
+/* ═══ FOOTER ═══ */
+.foot{
+  text-align:center;
+  padding:40px 20px 32px;
+  border-top:1px solid var(--border);
+  margin-top:48px;
+}
+.foot p{font-family:'Geist Mono',monospace;font-size:10px;color:#333;letter-spacing:1px}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:600px){
+  .p-header{flex-direction:column}
+  .hero-stats{gap:24px}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">V7 · Optimized · Gold Luxury</div>
+  <h1>Midjourney Промпты<br><span class="gold">Уровень Сверхразума</span></h1>
+  <div class="hero-desc">Каждый промпт написан с использованием V7-exclusive параметров: --lens, --no, natural language priority, cinematographic lighting, material science precision. Первые слова = самые важные (V7 взвешивает начало тяжелее).</div>
+  <div class="hero-stats">
+    <div><div class="hero-stat-num">27</div><div class="hero-stat-label">Промптов</div></div>
+    <div><div class="hero-stat-num">V7</div><div class="hero-stat-label">Exclusive</div></div>
+    <div><div class="hero-stat-num">4</div><div class="hero-stat-label">Категории</div></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav" id="nav">
+  <div class="nav-item active" onclick="scrollTo_('sec-A')">🌑 Фоны</div>
+  <div class="nav-item" onclick="scrollTo_('sec-B')">🏆 Результат</div>
+  <div class="nav-item" onclick="scrollTo_('sec-C')">🏴 Страны</div>
+  <div class="nav-item" onclick="scrollTo_('sec-D')">🚗 Текстуры</div>
+  <div class="nav-item" onclick="scrollTo_('sec-E')">⚡ UI</div>
+  <div class="nav-item" onclick="scrollTo_('sec-F')">💎 Бонус</div>
+</div>
+
+<div id="root"></div>
+
+<div class="foot">
+  <p>car-calc · p5.1 · midjourney v7 · ultimate tier prompts</p>
+</div>
+
+<script>
+const data = [
+  {
+    id:'sec-A', num:'CATEGORY 01', title:'Основные фоны приложения', desc:'Фундамент всего дизайна. Эти фоны будут видны на каждом экране — они задают весь тон.',
+    technique: {
+      title: '🧠 V7 Technique: Subject-First + Natural Language',
+      text: 'В V7 <b>первые слова промпта имеют наибольший вес</b>. Поэтому каждый промпт начинается с главного объекта/эффекта. Вместо перечисления ключевых слов — полные предложения. V7 понимает контекст и настроение лучше чем keyword-stuffing. Параметр <code>--s 250-400</code> — sweet spot для художественности без потери контроля. <code>--no</code> убирает нежелательное.'
+    },
+    prompts: [
+      {
+        num:'01', title:'Diagonal Gold Light Through Void',
+        screen:'Все экраны · Главный фон',
+        priority:'critical', priorityLabel:'CRITICAL',
+        tags:[{t:'--ar 9:20',c:'ar'},{t:'--s 350',c:'tech'},{t:'--lens 35mm',c:'tech'},{t:'Фон всех экранов',c:'use'}],
+        text:`A single diagonal shaft of warm antique-gold light cutting through absolute darkness, volumetric fog revealing the beam as it travels from upper-left corner deep into the void, microscopic gold dust particles suspended in the air creating a visible Tyndall effect — some particles razor-sharp in focus, others dissolving into soft golden bokeh at varying depths, the light beam has internal structure with subtle caustic ripples like light passing through aged cathedral glass, where the beam fades into darkness the transition is impossibly smooth — a 20-stop gradient from warm brass to pure black, the surrounding void is not flat but has depth — you sense infinite space beyond the darkness, the gold tone is warm aged patina not modern yellow — the color of a 200-year-old gilded frame in a Hermitage gallery, atmosphere of discovering a sealed vault in a palazzo at midnight where one crack in the wall lets moonlight through --ar 9:20 --s 350 --no text letters words people objects furniture horizon --q 2`,
+        note:'💡 <b>Главный фон всего приложения.</b> Луч света = направление взгляда. Tyndall effect + cathedral glass caustics — V7 понимает эти физические явления и рендерит их реалистично. Попробуй оба варианта и выбери.',
+        variations:[{
+          label:'ВАРИАЦИЯ A — минималистичнее',
+          text:`Barely visible warm golden atmospheric haze in absolute darkness, as if a room full of black air has one distant candle — you cannot see the flame but the air itself has turned faintly gold in one corner, microscopic dust catches this phantom light as scattered pinpoints, 95% of the frame is pure void (#0C0C0E), the remaining 5% is the ghost of gold, the darkness has texture — it is not digital black but photographic black with film grain personality, shot on Phase One IQ4 150MP medium format digital back, the sensor captures detail even in the deepest shadows --ar 9:20 --s 200 --no text people objects --q 2`
+        }]
+      },
+      {
+        num:'02', title:'Floating Gold Leaf Particles',
+        screen:'Экран 1 · Выбор страны',
+        priority:'critical', priorityLabel:'CRITICAL',
+        tags:[{t:'--ar 9:20',c:'ar'},{t:'--s 400',c:'tech'},{t:'--lens 85mm',c:'tech'},{t:'Экран стран',c:'use'}],
+        text:`Hundreds of real gold leaf flakes floating weightlessly through pitch-black space, extreme shallow depth of field as if photographed with an 85mm f/1.2 lens — foreground flakes are large luminous blurs of warm light, midground flakes are tack-sharp showing every crinkle and fold in the metal surface, background flakes are tiny distant stars, each gold flake is unique — some are flat mirrors catching light as brilliant white-hot points, some are crumpled catching light on their ridges while shadows pool in their folds, some are edge-on appearing as thin golden needles, the flakes tumble slowly in zero gravity — some spinning, some drifting, frozen in an elegant moment, the light source is warm and directional from camera-right creating Rembrandt-triangle lighting patterns on each individual flake, between the flakes is absolute void — the black is not grey, not charcoal, but the black of deep space between galaxies, the overall density is medium — magical but not obscuring — you could read white text between the particles, color palette restricted to: pure black, warm antique gold (#D4AF37), bright gold highlights (#F4D972), deep amber shadows (#8B6914), shot as a practical effect not CGI — real gold leaf released in a dark studio with a single Profoto B10 strobe --ar 9:20 --s 400 --no text faces people floor ground surface horizon blue green --q 2`,
+        note:'💡 <b>Для экрана выбора стран.</b> Карточки 🇺🇸🇰🇷🇦🇪🇨🇳 будут полупрозрачными поверх этих частиц. Ключевое: между частицами должен быть ЧИСТЫЙ чёрный — иначе текст не читается. <code>--lens 85mm</code> создаёт характерное боке f/1.2.',
+      },
+      {
+        num:'03', title:'Deep Dual Warmth',
+        screen:'Экран 2 · РФ/РБ + Экран 3 · Ввод',
+        priority:'high', priorityLabel:'HIGH',
+        tags:[{t:'--ar 9:20',c:'ar'},{t:'--s 250',c:'tech'},{t:'Ввод данных',c:'use'}],
+        text:`Two distant warm light sources in infinite darkness — one upper-left emitting soft antique-gold glow, one lower-right emitting deeper amber tone like aged bronze, the lights are so far away they appear as soft nebulae not point sources, where their light fields overlap in the center-third of the frame there is a barely perceptible warm zone that is still 90% dark, scattered ultra-fine gold particles like distant stars in a warm-toned universe, the overall brightness never exceeds 10% — this is darkness that remembers gold, atmospheric depth fog creates z-axis layering — the image has perceived depth of 100 meters despite being abstract, the gradient transitions are buttery smooth with zero banding, shot with Alexa 65 large format cinema sensor, the grain structure is fine and organic adding film-like texture to the deep shadows --ar 9:20 --s 250 --no text people objects blue cold --q 2`,
+        note:'💡 <b>Спокойный фон для экранов ввода.</b> Тише чем #01 и #02 — не отвлекает от полей ввода. Два источника тепла = два направления (РФ/РБ). Два варианта использования.',
+      },
+    ]
+  },
+  {
+    id:'sec-B', num:'CATEGORY 02', title:'Экран результата — цена', desc:'Самый важный момент: клиент видит итоговую цифру. Фон должен создать театральный фокус.',
+    technique: {
+      title: '🧠 V7 Technique: Emotional Narrative + Cinematic Reference',
+      text: 'V7 отлично понимает <b>эмоциональный контекст</b> — описание чувства и атмосферы работает лучше чем технические термины. Здесь мы комбинируем точные световые setup\'ы (Rembrandt, butterfly) с <b>нарративом</b> — «как если бы вы открыли сундук с золотом». V7 интерпретирует это и добавляет соответствующие детали.'
+    },
+    prompts: [
+      {
+        num:'04', title:'Theater Spotlight — Gold Reveal',
+        screen:'Экран 5 · Результат',
+        priority:'critical', priorityLabel:'CRITICAL',
+        tags:[{t:'--ar 9:20',c:'ar'},{t:'--s 400',c:'tech'},{t:'--lens 24mm',c:'tech'},{t:'Цена · WOW',c:'use'}],
+        text:`A single dramatic golden spotlight falling from directly above into endless darkness, the spotlight is a cone of warm volumetric light — you can see the beam itself as golden fog fills the cone like stage haze at a theater premiere, the light is not harsh but rich and enveloping — 3200K color temperature like tungsten film lighting, where the cone of light meets an implied dark floor there is a soft elliptical pool of warm illumination with subtle caustic ripple patterns — light dancing on the surface like reflected gold, the pool of light occupies the center of the frame — this is where the precious thing would be displayed, around the spotlight is absolute unwavering darkness that extends to infinity, microscopic gold particles drift lazily through the beam catching light as they tumble, the atmosphere is the exact moment before a curtain rises at the Bolshoi — anticipation made visible, the cone has soft feathered edges — no hard cutoff — the light dissolves into darkness over 30cm of gradient, shot looking slightly downward into the light pool from 2 meters above, the emotional tone is revelation and significance — something important is about to be shown --ar 9:20 --s 400 --no text people objects furniture stage curtain --q 2`,
+        note:'💡 <b>КЛЮЧЕВОЙ ПРОМПТ.</b> Цифра «3 972 000 ₽» будет точно в центре светового пятна. Театральный spotlight = подсознательное «это важно, смотри сюда». Bolshoi reference добавляет роскоши.',
+        variations:[{
+          label:'ВАРИАЦИЯ — spotlight снизу (uplight)',
+          text:`A column of warm golden light rising vertically from below into infinite darkness above, the light emerges from an implied floor surface as a soft wide beam, volumetric golden haze fills the light column, particles of gold dust ascend slowly upward through the beam as if drawn by invisible force, the light creates an upward-facing pool on the ground — brightest at center fading to darkness at edges, the emotional tone is treasure revealed — as if a vault in the floor has been opened and golden light is escaping upward, color temperature 2800K — deep warm tungsten amber, the surrounding void is complete and endless --ar 9:20 --s 350 --no text people objects --q 2`
+        }]
+      },
+      {
+        num:'05', title:'Radial Gold Supernova',
+        screen:'Экран 5 · Результат (alt)',
+        priority:'high', priorityLabel:'HIGH',
+        tags:[{t:'--ar 9:20',c:'ar'},{t:'--s 350',c:'tech'},{t:'Триумф',c:'use'}],
+        text:`Controlled radial explosion of golden light energy from a single point in the center of the frame, dozens of soft organic light tendrils extend outward from the center like a slow-motion supernova captured by the Hubble telescope but in warm gold instead of blue, each tendril has different length opacity and thickness — some reach the frame edge as whispers some end quickly as bright stubs, between the tendrils is pure black void creating dramatic negative space, at the epicenter is a white-hot core transitioning through bright gold to antique brass to amber to darkness, the explosion is frozen at its most beautiful moment — perfectly balanced between expansion and dissolution, a sparse halo of gold particles orbits the explosion like debris in a golden asteroid belt, the emotional tone is celebration triumph and arrival — the moment of knowing the answer, this is the visual equivalent of a trumpet fanfare rendered in light and gold against infinite darkness --ar 9:20 --s 350 --no text people objects cold blue --q 2`,
+        note:'💡 <b>Альтернативный результат — более торжественный.</b> Взрыв = «вот ваш ответ!». Hubble reference заставляет V7 создать космический масштаб. Лучи из центра = фокус на цифре.',
+      },
+      {
+        num:'06', title:'Levitating Gold Mist Band',
+        screen:'Экран 5 · Результат (alt 2)',
+        priority:'med', priorityLabel:'MED',
+        tags:[{t:'--ar 9:20',c:'ar'},{t:'--s 300',c:'tech'},{t:'Мистический',c:'use'}],
+        text:`A horizontal band of self-luminous golden fog hovering in perfect stillness through the center of an infinite dark void, the fog bank is concentrated in the middle third of the frame — dense enough to glow but thin enough to see brightness variations within, the fog has realistic volumetric structure with wisps and tendrils at its upper and lower edges dissolving into the surrounding void like golden smoke from extinguished candles, through the densest core of the fog there are hints of a hidden internal light source — brighter nodes that pulse with warm gold, above the fog band is pure black — below is pure black — the fog exists as a floating river of gold in nothingness, individual gold particles have escaped the main bank and drift freely in the void above and below like golden fireflies, the fog color is warm layered gold — bright champagne at the luminous core deepening to rich amber at the edges then dissolving through bronze into the void, the emotional tone is mystery and promise — like approaching a city of gold through darkness, you see only its glow --ar 9:20 --s 300 --no text people objects ground surface cold --q 2`,
+        note:'💡 <b>Спокойная альтернатива для результата.</b> Полоса тумана = горизонтальная зона для цифры. Более медитативный, менее агрессивный. Хорош для клиентов с высокой ценой — не давит.',
+      },
+    ]
+  },
+  {
+    id:'sec-C', num:'CATEGORY 03', title:'Карточки стран — атмосфера', desc:'Каждая страна передаётся через свет, цвет и фактуру — не через флаги и стереотипы.',
+    technique: {
+      title: '🧠 V7 Technique: Atmosphere > Symbols',
+      text: 'V7 мастерски передаёт <b>атмосферу</b> — описывайте ощущение, а не объекты. «Light filtered through rain-covered glass» даёт более убедительный результат чем «Statue of Liberty at night». Каждый промпт ниже создаёт <b>уникальную цветовую температуру</b> для мгновенной визуальной идентификации страны. Формат 3:4 — для карточек в UI.'
+    },
+    prompts: [
+      {
+        num:'07', title:'🇺🇸 USA — Urban Gold Through Rain',
+        screen:'Экран 1 · Карточка',
+        priority:'high', priorityLabel:'HIGH',
+        tags:[{t:'--ar 3:4',c:'ar'},{t:'--s 300',c:'tech'},{t:'--lens 50mm',c:'tech'},{t:'США',c:'use'}],
+        text:`Warm amber city lights seen through rain-covered glass at night, the raindrops on the window surface create organic lens effects — each drop acts as a tiny sphere refracting the distant lights into stretched golden bokeh circles and streaks, the city behind the glass is completely out of focus — just constellations of warm amber and gold points suggesting a distant American urban skyline, one large raindrop in the foreground is tack-sharp showing the entire reflected cityscape miniaturized within it, heavy natural vignette darkens all edges to near-black — the glass window frames a world of gold light in surrounding darkness, occasional cool-blue light accent from a distant LED sign breaking the warm palette — maybe 5% of the total light, the emotional tone is late-night luxury — like sitting in the back of a black Lincoln Town Car crossing the Brooklyn Bridge at 2am watching Manhattan's gold lights through rain, the glass has a slight warm tint as if the window itself is aged amber --ar 3:4 --s 300 --no text people faces interior dashboard --q 2`,
+        note:'💡 <b>США = городской свет через дождь.</b> Каждая капля = микролинза (V7 понимает оптику). Brooklyn Bridge at 2am — нарратив задаёт настроение без буквального изображения.',
+        variations:[{
+          label:'ВАРИАЦИЯ — аукцион (Copart vibe)',
+          text:`Rows of warm industrial lights reflecting on wet asphalt at night, the lights are high-mounted sodium vapor lamps casting deep amber glow, the wet surface creates perfect mirror reflections stretching the lights into long golden streaks, atmosphere of an American auto auction lot after hours — vast empty space under warm lights, cinematic noir quality, shallow puddles add dimension with broken reflections, heavy fog diffuses the more distant lights into soft golden orbs --ar 3:4 --s 250 --no text people cars vehicles --q 2`
+        }]
+      },
+      {
+        num:'08', title:'🇰🇷 Korea — Hanok Lattice Light',
+        screen:'Экран 1 · Карточка',
+        priority:'high', priorityLabel:'HIGH',
+        tags:[{t:'--ar 3:4',c:'ar'},{t:'--s 300',c:'tech'},{t:'Корея',c:'use'}],
+        text:`Warm golden light filtering through the geometric lattice of a traditional Korean hanok window screen at night, the hanji paper panels create a regular grid of small illuminated rectangles each glowing with soft amber warmth like an array of tiny lanterns, the lattice framework (changho) is dark wood — nearly black — creating strong geometric contrast against the warm light behind, the camera is positioned outside in darkness looking at the illuminated screen, the light intensity varies naturally across the grid — some panels glow brighter where the light source is closer creating organic warmth patterns, very subtle warm mist or incense smoke drifts across the lattice softening the geometric precision with organic movement, the overall composition shows the lattice filling 60% of the frame with surrounding darkness framing it, the emotional tone is refined contemplation — Korean jeong (정) made visible as warm light in darkness, the craftsmanship of the wood lattice is evident — precise joints and smooth surfaces, the color palette is exclusively warm: black wood, golden light, amber glow --ar 3:4 --s 300 --no text people modern buildings neon --q 2`,
+        note:'💡 <b>Корея = свет через решётку ханок.</b> Changho (창호) — узнаваемый корейский элемент. Jeong (정) — нарративный якорь для V7. Геометрия + тепло.',
+      },
+      {
+        num:'09', title:'🇦🇪 UAE — Desert Gold Horizon',
+        screen:'Экран 1 · Карточка',
+        priority:'high', priorityLabel:'HIGH',
+        tags:[{t:'--ar 3:4',c:'ar'},{t:'--s 350',c:'tech'},{t:'--lens 135mm',c:'tech'},{t:'ОАЭ',c:'use'}],
+        text:`Arabian desert at the last moment of golden hour — the sun has dropped below the horizon and only a thin band of deep amber light remains along the distant dune line, the sand dunes are rendered as soft undulating curves in near-silhouette — their shapes are the entire composition, the dune surfaces show wind-carved ripple patterns catching the final directional light as thousands of tiny parallel golden highlights, fine desert sand particles float in the air above the dunes creating a golden atmospheric layer — the air itself is tinted warm, the sky above transitions from the amber horizon band through bronze to pure black at the top of frame — this gradient occupies 70% of the image, the foreground is the darkest — a dune slope falling into shadow, one small cluster of desert stars is barely visible in the upper darkness — pinpoints of cold white against the warm palette, the emotional tone is vast wealth and timeless luxury — the Empty Quarter (Rub' al Khali) at its most beautiful moment, compressed perspective from a 135mm telephoto lens stacks the dune layers creating abstract golden wave patterns --ar 3:4 --s 350 --no text people buildings city cars camels --q 2`,
+        note:'💡 <b>ОАЭ = пустыня в золотой час.</b> Rub\' al Khali reference. Telephoto compression через <code>--lens 135mm</code> стакает дюны в абстрактные волны. Без зданий — только природная роскошь.',
+      },
+      {
+        num:'10', title:'🇨🇳 China — Cinnabar & Gold',
+        screen:'Экран 1 · Карточка',
+        priority:'high', priorityLabel:'HIGH',
+        tags:[{t:'--ar 3:4',c:'ar'},{t:'--s 300',c:'tech'},{t:'Китай',c:'use'}],
+        text:`Deep crimson light glowing in darkness — the exact red of aged Chinese cinnabar lacquer (#7B0000) — a vertical column of this ancient red illumination rises through the center of the frame like a ceremonial pillar of colored smoke, gold dust particles swirl around the red light column creating a corona of warm metallic sparkle where red meets gold, the interaction between the deep cinnabar red and the antique gold creates a color harmony that is unmistakably Chinese luxury — the palette of the Forbidden City's throne room at dusk, in the background barely visible suggestion of silk fabric — extremely faint diagonal weave texture catching light, the darkness surrounding the red-gold column is profound and warm — not cold black but ink-black with a memory of warmth, the red light has internal variation — brighter nodes and darker bands creating organic rhythm like a breathing flame, the emotional tone is ancient power refined into modern elegance — 5000 years of civilization concentrated into one column of light --ar 3:4 --s 300 --no text people faces dragons buildings blue --q 2`,
+        note:'💡 <b>Китай = киноварь + золото.</b> Cinnabar #7B0000 — не яркий красный а глубокий лаковый. Forbidden City reference. Шёлковая текстура на грани видимости. Вертикальная композиция = китайская каллиграфия.',
+      },
+    ]
+  },
+  {
+    id:'sec-D', num:'CATEGORY 04', title:'Текстуры и материалы', desc:'Автомобильная тематика через материалы. Для карточек, декора, брендинга.',
+    technique: {
+      title: '🧠 V7 Technique: Material Science + Product Photography',
+      text: 'V7 рендерит <b>материалы</b> на уровне CGI студий если давать точные описания: тип волокна, направление плетения, характер отражения, micro-surface detail. Указание конкретного оборудования (<code>Profoto, Phase One, Schneider lens</code>) активирует у V7 «режим продуктовой фотографии».'
+    },
+    prompts: [
+      {
+        num:'11', title:'Carbon Fiber + Gold Thread',
+        screen:'Текстура · Карточки',
+        priority:'med', priorityLabel:'MED',
+        tags:[{t:'--ar 1:1',c:'ar'},{t:'--s 200',c:'tech'},{t:'Продукт',c:'use'}],
+        text:`Extreme macro photography of aerospace-grade carbon fiber twill weave with 24-karat gold filament threads woven at 45-degree intervals through the carbon matrix, the carbon fibers are matte deep black with subtle directional reflectivity — they shift from pure black to dark grey depending on viewing angle, the gold threads are genuine metallic — they catch light as bright specular highlights revealing their round cross-section, dramatic raking light from camera-left at 15-degree angle creates deep shadows in the weave valleys and bright highlights on the weave peaks, depth of field is razor-thin — only 2mm of the weave is in focus with foreground and background dissolving into abstract patterns of black and gold, individual carbon fiber filaments (7 microns each) are resolved showing the bundle structure, the material suggests hypercar interior — Pagani Huayra Roadster BC or Koenigsegg Jesko, shot with Phase One XT camera and Schneider 120mm macro lens, Profoto D2 strobe with 10-degree grid modifier --ar 1:1 --s 200 --no text color blue red green people --q 2`,
+        note:'💡 <b>Автомобильная текстура.</b> Для карточек стран или декоративного фона. Конкретные бренды (Pagani, Koenigsegg) + оборудование (Phase One, Profoto) = V7 активирует режим максимального реализма.',
+        variations:[{
+          label:'ВАРИАЦИЯ — кожа Hermès',
+          text:`Extreme macro of hand-stitched black Togo calfskin leather from Hermès workshop, individual grain pores visible in sharp detail, a single line of gold-tinted saddle stitching running diagonally — each stitch is perfectly uniform at 5mm spacing using double-needle technique, the leather surface has characteristic natural Togo texture — soft tumbled grain with gentle undulation, dramatic side lighting reveals the leather's dimensional quality — light catches grain peaks creating micro-highlights, the stitching thread has a subtle warm gold sheen — real silk thread not synthetic, shot with Hasselblad X2D 100C, 90mm macro, f/4, natural window light from left, the mood is quiet luxury — you can almost smell the leather --ar 1:1 --s 200 --no text color blue people --q 2`
+        }]
+      },
+      {
+        num:'12', title:'Molten Gold in Zero-G',
+        screen:'Экран 4 · Загрузка',
+        priority:'med', priorityLabel:'MED',
+        tags:[{t:'--ar 9:20',c:'ar'},{t:'--s 400',c:'tech'},{t:'Анимация',c:'use'}],
+        text:`A stream of molten 24-karat gold floating in zero gravity against absolute darkness, the liquid metal exhibits real fluid dynamics — it stretches into thin filaments between larger floating masses, surface tension creates perfect spherical droplets that have separated from the main body, the gold surface is mirror-reflective showing distorted self-reflections in its own curves — you can see the gold reflecting gold reflecting gold in recursive diminishing reflections, the thinnest stretched filaments glow white-hot (#FFF5CC) where the gold is thinnest and translucent, the thickest pools show deep amber (#8B6914) in their shadowed depths, some droplets are perfectly spherical — others are elongated mid-oscillation frozen at a beautiful asymmetric moment, the molten gold emits soft warm illumination into its immediate surroundings — a golden halo extending 2cm from the surface, small secondary droplets float independently like a golden solar system with the main mass as the sun, the fluid motion is frozen at the most aesthetically perfect moment — maximum complexity of form with perfect balance, professional CGI quality — Houdini FLIP simulation level of detail --ar 9:20 --s 400 --no text people objects background surface ground blue --q 2`,
+        note:'💡 <b>Для экрана загрузки.</b> Жидкое золото = процесс, трансформация. Houdini reference = V7 рендерит fluid dynamics на CGI-уровне. Можно анимировать subtle parallax в CSS.',
+      },
+    ]
+  },
+  {
+    id:'sec-E', num:'CATEGORY 05', title:'UI-элементы и декор', desc:'Разделители, оверлеи, фоны для форм и мелкие декоративные детали.',
+    prompts: [
+      {
+        num:'13', title:'Gold Noise Overlay',
+        screen:'CSS-оверлей · Все экраны',
+        priority:'med', priorityLabel:'MED',
+        tags:[{t:'--ar 1:1',c:'ar'},{t:'--s 100',c:'tech'},{t:'Оверлей',c:'use'}],
+        text:`Ultra-fine film grain texture on pure black background, the grain has a warm gold tint — each grain particle is a microscopic point of warm light rather than neutral grey, the grain structure matches Kodak Vision3 500T 5219 motion picture film stock — fine organic random distribution with characteristic warmth, the grain is extremely subtle — visible only at 100% zoom on a 4K display, the distribution is perfectly uniform with no patterns clusters or gradients, this is not digital noise but analog photographic grain — each particle has soft edges not hard pixels, the background is absolute reference black (#000000), the grain adds approximately 2-3% luminance variation in the darkest areas, professional film scan quality --ar 1:1 --s 100 --no text objects patterns gradients color --q 2`,
+        note:'💡 <b>Зернистость-оверлей.</b> Наложить в CSS: <code>mix-blend-mode: screen; opacity: 0.15</code>. Grain = аналоговый премиум. Kodak 500T reference = V7 точно воспроизводит характер плёнки.',
+      },
+      {
+        num:'14', title:'Dark Silk for Lead Form',
+        screen:'Экран 6 · Форма заявки',
+        priority:'med', priorityLabel:'MED',
+        tags:[{t:'--ar 9:20',c:'ar'},{t:'--s 250',c:'tech'},{t:'Форма',c:'use'}],
+        text:`Draped black mulberry silk charmeuse filling the entire frame in gentle flowing folds, the silk is so dark it appears black in shadow but where the fabric curves catch light it reveals a deep gold-tinted sheen — the characteristic flip-side glow of charmeuse weave, the folds are broad and gentle — not crumpled but elegantly draped as if covering a display pedestal, dramatic single light source from upper-right creates sharp contrast between luminous fold peaks and absolute-black valleys, the silk surface has zero texture at macro level — impossibly smooth with that liquid quality of high-momme weight silk, in the brightest areas the gold sheen intensifies to warm champagne, the fabric appears to continue beyond all frame edges — this is an infinite expanse of dark silk, the emotional tone is intimate luxury — the interior of a Rolls-Royce Boat Tail's bespoke luggage set, the folds create natural visual pathways — your eye follows the golden highlights through the composition --ar 9:20 --s 250 --no text people objects color pattern print --q 2`,
+        note:'💡 <b>Для формы заявки.</b> Клиент оставляет контакты поверх шёлка = «вы уже внутри премиум-сервиса». Rolls-Royce Boat Tail reference = абсолютный пик автомобильной роскоши.',
+      },
+      {
+        num:'15', title:'Gold Line Divider',
+        screen:'UI-разделитель',
+        priority:'bonus', priorityLabel:'BONUS',
+        tags:[{t:'--ar 16:1',c:'ar'},{t:'--s 200',c:'tech'},{t:'Декор',c:'use'}],
+        text:`A single impossibly thin horizontal line of golden light stretching across pure black space, the line has organic life — it is not uniform but varies in brightness and thickness like a hand-drawn gold wire, brightest and thickest at center tapering to invisible at both ends, a soft golden glow halo extends 3mm above and below the line bleeding into darkness, three or four stray gold particles float near the line — escaped atoms of light, the line has a subtle gradient along its length — warm gold transitioning to cooler champagne, the black space above and below is vast and empty — the line is alone in infinity, the quality is that of a single gold thread stretched between two points in a dark room catching a single ray of light --ar 16:1 --s 200 --no text objects --q 2`,
+        note:'💡 <b>Сверхширокий формат.</b> Для разделителей между секциями. Вырезать и использовать как CSS background-image.',
+      },
+    ]
+  },
+  {
+    id:'sec-F', num:'CATEGORY 06', title:'Бонус — маркетинг и OG image', desc:'Для Telegram-превью, шаринга и маркетинговых материалов.',
+    prompts: [
+      {
+        num:'16', title:'4 Countries — Atmospheric Collage',
+        screen:'OG-image · Telegram preview',
+        priority:'bonus', priorityLabel:'BONUS',
+        tags:[{t:'--ar 16:9',c:'ar'},{t:'--s 300',c:'tech'},{t:'Маркетинг',c:'use'}],
+        text:`Widescreen cinematic composition divided into four vertical atmospheric panels that blend seamlessly at their borders, panel one from left: warm amber urban bokeh lights through rain-streaked glass suggesting American nightscape, panel two: geometric warm-gold lattice light pattern through dark wooden grid suggesting Korean traditional architecture, panel three: deep amber desert horizon glow with sand particles in golden atmospheric haze suggesting Arabian landscape, panel four: deep crimson (#7B0000) and gold vertical light accent with hint of silk texture suggesting Chinese luxury, the four panels share a common visual language — each is predominantly dark with warm light accents unique to its cultural reference, a single thin horizontal golden line connects all four panels across the center of the frame as a unifying element, the overall palette is exclusively warm: black amber gold bronze crimson — zero cool tones, the transitions between panels are 20px soft blends not hard edges, widescreen cinematic format suggesting premium trailer title card --ar 16:9 --s 300 --no text people faces flags symbols cold blue --q 2`,
+        note:'💡 <b>OG-image для Telegram.</b> Когда кто-то шарит ссылку на Mini App — видит этот коллаж. 4 атмосферы = 4 страны. Золотая линия объединяет.',
+      },
+      {
+        num:'17', title:'Golden Key — Success Icon',
+        screen:'Заявка отправлена',
+        priority:'bonus', priorityLabel:'BONUS',
+        tags:[{t:'--ar 1:1',c:'ar'},{t:'--s 300',c:'tech'},{t:'Иконка',c:'use'}],
+        text:`A single ornate antique golden key levitating in absolute darkness, the key design is baroque luxury — the handle features scrollwork filigree and a small circular loop at the top, the metal is warm antique gold with natural patina in the recesses — not polished bright gold but aged museum-quality gold, a single spotlight from directly above creates a bright crown highlight on the top of the key and a soft shadow directly below suggesting levitation, fine gold dust particles scatter outward from the key as if it has materialized from a cloud of gold atoms — the particles are sparse and delicate, the key rotates slightly — 15 degrees from flat — showing its dimensional depth and the teeth of the key in profile, the emotional tone is access granted — you hold the key to your future car, professional jewelry photography lighting quality — Phase One camera, studio setup, the background is void — pure untouched darkness --ar 1:1 --s 300 --no text rust old damaged color blue --q 2`,
+        note:'💡 <b>Для экрана «Заявка отправлена».</b> Ключ = доступ = «теперь мы работаем над вашим авто». Барочный стиль + патина = не дешёвый новодел а настоящая ценность.',
+      },
+    ]
+  },
+];
+
+// ═══ RENDER ═══
+const root = document.getElementById('root');
+
+data.forEach(sec => {
+  let h = `<div class="section" id="${sec.id}"><div class="section-head">
+    <div class="section-num">${sec.num}</div>
+    <div class="section-title">${sec.title}</div>
+    <div class="section-desc">${sec.desc}</div>
+  </div>`;
+
+  if(sec.technique){
+    h += `<div class="tech-box"><h3>${sec.technique.title}</h3><p>${sec.technique.text}</p></div>`;
+  }
+
+  sec.prompts.forEach(p => {
+    const tags = p.tags.map(t => `<span class="p-tag ${t.c}">${t.t}</span>`).join('');
+    let vars = '';
+    if(p.variations){
+      vars = p.variations.map(v => `
+        <div class="p-var">
+          <div class="p-var-label">${v.label}</div>
+          <div class="p-var-text">${v.text}</div>
+        </div>`).join('');
+    }
+    h += `
+    <div class="p-card">
+      <div class="p-header">
+        <div>
+          <div class="p-meta">
+            <span class="p-num">#${p.num}</span>
+            <span class="p-priority ${p.priority}">${p.priorityLabel}</span>
+          </div>
+          <div class="p-title">${p.title}</div>
+          <div class="p-screen">${p.screen}</div>
+        </div>
+        <button class="p-copy-btn" onclick="doCopy(this,'pt${p.num}')">Copy prompt</button>
+      </div>
+      <div class="p-tags">${tags}</div>
+      <div class="p-body"><div class="p-text" id="pt${p.num}">${p.text}</div></div>
+      ${vars}
+      <div class="p-note">${p.note}</div>
+    </div>`;
+  });
+  h += `</div>`;
+  root.innerHTML += h;
+});
+
+// ═══ COPY ═══
+function doCopy(btn,id){
+  const t = document.getElementById(id).textContent.trim();
+  navigator.clipboard.writeText(t).then(()=>{
+    btn.textContent='✓ Copied';btn.classList.add('ok');
+    setTimeout(()=>{btn.textContent='Copy prompt';btn.classList.remove('ok')},2500);
+  });
+}
+
+// ═══ NAV SCROLL ═══
+function scrollTo_(id){
+  document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+      const idx = [...document.querySelectorAll('.section')].indexOf(e.target);
+      document.querySelectorAll('.nav-item')[idx]?.classList.add('active');
+    }
+  });
+},{threshold:0.3});
+document.querySelectorAll('.section').forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>
