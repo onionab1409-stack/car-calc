@@ -33,7 +33,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: '#0C0C0E',
+  themeColor: '#2a2b2a',
 };
 
 export default function RootLayout({
@@ -52,8 +52,11 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
       </head>
-      <body className="bg-bg-app text-white min-h-screen font-sans antialiased">
-        {children}
+      <body className="min-h-screen font-sans antialiased" style={{ background: '#2a2b2a' }}>
+        <div className="app-bg" aria-hidden="true" />
+        <div className="relative z-10">
+          {children}
+        </div>
       </body>
     </html>
   );

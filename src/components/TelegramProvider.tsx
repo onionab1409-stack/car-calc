@@ -119,8 +119,8 @@ export function TelegramProvider({ children }: { children: React.ReactNode }) {
       tg.expand();
 
       // Стилизация под наш дизайн
-      tg.setHeaderColor('#0C0C0E');
-      tg.setBackgroundColor('#0C0C0E');
+      tg.setHeaderColor('#2a2b2a');
+      tg.setBackgroundColor('#2a2b2a');
 
       // Настройка MainButton
       tg.MainButton.setParams({

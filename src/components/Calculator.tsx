@@ -210,23 +210,16 @@ export function Calculator() {
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="text-center space-y-4 animate-fade-in max-w-sm">
             <div className="text-4xl">⚠️</div>
-            <h2 className="font-serif text-xl text-gold-100">Ошибка расчёта</h2>
-            <p className="text-sm text-neutral-400">{state.error || 'Неизвестная ошибка'}</p>
+            <h2 className="font-serif text-xl" style={{ color: 'var(--txt-gold)' }}>Ошибка расчёта</h2>
+            <p className="text-sm" style={{ color: 'var(--txt-muted)' }}>{state.error || 'Неизвестная ошибка'}</p>
             <div className="space-y-2 pt-2">
-              <button
-                onClick={handleBackToDestination}
-                className="
-                  w-full h-12 text-sm text-gold-400
-                  border border-[rgba(196,162,101,0.14)] rounded-lg
-                  hover:border-[rgba(196,162,101,0.25)]
-                  transition-all duration-250
-                "
-              >
+              <button onClick={handleBackToDestination} className="btn-ghost-3d w-full">
                 Попробовать снова
               </button>
               <button
                 onClick={handleNewCalc}
-                className="text-sm text-neutral-500 hover:text-gold-300 transition-colors"
+                className="text-sm transition-colors"
+                style={{ color: 'var(--txt-muted)' }}
               >
                 Начать заново
               </button>
@@ -243,25 +236,14 @@ function HistoryButton({ count, onClick }: { count: number; onClick: () => void 
   return (
     <button
       onClick={onClick}
-      className="
-        fixed bottom-6 right-5 z-10
-        flex items-center gap-2
-        bg-bg-card border border-[rgba(196,162,101,0.14)]
-        rounded-full px-4 py-2.5
-        hover:border-[rgba(196,162,101,0.30)]
-        hover:shadow-[0_0_20px_rgba(196,162,101,0.08)]
-        transition-all duration-250
-        animate-slide-up
-      "
+      className="fixed bottom-6 right-5 z-10 flex items-center gap-2 animate-slide-up card-3d !rounded-full !px-4 !py-2.5"
     >
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-gold-400">
-        <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.2" />
-        <path d="M8 4.5V8L10 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="6.5" stroke="var(--gold-warm)" strokeWidth="1.2" />
+        <path d="M8 4.5V8L10 10" stroke="var(--gold-warm)" strokeWidth="1.2" strokeLinecap="round" />
       </svg>
-      <span className="text-xs text-gold-300">История</span>
-      <span className="bg-[rgba(196,162,101,0.15)] text-gold-400 text-[10px] font-medium px-1.5 py-0.5 rounded-full">
-        {count}
-      </span>
+      <span className="text-xs" style={{ color: 'var(--txt-gold)' }}>История</span>
+      <span className="pill-3d !text-[10px] !h-[20px] !px-[6px]">{count}</span>
     </button>
   );
 }
