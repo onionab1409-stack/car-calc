@@ -45,11 +45,11 @@ export function StepCountry({ onSelect }: StepCountryProps) {
                 key={country}
                 onClick={() => { haptic?.impactOccurred('medium'); onSelect(country); }}
                 className="card-3d text-left relative overflow-hidden"
-                style={{ padding: 0, cursor: 'pointer', minHeight: 160 }}
+                style={{ padding: 0, cursor: 'pointer', minHeight: 220 }}
               >
                 {/* 3D Flag — top right, big, decorative */}
                 <div className="absolute" style={{
-                  top: 8, right: 8,
+                  top: 10, right: 10,
                   fontSize: 72, lineHeight: 1,
                   filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.5)) drop-shadow(0 3px 4px rgba(0,0,0,0.35))',
                   opacity: 0.85,
@@ -58,7 +58,7 @@ export function StepCountry({ onSelect }: StepCountryProps) {
                   {COUNTRY_FLAG[country]}
                 </div>
 
-                <div className="relative px-4 pt-5 pb-4 flex flex-col justify-end" style={{ minHeight: 160 }}>
+                <div className="relative px-4 pt-5 pb-4 flex flex-col justify-end" style={{ minHeight: 220 }}>
                   {/* Title */}
                   <h3 className="text-[17px] mb-0.5" style={{
                     fontFamily: "'Playfair Display', serif", fontWeight: 500, color: 'var(--txt-primary)',
