@@ -81,7 +81,7 @@ export function calcChina(
       throw new Error('Для авто 3–5 лет нужен курс EUR/RUB');
     }
     customsRUB = calcETT(car.engineCC, eurRate, '3to5');
-    customsFormula = `ЕТТ ЕАЭС: ${car.engineCC}см³ × ставка × EUR ${eurRate}₽ × 1.20`;
+    customsFormula = `ЕТТ ЕАЭС: ${car.engineCC}см³ × ставка × EUR ${eurRate}₽`;
     usedTKS = true;
   } else {
     if (!car.engineCC) {
@@ -91,7 +91,7 @@ export function calcChina(
       throw new Error('Для авто 5+ лет нужен курс EUR/RUB');
     }
     customsRUB = calcETT(car.engineCC, eurRate, 'over5');
-    customsFormula = `ЕТТ ЕАЭС 5+: ${car.engineCC}см³ × ставка × EUR ${eurRate}₽ × 1.20`;
+    customsFormula = `ЕТТ ЕАЭС 5+: ${car.engineCC}см³ × ставка × EUR ${eurRate}₽`;
     usedTKS = true;
   }
 

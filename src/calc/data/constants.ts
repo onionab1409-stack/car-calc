@@ -210,7 +210,7 @@ export const ETT_RATES_5PLUS: EttRate[] = [
 
 /**
  * Расчёт таможни по ЕТТ ЕАЭС (для авто 3–5 и 5+ лет).
- * @returns Таможенная пошлина + НДС 20% в рублях
+ * @returns Таможенная пошлина в рублях (без НДС)
  */
 export function calcETT(
   volumeCc: number,

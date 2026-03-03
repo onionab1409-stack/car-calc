@@ -95,7 +95,7 @@ export function calcUSA(
     // ЕТТ считается в рублях, переведём обратно в USD для breakdown
     const ettRUB = calcETT(car.engineCC, eurRate, '3to5');
     customsUSD = ettRUB / rates.USDT_RUB; // для единообразия
-    customsFormula = `ЕТТ ЕАЭС: ${car.engineCC}см³ × ставка × EUR ${eurRate}₽ × 1.20`;
+    customsFormula = `ЕТТ ЕАЭС: ${car.engineCC}см³ × ставка × EUR ${eurRate}₽`;
     usedTKS = true;
   } else {
     // over5 — ЕТТ 5+
@@ -107,7 +107,7 @@ export function calcUSA(
     }
     const ettRUB = calcETT(car.engineCC, eurRate, 'over5');
     customsUSD = ettRUB / rates.USDT_RUB;
-    customsFormula = `ЕТТ ЕАЭС 5+: ${car.engineCC}см³ × ставка × EUR ${eurRate}₽ × 1.20`;
+    customsFormula = `ЕТТ ЕАЭС 5+: ${car.engineCC}см³ × ставка × EUR ${eurRate}₽`;
     usedTKS = true;
   }
 
