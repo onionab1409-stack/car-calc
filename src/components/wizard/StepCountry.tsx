@@ -37,28 +37,30 @@ export function StepCountry({ onSelect }: StepCountryProps) {
 
       {/* Country Grid */}
       <div className="flex-1 px-5 pb-4">
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-4">
           {COUNTRIES.map((country) => {
             const meta = COUNTRY_META[country];
             return (
               <button
                 key={country}
                 onClick={() => { haptic?.impactOccurred('medium'); onSelect(country); }}
-                className="card-3d text-left"
-                style={{ padding: 0, cursor: 'pointer' }}
+                className="card-3d text-left relative overflow-hidden"
+                style={{ padding: 0, cursor: 'pointer', minHeight: 160 }}
               >
-                <div className="px-4 pt-5 pb-4">
-                  {/* 3D Flag */}
-                  <div className="mb-3" style={{
-                    width: 48, height: 48,
-                    fontSize: 36, lineHeight: '48px',
-                    filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.45)) drop-shadow(0 2px 3px rgba(0,0,0,0.3))',
-                  }}>
-                    {COUNTRY_FLAG[country]}
-                  </div>
+                {/* 3D Flag — top right, big, decorative */}
+                <div className="absolute" style={{
+                  top: 8, right: 8,
+                  fontSize: 72, lineHeight: 1,
+                  filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.5)) drop-shadow(0 3px 4px rgba(0,0,0,0.35))',
+                  opacity: 0.85,
+                  pointerEvents: 'none',
+                }}>
+                  {COUNTRY_FLAG[country]}
+                </div>
 
+                <div className="relative px-4 pt-5 pb-4 flex flex-col justify-end" style={{ minHeight: 160 }}>
                   {/* Title */}
-                  <h3 className="text-[16px] mb-0.5" style={{
+                  <h3 className="text-[17px] mb-0.5" style={{
                     fontFamily: "'Playfair Display', serif", fontWeight: 500, color: 'var(--txt-primary)',
                   }}>
                     {COUNTRY_NAME_RU[country]}
