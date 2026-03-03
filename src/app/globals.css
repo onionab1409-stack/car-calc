@@ -132,45 +132,34 @@
   .card-3d {
     position: relative;
     isolation: isolate;
-    background: linear-gradient(170deg,
-      rgba(75,72,65,0.6) 0%,
-      var(--sf-card-hi) 8%,
-      var(--sf-card) 35%,
-      var(--sf-raised) 70%,
-      rgba(38,39,38,0.9) 100%);
+    background: linear-gradient(170deg, var(--sf-card-hi) 0%, var(--sf-card) 40%, var(--sf-raised) 100%);
     border-radius: 16px;
     border: 1px solid var(--brd-card);
-    border-top-color: rgba(200,170,100, 0.22);
+    border-top-color: var(--brd-card-top);
     border-bottom-color: var(--brd-card-bot);
     padding: 16px;
     transform: translateY(-2px);
     box-shadow:
-      /* close contact shadow */
       0 1px 2px rgba(0,0,0,0.30),
-      /* mid shadow — depth */
       0 8px 24px rgba(0,0,0,0.40),
-      /* far shadow — levitation */
       0 20px 60px rgba(0,0,0,0.30),
       0 30px 80px rgba(0,0,0,0.15),
-      /* inner top highlight — convexity */
-      inset 0 1px 0 rgba(255,244,212, 0.10),
-      inset 0 2px 4px rgba(255,244,212, 0.04);
+      inset 0 1px 0 rgba(255,244,212, 0.05);
     transition: transform 300ms ease, box-shadow 300ms ease;
   }
   .card-3d:active { transform: translateY(0) scale(0.985); transition: transform 100ms ease; }
 
   .card-3d-selected {
     border-color: var(--brd-gold-active) !important;
-    border-top-color: rgba(217,165,78, 0.60) !important;
+    border-top-color: rgba(217,165,78, 0.55) !important;
     box-shadow:
-      0 0 24px var(--glow-gold-warm),
-      0 0 60px var(--glow-gold-dim),
+      0 0 20px var(--glow-gold-warm),
+      0 0 50px var(--glow-gold-dim),
       0 8px 24px rgba(0,0,0,0.40),
       0 20px 60px rgba(0,0,0,0.30),
       0 30px 80px rgba(0,0,0,0.15),
       0 1px 2px rgba(0,0,0,0.30),
-      inset 0 1px 0 rgba(217,165,78, 0.18),
-      inset 0 2px 4px rgba(255,244,212, 0.05) !important;
+      inset 0 1px 0 rgba(217,165,78, 0.12) !important;
   }
 
   /* ═══════════════════════════════════════════════════
