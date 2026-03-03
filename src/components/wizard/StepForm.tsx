@@ -40,13 +40,9 @@ const PRICE_MAX: Record<Country, number> = {
 };
 
 const CURRENT_YEAR = new Date().getFullYear();
-const YEAR_PRESETS = [
-  { label: 'Новый', year: CURRENT_YEAR },
-  { label: `${CURRENT_YEAR - 1}`, year: CURRENT_YEAR - 1 },
-  { label: `${CURRENT_YEAR - 2}`, year: CURRENT_YEAR - 2 },
-  { label: `${CURRENT_YEAR - 3}`, year: CURRENT_YEAR - 3 },
-  { label: `${CURRENT_YEAR - 4}`, year: CURRENT_YEAR - 4 },
-  { label: `${CURRENT_YEAR - 5}`, year: CURRENT_YEAR - 5 },
+const AGE_PRESETS = [
+  { label: '0–3 лет', year: CURRENT_YEAR },       // under3
+  { label: '3–5 лет', year: CURRENT_YEAR - 4 },   // 3to5
 ];
 
 const DEST_INFO: Record<Destination, { flag: string; name: string; hint: string }> = {
@@ -129,7 +125,6 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
   const priceNum = useMemo(() => Number(price.replace(/\s/g, '')) || 0, [price]);
   const carAge = CURRENT_YEAR - year;
   const needsVolume = carAge >= 3 || parseInt(horsePower) > 160;
-  const isUAE = country === 'UAE';
 
   // ── Handlers: form ──
 
@@ -391,47 +386,27 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
           </div>
         </section>
 
-        {/* ── Year Block ── */}
+        {/* ── Age Category ── */}
         <section>
-          <p className="label-gold mb-2 ml-1">Год выпуска</p>
-          <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
-            {YEAR_PRESETS.map((preset) => {
-              const disabled = isUAE && (CURRENT_YEAR - preset.year > 1);
+          <p className="label-gold mb-2 ml-1">Возраст авто</p>
+          <div className="grid grid-cols-2 gap-3">
+            {AGE_PRESETS.map((preset) => {
               const active = year === preset.year;
               return (
                 <button
-                  key={preset.year}
-                  onClick={() => !disabled && handleYearSelect(preset.year)}
-                  disabled={disabled}
-                  className={`chip-3d flex-shrink-0 ${active ? 'chip-3d-active' : ''}`}
-                  style={{
-                    height: 38, padding: '0 14px', fontSize: 13,
-                    opacity: disabled ? 0.3 : 1,
-                    cursor: disabled ? 'not-allowed' : 'pointer',
-                  }}
+                  key={preset.label}
+                  onClick={() => handleYearSelect(preset.year)}
+                  className={`chip-3d ${active ? 'chip-3d-active' : ''}`}
+                  style={{ height: 44, fontSize: 14, fontWeight: 500 }}
                 >
                   {preset.label}
                 </button>
               );
             })}
-            <input
-              type="text" inputMode="numeric" placeholder="Другой" maxLength={4}
-              className="input-3d flex-shrink-0 text-center"
-              style={{ width: 76, height: 38, fontSize: 13, padding: '0 8px', borderRadius: 10 }}
-              onChange={(e) => {
-                const v = parseInt(e.target.value);
-                if (v >= 2000 && v <= CURRENT_YEAR) handleYearSelect(v);
-              }}
-            />
           </div>
-          {isUAE && (
-            <p className="text-[11px] mt-1.5 ml-1" style={{ color: 'var(--txt-muted)' }}>
-              ОАЭ: только новые авто (до 1 года)
-            </p>
-          )}
-          {carAge >= 3 && !isUAE && (
+          {carAge >= 3 && (
             <p className="text-[11px] mt-1.5 ml-1" style={{ color: 'var(--gold-warm)' }}>
-              ⚠ Авто {carAge}+ лет — расчёт по ставкам ЕТТ ЕАЭС
+              ⚠ Расчёт по ставкам ЕТТ ЕАЭС
             </p>
           )}
         </section>
@@ -591,7 +566,7 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
               <div className="divider-gold mb-3" />
               <div className="grid grid-cols-2 gap-y-3 gap-x-4">
                 <InfoRow label="Цена авто" value={`${symbol}${priceNum.toLocaleString('ru-RU')}`} />
-                <InfoRow label="Год" value={String(year)} />
+                <InfoRow label="Возраст" value={carAge >= 3 ? '3–5 лет' : '0–3 лет'} />
                 <InfoRow label="Мощность" value={`${horsePower} л.с.`} />
               </div>
             </div>

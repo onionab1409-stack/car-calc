@@ -199,7 +199,7 @@ export function StepHistory({
                         {symbol}{entry.price.toLocaleString('ru-RU')}
                       </span>
                       <span className="pill-3d-dark" style={{ height: 20, fontSize: 9, padding: '0 7px' }}>
-                        {entry.year}
+                        {new Date().getFullYear() - entry.year >= 3 ? '3–5 лет' : '0–3 лет'}
                       </span>
                       <span className="pill-3d-dark" style={{ height: 20, fontSize: 9, padding: '0 7px' }}>
                         {entry.horsePower} л.с.
