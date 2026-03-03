@@ -238,10 +238,10 @@ describe('calcKorea — дополнительные кейсы', () => {
     expect(result.breakdown.usedTKS).toBe(true);
 
     // carPriceRUB = 30M × 0.05364 = 1,609,200₽
-    // ЕТТ: 2000см³ × 2.7€/см³ = 5400€ × 84₽ = 453,600₽ × 1.20 = 544,320₽
-    // total = 1,609,200 + 90,000 + 544,320 + 600,000 = 2,843,520₽
-    expect(result.totalRUB).toBeGreaterThan(2_800_000);
-    expect(result.totalRUB).toBeLessThan(2_900_000);
+    // ЕТТ: 2000см³ × 2.7€/см³ = 5400€ × 84₽ = 453,600₽
+    // total = 1,609,200 + 90,000 + 453,600 + 600,000 = 2,752,800₽
+    expect(result.totalRUB).toBeGreaterThan(2_700_000);
+    expect(result.totalRUB).toBeLessThan(2_800_000);
   });
 
   it('авто 3–5 лет Корея→РБ — ЕТТ ЕАЭС', () => {
@@ -260,10 +260,10 @@ describe('calcKorea — дополнительные кейсы', () => {
 
     expect(result.breakdown.ageCategory).toBe('3to5');
     // carPriceRUB = 25M × 0.05364 = 1,341,000₽
-    // ЕТТ: 1800см³ × 2.5€/см³ = 4500€ × 84₽ = 378,000₽ × 1.20 = 453,600₽
-    // total = 1,341,000 + 90,000 + 453,600 + 720,000 = 2,604,600₽
-    expect(result.totalRUB).toBeGreaterThan(2_550_000);
-    expect(result.totalRUB).toBeLessThan(2_650_000);
+    // ЕТТ: 1800см³ × 2.5€/см³ = 4500€ × 84₽ = 378,000₽
+    // total = 1,341,000 + 90,000 + 378,000 + 720,000 = 2,529,000₽
+    expect(result.totalRUB).toBeGreaterThan(2_480_000);
+    expect(result.totalRUB).toBeLessThan(2_580_000);
 
     expect(result.breakdown.fixedCosts).toBe(720_000);
   });
@@ -312,10 +312,10 @@ describe('calcKorea — дополнительные кейсы', () => {
     expect(result.breakdown.ageCategory).toBe('over5');
     expect(result.breakdown.usedTKS).toBe(true);
 
-    // ЕТТ 5+: 2000см³ × 4.8€/см³ = 9600€ × 84₽ = 806,400₽ × 1.20 = 967,680₽
+    // ЕТТ 5+: 2000см³ × 4.8€/см³ = 9600€ × 84₽ = 806,400₽
     // carPriceRUB = 20M × 0.05364 = 1,072,800₽
-    // total = 1,072,800 + 90,000 + 967,680 + 600,000 = 2,730,480₽
-    expect(result.totalRUB).toBeGreaterThan(2_680_000);
-    expect(result.totalRUB).toBeLessThan(2_780_000);
+    // total = 1,072,800 + 90,000 + 806,400 + 600,000 = 2,569,200₽
+    expect(result.totalRUB).toBeGreaterThan(2_520_000);
+    expect(result.totalRUB).toBeLessThan(2_620_000);
   });
 });

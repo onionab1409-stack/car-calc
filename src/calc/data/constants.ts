@@ -225,8 +225,7 @@ export function calcETT(
   const dutyEUR = volumeCc * rate.eurPerCc;
   const dutyRUB = dutyEUR * eurRubRate;
 
-  // +20% НДС
-  return Math.round(dutyRUB * 1.20);
+  return Math.round(dutyRUB);
 }
 
 // ─────────────────────────────────────────────

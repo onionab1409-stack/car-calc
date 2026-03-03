@@ -266,10 +266,10 @@ describe('calcChina — дополнительные кейсы', () => {
 
     // baseCNY = 150K + 8K + 3750 = 161,750
     // baseRUB = 161,750 × 11.40 = 1,843,950
-    // ЕТТ: 2000см³ × 2.7€/см³ = 5400€ × 84₽ × 1.20 = 544,320₽
-    // total = 1,843,950 + 544,320 + 590,000 = 2,978,270
-    expect(result.totalRUB).toBeGreaterThan(2_930_000);
-    expect(result.totalRUB).toBeLessThan(3_030_000);
+    // ЕТТ: 2000см³ × 2.7€/см³ = 5400€ × 84₽ = 453,600₽
+    // total = 1,843,950 + 453,600 + 590,000 = 2,887,550
+    expect(result.totalRUB).toBeGreaterThan(2_840_000);
+    expect(result.totalRUB).toBeLessThan(2_940_000);
   });
 
   it('авто 3–5 лет Китай→РБ — ЕТТ ЕАЭС', () => {
@@ -291,10 +291,10 @@ describe('calcChina — дополнительные кейсы', () => {
 
     // baseCNY = 120K + 8K + 3K = 131K
     // baseRUB = 131K × 11.40 = 1,493,400
-    // ЕТТ: 1800 × 2.5 × 84 × 1.20 = 453,600
-    // total = 1,493,400 + 453,600 + 720,000 = 2,667,000
-    expect(result.totalRUB).toBeGreaterThan(2_620_000);
-    expect(result.totalRUB).toBeLessThan(2_720_000);
+    // ЕТТ: 1800 × 2.5 × 84 = 378,000
+    // total = 1,493,400 + 378,000 + 720,000 = 2,591,400
+    expect(result.totalRUB).toBeGreaterThan(2_540_000);
+    expect(result.totalRUB).toBeLessThan(2_640_000);
   });
 
   it('авто 5+ лет Китай→РФ — ЕТТ 5+', () => {
@@ -314,11 +314,11 @@ describe('calcChina — дополнительные кейсы', () => {
     expect(result.breakdown.ageCategory).toBe('over5');
     expect(result.breakdown.usedTKS).toBe(true);
 
-    // ЕТТ 5+: 2000 × 4.8 × 84 × 1.20 = 967,680
+    // ЕТТ 5+: 2000 × 4.8 × 84 = 806,400
     // baseCNY = 100K + 8K + 2.5K = 110.5K → baseRUB = 1,259,700
-    // total = 1,259,700 + 967,680 + 590,000 = 2,817,380
-    expect(result.totalRUB).toBeGreaterThan(2_770_000);
-    expect(result.totalRUB).toBeLessThan(2_870_000);
+    // total = 1,259,700 + 806,400 + 590,000 = 2,656,100
+    expect(result.totalRUB).toBeGreaterThan(2_610_000);
+    expect(result.totalRUB).toBeLessThan(2_710_000);
   });
 
   it('бросает ошибку без engineCC для 3–5 лет', () => {

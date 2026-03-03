@@ -195,9 +195,9 @@ describe('P7.2-C · Границы ЕТТ ЕАЭС', () => {
 
   it('≤1000cc → 1.5 €/см³', () => {
     const r = calculate(baseCar(1000), RATES, EUR_RATE);
-    // ETT = 1000 × 1.5 × 84.12 × 1.2 = 151,416₽
+    // ETT = 1000 × 1.5 × 84.12 = 151,416₽
     expect(r.breakdown.usedTKS).toBe(true);
-    const ettExpected = Math.round(1000 * 1.5 * EUR_RATE * 1.2);
+    const ettExpected = Math.round(1000 * 1.5 * EUR_RATE);
     expect(r.breakdown.customs).toBeGreaterThan(ettExpected * 0.95);
     expect(r.breakdown.customs).toBeLessThan(ettExpected * 1.05);
   });
@@ -211,7 +211,7 @@ describe('P7.2-C · Границы ЕТТ ЕАЭС', () => {
 
   it('1500cc → 1.7 €/см³', () => {
     const r = calculate(baseCar(1500), RATES, EUR_RATE);
-    const ettExpected = Math.round(1500 * 1.7 * EUR_RATE * 1.2);
+    const ettExpected = Math.round(1500 * 1.7 * EUR_RATE);
     expect(Math.abs(r.breakdown.customs - ettExpected)).toBeLessThan(ettExpected * 0.05);
   });
 
@@ -246,7 +246,7 @@ describe('P7.2-C · Границы ЕТТ ЕАЭС', () => {
     const r3to5 = calculate(car3to5, RATES, EUR_RATE);
     const r5plus = calculate(car5plus, RATES, EUR_RATE);
 
-    // ETT 5+ = 2000 × 4.8 × 84.12 × 1.2 vs 3-5 = 2000 × 2.5 × 84.12 × 1.2
+    // ETT 5+ = 2000 × 4.8 × 84.12 vs 3-5 = 2000 × 2.5 × 84.12
     expect(r5plus.breakdown.customs).toBeGreaterThan(r3to5.breakdown.customs * 1.5);
   });
 });
@@ -426,7 +426,7 @@ describe('P7.2-G · Все комбинации 3-5/5+ лет × направл�
     expect(r.breakdown.destination).toBe('BY');
     // priceRUB + 90K + ETT + 720K (BY)
     const priceRUB = 25_000_000 * 0.05364;
-    const ett = Math.round(2000 * 2.5 * EUR_RATE * 1.2);
+    const ett = Math.round(2000 * 2.5 * EUR_RATE);
     const expected = Math.round(priceRUB + 90_000 + ett + 720_000);
     expect(Math.abs(r.totalRUB - expected)).toBeLessThan(expected * 0.02);
   });
@@ -439,7 +439,7 @@ describe('P7.2-G · Все комбинации 3-5/5+ лет × направл�
     const r = calculate(car, RATES, EUR_RATE);
     expect(r.breakdown.ageCategory).toBe('over5');
     // ETT 5+ для 1800cc = 3.5 €/см³
-    const ett = Math.round(1800 * 3.5 * EUR_RATE * 1.2);
+    const ett = Math.round(1800 * 3.5 * EUR_RATE);
     const priceRUB = 20_000_000 * 0.05364;
     const expected = Math.round(priceRUB + 90_000 + ett + 600_000);
     expect(Math.abs(r.totalRUB - expected)).toBeLessThan(expected * 0.02);
@@ -454,7 +454,7 @@ describe('P7.2-G · Все комбинации 3-5/5+ лет × направл�
     expect(r.breakdown.ageCategory).toBe('over5');
     expect(r.breakdown.destination).toBe('BY');
     // 1500cc → ETT 5+ = 3.2 €/см³
-    const ett = Math.round(1500 * 3.2 * EUR_RATE * 1.2);
+    const ett = Math.round(1500 * 3.2 * EUR_RATE);
     const priceRUB = 18_000_000 * 0.05364;
     const expected = Math.round(priceRUB + 90_000 + ett + 720_000);
     expect(Math.abs(r.totalRUB - expected)).toBeLessThan(expected * 0.02);
@@ -491,7 +491,7 @@ describe('P7.2-G · Все комбинации 3-5/5+ лет × направл�
     // baseCNY × cnyRate + ETT + 590K
     const baseCNY = 150_000 + 8000 + 150_000 * 0.025;
     const baseRUB = baseCNY * 11.40;
-    const ett = Math.round(1800 * 2.5 * EUR_RATE * 1.2);
+    const ett = Math.round(1800 * 2.5 * EUR_RATE);
     const expected = Math.round(baseRUB + ett + 590_000);
     expect(Math.abs(r.totalRUB - expected)).toBeLessThan(expected * 0.02);
   });
@@ -506,7 +506,7 @@ describe('P7.2-G · Все комбинации 3-5/5+ лет × направл�
     expect(r.breakdown.destination).toBe('BY');
     const baseCNY = 120_000 + 8000 + 120_000 * 0.025;
     const baseRUB = baseCNY * 11.40;
-    const ett = Math.round(1500 * 1.7 * EUR_RATE * 1.2);
+    const ett = Math.round(1500 * 1.7 * EUR_RATE);
     const expected = Math.round(baseRUB + ett + 720_000);
     expect(Math.abs(r.totalRUB - expected)).toBeLessThan(expected * 0.02);
   });
@@ -521,7 +521,7 @@ describe('P7.2-G · Все комбинации 3-5/5+ лет × направл�
     // ETT 5+ для 2300cc = 4.8 €/см³
     const baseCNY = 100_000 + 8000 + 100_000 * 0.025;
     const baseRUB = baseCNY * 11.40;
-    const ett = Math.round(2300 * 4.8 * EUR_RATE * 1.2);
+    const ett = Math.round(2300 * 4.8 * EUR_RATE);
     const expected = Math.round(baseRUB + ett + 590_000);
     expect(Math.abs(r.totalRUB - expected)).toBeLessThan(expected * 0.02);
   });

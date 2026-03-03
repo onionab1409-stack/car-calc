@@ -81,7 +81,7 @@ function manualUSA_ETT(lot: number, dest: 'RU' | 'BY', engineCC: number, age: '3
   const ettRates5plus: [number, number][] = [[1000, 3.0], [1500, 3.2], [1800, 3.5], [2300, 4.8], [3000, 5.0], [Infinity, 5.7]];
   const rates = age === '3to5' ? ettRates3to5 : ettRates5plus;
   const rate = rates.find(([maxCC]) => engineCC <= maxCC)!;
-  const ettRUB = Math.round(engineCC * rate[1] * EUR_RATE * 1.20);
+  const ettRUB = Math.round(engineCC * rate[1] * EUR_RATE);
   const customsUSD = ettRUB / RATES.USDT_RUB;
 
   const totalUSD = preCustomsTotal + customsUSD;
@@ -119,7 +119,7 @@ function manualKorea_ETT(priceKRW: number, dest: 'RU' | 'BY', engineCC: number, 
   const ettRates5plus: [number, number][] = [[1000, 3.0], [1500, 3.2], [1800, 3.5], [2300, 4.8], [3000, 5.0], [Infinity, 5.7]];
   const rates = age === '3to5' ? ettRates3to5 : ettRates5plus;
   const rate = rates.find(([maxCC]) => engineCC <= maxCC)!;
-  const ettRUB = Math.round(engineCC * rate[1] * EUR_RATE * 1.20);
+  const ettRUB = Math.round(engineCC * rate[1] * EUR_RATE);
 
   return Math.round(priceRUB + 90000 + ettRUB + fix);
 }
@@ -166,7 +166,7 @@ function manualChina_ETT(priceCNY: number, dest: 'RU' | 'BY', engineCC: number, 
   const ettRates5plus: [number, number][] = [[1000, 3.0], [1500, 3.2], [1800, 3.5], [2300, 4.8], [3000, 5.0], [Infinity, 5.7]];
   const rates = age === '3to5' ? ettRates3to5 : ettRates5plus;
   const rate = rates.find(([maxCC]) => engineCC <= maxCC)!;
-  const ettRUB = Math.round(engineCC * rate[1] * EUR_RATE * 1.20);
+  const ettRUB = Math.round(engineCC * rate[1] * EUR_RATE);
 
   return Math.round(baseRUB + ettRUB + fix);
 }
