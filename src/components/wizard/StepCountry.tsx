@@ -47,24 +47,30 @@ export function StepCountry({ onSelect }: StepCountryProps) {
                 className="card-3d text-left"
                 style={{ padding: 0, cursor: 'pointer' }}
               >
-                {/* Content */}
-                <div className="px-3 py-3">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[20px]">{COUNTRY_FLAG[country]}</span>
-                    <h3 className="text-[15px]" style={{
-                      fontFamily: "'Playfair Display', serif", fontWeight: 500, color: 'var(--txt-primary)',
-                    }}>
-                      {COUNTRY_NAME_RU[country]}
-                    </h3>
+                <div className="px-4 pt-5 pb-4">
+                  {/* 3D Flag */}
+                  <div className="mb-3" style={{
+                    width: 48, height: 48,
+                    fontSize: 36, lineHeight: '48px',
+                    filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.45)) drop-shadow(0 2px 3px rgba(0,0,0,0.3))',
+                  }}>
+                    {COUNTRY_FLAG[country]}
                   </div>
-                  <p className="text-[10px] mb-2" style={{ color: 'var(--txt-muted)' }}>{meta.desc}</p>
+
+                  {/* Title */}
+                  <h3 className="text-[16px] mb-0.5" style={{
+                    fontFamily: "'Playfair Display', serif", fontWeight: 500, color: 'var(--txt-primary)',
+                  }}>
+                    {COUNTRY_NAME_RU[country]}
+                  </h3>
+                  <p className="text-[11px] mb-3" style={{ color: 'var(--txt-muted)' }}>{meta.desc}</p>
 
                   {/* Tags + Arrow */}
                   <div className="flex items-center gap-1.5">
                     {meta.tags.map(t => (
-                      <span key={t} className="pill-3d-dark" style={{ height: 18, fontSize: 8, padding: '0 6px' }}>{t}</span>
+                      <span key={t} className="pill-3d-dark" style={{ height: 20, fontSize: 9, padding: '0 7px' }}>{t}</span>
                     ))}
-                    <div className="ml-auto icon-btn-3d" style={{ width: 28, height: 28, borderRadius: 8 }}>
+                    <div className="ml-auto icon-btn-3d" style={{ width: 30, height: 30, borderRadius: 8 }}>
                       <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                         <path d="M4.5 2.5L8 6L4.5 9.5" stroke="var(--gold-warm)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
