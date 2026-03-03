@@ -456,9 +456,12 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
                   key={dest}
                   onClick={() => handleDestSelect(dest)}
                   className={`card-3d text-center ${isSelected ? 'card-3d-selected' : ''}`}
-                  style={{ padding: '16px 12px' }}
+                  style={{ padding: '20px 12px' }}
                 >
-                  <span className={`text-[32px] block mb-2 transition-transform duration-300 ${isSelected ? 'scale-110' : ''}`}>
+                  <span className={`block mb-3 transition-transform duration-300 ${isSelected ? 'scale-110' : ''}`} style={{
+                    fontSize: 96, lineHeight: 1,
+                    filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.6)) drop-shadow(0 4px 6px rgba(0,0,0,0.4)) drop-shadow(0 16px 32px rgba(0,0,0,0.3))',
+                  }}>
                     {meta.flag}
                   </span>
                   <p className="text-[15px] mb-1" style={{
