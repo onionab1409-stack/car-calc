@@ -26,10 +26,6 @@ const CURRENCY_SYMBOL: Record<string, string> = {
   USD: '$', KRW: '₩', AED: 'AED', CNY: '¥',
 };
 
-const ENGINE_LABEL: Record<string, string> = {
-  petrol: 'Бензин', diesel: 'Дизель', electric: 'Электро', hybrid: 'Гибрид',
-};
-
 /** Форматирование даты: "28 фев, 14:30" */
 function formatDate(ts: number): string {
   const d = new Date(ts);
@@ -204,9 +200,6 @@ export function StepHistory({
                       </span>
                       <span className="pill-3d-dark" style={{ height: 20, fontSize: 9, padding: '0 7px' }}>
                         {entry.year}
-                      </span>
-                      <span className="pill-3d-dark" style={{ height: 20, fontSize: 9, padding: '0 7px' }}>
-                        {ENGINE_LABEL[entry.engineType] || entry.engineType}
                       </span>
                       <span className="pill-3d-dark" style={{ height: 20, fontSize: 9, padding: '0 7px' }}>
                         {entry.horsePower} л.с.

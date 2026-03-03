@@ -39,13 +39,6 @@ const PRICE_MAX: Record<Country, number> = {
   China: 5_000_000,
 };
 
-const ENGINE_TYPES: Array<{ value: EngineType; label: string; icon: string }> = [
-  { value: 'petrol', label: 'Бензин', icon: '⛽' },
-  { value: 'diesel', label: 'Дизель', icon: '🛢️' },
-  { value: 'electric', label: 'Электро', icon: '⚡' },
-  { value: 'hybrid', label: 'Гибрид', icon: '🔋' },
-];
-
 const CURRENT_YEAR = new Date().getFullYear();
 const YEAR_PRESETS = [
   { label: 'Новый', year: CURRENT_YEAR },
@@ -70,10 +63,6 @@ function formatNumber(n: number): string {
 
 function formatRUB(n: number): string {
   return Math.round(n).toLocaleString('ru-RU');
-}
-
-function engineTypeLabel(type: string): string {
-  return { petrol: 'Бензин', diesel: 'Дизель', electric: 'Электро', hybrid: 'Гибрид' }[type] || type;
 }
 
 // ─── Count-up hook ───────────────────────────────
@@ -111,7 +100,7 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
   // ── Form state ──
   const [price, setPrice] = useState<string>('');
   const [year, setYear] = useState<number>(CURRENT_YEAR);
-  const [engineType, setEngineType] = useState<EngineType>('petrol');
+  const engineType: EngineType = 'petrol'; // always petrol for физлица
   const [horsePower, setHorsePower] = useState<string>('');
   const [engineVolume, setEngineVolume] = useState<string>('');
   const [destination, setDestination] = useState<Destination | null>(null);
@@ -139,7 +128,7 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
   // ── Derived ──
   const priceNum = useMemo(() => Number(price.replace(/\s/g, '')) || 0, [price]);
   const carAge = CURRENT_YEAR - year;
-  const needsVolume = engineType !== 'electric' && (carAge >= 3 || parseInt(horsePower) > 160);
+  const needsVolume = carAge >= 3 || parseInt(horsePower) > 160;
   const isUAE = country === 'UAE';
 
   // ── Handlers: form ──
@@ -171,13 +160,6 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
   const handleYearSelect = useCallback((y: number) => {
     haptic?.selectionChanged();
     setYear(y);
-    if (phase !== 'input') { setPhase('input'); setTotalRUB(0); fetchedRef.current = false; }
-  }, [haptic, phase]);
-
-  const handleEngineSelect = useCallback((type: EngineType) => {
-    haptic?.selectionChanged();
-    setEngineType(type);
-    if (type === 'electric') setEngineVolume('');
     if (phase !== 'input') { setPhase('input'); setTotalRUB(0); fetchedRef.current = false; }
   }, [haptic, phase]);
 
@@ -258,7 +240,7 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
       setPhase('input');
       haptic?.notificationOccurred('error');
     }
-  }, [priceNum, horsePower, engineVolume, destination, country, year, engineType, needsVolume, haptic, onCalcComplete]);
+  }, [priceNum, horsePower, engineVolume, destination, country, year, needsVolume, haptic, onCalcComplete]);
 
   // ── Handler: lead ──
 
@@ -327,12 +309,11 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
       setPhase('lead-error');
       haptic?.notificationOccurred('error');
     }
-  }, [leadName, leadPhone, leadComment, country, destination, priceNum, year, engineType, horsePower, totalRUB, user, haptic]);
+  }, [leadName, leadPhone, leadComment, country, destination, priceNum, year, horsePower, totalRUB, user, haptic]);
 
   const handleNewCalc = useCallback(() => {
     setPrice('');
     setYear(CURRENT_YEAR);
-    setEngineType('petrol');
     setHorsePower('');
     setEngineVolume('');
     setDestination(null);
@@ -453,27 +434,6 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
               ⚠ Авто {carAge}+ лет — расчёт по ставкам ЕТТ ЕАЭС
             </p>
           )}
-        </section>
-
-        {/* ── Engine Type ── */}
-        <section>
-          <p className="label-gold mb-2 ml-1">Тип двигателя</p>
-          <div className="grid grid-cols-4 gap-2">
-            {ENGINE_TYPES.map((et) => {
-              const active = engineType === et.value;
-              return (
-                <button
-                  key={et.value}
-                  onClick={() => handleEngineSelect(et.value)}
-                  className={`chip-3d ${active ? 'chip-3d-active' : ''}`}
-                  style={{ height: 56, flexDirection: 'column', gap: 2, padding: '6px 4px', borderRadius: 12, display: 'flex' }}
-                >
-                  <span style={{ fontSize: 18 }}>{et.icon}</span>
-                  <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: 0.3 }}>{et.label}</span>
-                </button>
-              );
-            })}
-          </div>
         </section>
 
         {/* ── Horsepower ── */}
@@ -632,7 +592,6 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
               <div className="grid grid-cols-2 gap-y-3 gap-x-4">
                 <InfoRow label="Цена авто" value={`${symbol}${priceNum.toLocaleString('ru-RU')}`} />
                 <InfoRow label="Год" value={String(year)} />
-                <InfoRow label="Двигатель" value={engineTypeLabel(engineType)} />
                 <InfoRow label="Мощность" value={`${horsePower} л.с.`} />
               </div>
             </div>
