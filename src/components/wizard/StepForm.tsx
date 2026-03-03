@@ -11,6 +11,16 @@ import { useTelegram } from '@/components/TelegramProvider';
 export interface StepFormProps {
   country: Country;
   onBack: () => void;
+  /** Called when calculation completes successfully — for history saving */
+  onCalcComplete?: (data: {
+    country: Country;
+    destination: Destination;
+    price: number;
+    year: number;
+    engineType: EngineType;
+    horsePower: number;
+    totalRUB: number;
+  }) => void;
 }
 
 // ─── Constants ───────────────────────────────────
@@ -93,7 +103,7 @@ function useCountUp(target: number, duration: number = 1400): number {
 
 type FormPhase = 'input' | 'calculating' | 'result' | 'lead' | 'lead-sending' | 'lead-success' | 'lead-error';
 
-export function StepForm({ country, onBack }: StepFormProps) {
+export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
   const { haptic, user } = useTelegram();
   const currency = COUNTRY_CURRENCY[country];
   const symbol = CURRENCY_SYMBOL[currency];
@@ -226,6 +236,19 @@ export function StepForm({ country, onBack }: StepFormProps) {
       setPhase('result');
       haptic?.notificationOccurred('success');
 
+      // Notify parent for history saving
+      if (onCalcComplete && destination) {
+        onCalcComplete({
+          country,
+          destination,
+          price: priceNum,
+          year,
+          engineType,
+          horsePower: parseInt(horsePower) || 0,
+          totalRUB: data.totalRUB,
+        });
+      }
+
       // Scroll to result
       setTimeout(() => {
         resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -235,7 +258,7 @@ export function StepForm({ country, onBack }: StepFormProps) {
       setPhase('input');
       haptic?.notificationOccurred('error');
     }
-  }, [priceNum, horsePower, engineVolume, destination, country, year, engineType, needsVolume, haptic]);
+  }, [priceNum, horsePower, engineVolume, destination, country, year, engineType, needsVolume, haptic, onCalcComplete]);
 
   // ── Handler: lead ──
 
