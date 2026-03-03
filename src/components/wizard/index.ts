@@ -1,12 +1,6 @@
 export { StepCountry } from './StepCountry';
-export { StepCar } from './StepCar';
-export { StepDestination } from './StepDestination';
-export { StepLoading } from './StepLoading';
-export { StepResult } from './StepResult';
-export { StepLead } from './StepLead';
 export { StepForm } from './StepForm';
 export { StepHistory } from './StepHistory';
 export { useHistory } from './useHistory';
 export type { HistoryEntry } from './useHistory';
-export type { CarFormData } from './StepCar';
 export type { StepFormProps } from './StepForm';
