@@ -61,7 +61,7 @@ export const UAE = {
   AED_USD_RATE: 3.67,
 
   /** Морская доставка ОАЭ → Новороссийск, $ */
-  SHIPPING_USD: 1600,
+  SHIPPING_USD: 1700,
 
   /** Множитель таможни РФ */
   CUSTOMS_MULTIPLIER_RU: 1.48,

@@ -126,7 +126,7 @@ function manualKorea_ETT(priceKRW: number, dest: 'RU' | 'BY', engineCC: number, 
 
 /** Ручной расчёт ОАЭ → РФ/РБ */
 function manualUAE(priceAED: number, dest: 'RU' | 'BY'): number {
-  const priceUSD = priceAED / 3.67 + 1600;
+  const priceUSD = priceAED / 3.67 + 1700;
   const mult = dest === 'RU' ? 1.48 : 1.30;
   const totalRUBBeforeFix = priceUSD * RATES.USDT_RUB * mult;
 
@@ -372,7 +372,7 @@ describe('P7.1 · E2E: 20 реальных автомобилей', () => {
     const r = calculate(car, RATES);
     const base = manualUAE(200_000, 'RU');
 
-    // priceUSD = 200000/3.67 + 1600 ≈ 56_117 → overflow >$50K
+    // priceUSD = 200000/3.67 + 1700 ≈ 56_217 → overflow >$50K
     expect(r.breakdown.fixedCosts).toBeGreaterThan(560_000);
     // 409hp > 160, 3.5L > 3.0L → утильсбор огромный
     expect(r.breakdown.utilSbor).toBeGreaterThan(1_000_000);
@@ -402,7 +402,7 @@ describe('P7.1 · E2E: 20 реальных автомобилей', () => {
     const r = calculate(car, RATES);
     const base = manualUAE(75_000, 'RU');
 
-    // priceUSD = 75000/3.67 + 1600 ≈ 22037 → ≤$30K → fix 460K
+    // priceUSD = 75000/3.67 + 1700 ≈ 22137 → ≤$30K → fix 460K
     expect(r.breakdown.fixedCosts).toBe(460_000);
     // 187hp > 160 → утильсбор
     expect(r.breakdown.utilSbor).toBeGreaterThan(0);
