@@ -97,7 +97,7 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
   const [price, setPrice] = useState<string>('');
   const [year, setYear] = useState<number>(CURRENT_YEAR);
   const engineType: EngineType = 'petrol'; // always petrol for физлица
-  const [horsePower, setHorsePower] = useState<string>('');
+  const [horsePower, setHorsePower] = useState<string>('150');
   const [engineVolume, setEngineVolume] = useState<string>('');
   const [destination, setDestination] = useState<Destination | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -161,6 +161,7 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
   const handleDestSelect = useCallback((dest: Destination) => {
     haptic?.selectionChanged();
     setDestination(dest);
+    setErrors(prev => ({ ...prev, destination: '' }));
     if (phase !== 'input') { setPhase('input'); setTotalRUB(0); fetchedRef.current = false; }
   }, [haptic, phase]);
 

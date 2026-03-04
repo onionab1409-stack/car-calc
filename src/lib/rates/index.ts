@@ -67,7 +67,7 @@ interface RatesAdminConfig {
 /** Дефолтные значения — перезаписываются через setAdminConfig() */
 let adminConfig: RatesAdminConfig = {
   usdtCorrection: 1.50,   // Bybit 77.00 + 1.50 = 78.50 (≈ MoscaEx)
-  vtbSpreadKRW: 0.00050,  // ЦБ 0.05425 + 0.00050 = 0.05475
+  vtbSpreadKRW: 0,        // Без спреда — курс ЦБ напрямую
   vtbSpreadCNY: 0.30,     // ЦБ 11.24 + 0.30 = 11.54
 };
 
@@ -266,7 +266,7 @@ export function _resetAllCaches(): void {
   // Сбрасываем конфиг к дефолту
   adminConfig = {
     usdtCorrection: 1.50,
-    vtbSpreadKRW: 0.00050,
+    vtbSpreadKRW: 0,
     vtbSpreadCNY: 0.30,
   };
 }

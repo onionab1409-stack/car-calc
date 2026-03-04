@@ -352,8 +352,8 @@ describe('getExchangeRates', () => {
 
     // USDT: медиана 77.19 + коррекция 1.50 = 78.69
     expect(rates.USDT_RUB).toBeCloseTo(78.69, 2);
-    // KRW: 0.0542461 + спред 0.00050 = 0.054746
-    expect(rates.KRW_RUB).toBeCloseTo(0.054746, 5);
+    // KRW: 0.0542461 + спред 0 = 0.0542461
+    expect(rates.KRW_RUB).toBeCloseTo(0.054246, 5);
     // CNY: 11.2394 + спред 0.30 = 11.5394
     expect(rates.CNY_RUB).toBeCloseTo(11.5394, 3);
     // AED/USD — фиксированный
@@ -439,7 +439,7 @@ describe('setAdminConfig', () => {
     setAdminConfig({ usdtCorrection: 3.00 });
     const cfg = getAdminConfig();
     expect(cfg.usdtCorrection).toBe(3.00);
-    expect(cfg.vtbSpreadKRW).toBe(0.00050); // не изменился
+    expect(cfg.vtbSpreadKRW).toBe(0); // не изменился
     expect(cfg.vtbSpreadCNY).toBe(0.30);     // не изменился
   });
 
