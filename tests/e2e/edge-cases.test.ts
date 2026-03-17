@@ -93,8 +93,8 @@ describe('P7.2-A · Экстремальные цены', () => {
       year: 2025, engineType: 'petrol', engineCC: 2000, horsePower: 150,
     };
     const r = calculate(car, RATES);
-    // priceUSD = 300000/3.67 + 1700 ≈ 83,470
-    // overflow: 83370 > 50K → fix = 560K + ceil(33370/10K)*100K = 560K + 400K = 960K₽
+    // priceUSD = 300000/3.67 + 3200 ≈ 84,970
+    // overflow: 84970 > 50K → fix = 560K + ceil(34970/10K)*100K = 560K + 400K = 960K₽
     expect(r.breakdown.fixedCosts).toBe(960_000);
     expect(r.breakdown.utilSbor).toBe(0); // 150hp ≤ 160 и 2.0L ≤ 3.0L
   });

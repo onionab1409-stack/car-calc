@@ -66,23 +66,23 @@ describe('calcUAEComponents', () => {
     // priceUSD = 120000 / 3.67 = 32,697.55
     expect(c.priceUSD).toBeCloseTo(32_697.55, 0);
 
-    // totalUSD = 32,697.55 + 1700 = 34,397.55
-    expect(c.totalUSD).toBeCloseTo(34_397.55, 0);
+    // totalUSD = 32,697.55 + 3200 = 35,897.55
+    expect(c.totalUSD).toBeCloseTo(35_897.55, 0);
 
-    // baseRUB = 34,397.55 × 78.50 = 2,700,207.68
-    expect(c.baseRUB).toBeCloseTo(2_700_208, -1);
+    // baseRUB = 35,897.55 × 78.50 = 2,817,957.49
+    expect(c.baseRUB).toBeCloseTo(2_817_957, -1);
 
-    // customsRUB = baseRUB × 0.48 = 1,296,099.68
-    expect(c.customsRUB).toBeCloseTo(1_296_100, -1);
+    // customsRUB = baseRUB × 0.48 = 1,352,619.60
+    expect(c.customsRUB).toBeCloseTo(1_352_620, -1);
 
-    // withCustomsRUB = baseRUB × 1.48 = 3,996,307.84
-    expect(c.withCustomsRUB).toBeCloseTo(3_996_308, -1);
+    // withCustomsRUB = baseRUB × 1.48 = 4,170,577.09
+    expect(c.withCustomsRUB).toBeCloseTo(4_170_577, -1);
 
-    // fixedCosts: totalUSD = 34,397.55 → ≤$40K → 510K₽
+    // fixedCosts: totalUSD = 35,897.55 → ≤$40K → 510K₽
     expect(c.fixedCosts).toBe(510_000);
 
-    // totalRUB = 3,996,308 + 510,000 = 4,506,308
-    expect(c.totalRUB).toBeCloseTo(4_506_308, -1);
+    // totalRUB = 4,170,577 + 510,000 = 4,680,577
+    expect(c.totalRUB).toBeCloseTo(4_680_577, -1);
   });
 
   it('90K AED ОАЭ→РБ: компоненты', () => {
@@ -91,17 +91,17 @@ describe('calcUAEComponents', () => {
     // priceUSD = 90000 / 3.67 = 24,523.16
     expect(c.priceUSD).toBeCloseTo(24_523.16, 0);
 
-    // totalUSD = 24,523.16 + 1700 = 26,223.16
-    expect(c.totalUSD).toBeCloseTo(26_223.16, 0);
+    // totalUSD = 24,523.16 + 3200 = 27,723.16
+    expect(c.totalUSD).toBeCloseTo(27_723.16, 0);
 
-    // fixedCosts: totalUSD = 26,223.16 → ≤$30K → 580K₽
+    // fixedCosts: totalUSD = 27,723.16 → ≤$30K → 580K₽
     expect(c.fixedCosts).toBe(580_000);
 
-    // withCustomsRUB = 26,223.16 × 78.50 × 1.30 = 2,676,073.56
-    expect(c.withCustomsRUB).toBeCloseTo(2_676_074, -1);
+    // withCustomsRUB = 27,723.16 × 78.50 × 1.30 = 2,829,148.56
+    expect(c.withCustomsRUB).toBeCloseTo(2_829_149, -1);
 
-    // totalRUB = 2,676,074 + 580,000 = 3,256,074
-    expect(c.totalRUB).toBeCloseTo(3_256_074, -1);
+    // totalRUB = 2,829,149 + 580,000 = 3,409,149
+    expect(c.totalRUB).toBeCloseTo(3_409_149, -1);
   });
 });
 
@@ -125,8 +125,8 @@ describe('calcUAE — эталонные расчёты', () => {
     const result = calcUAE(car, TEST_RATES);
 
     // Допуск ±0.5%
-    expect(result.totalRUB).toBeGreaterThan(4_507_000 * 0.995);
-    expect(result.totalRUB).toBeLessThan(4_507_000 * 1.005);
+    expect(result.totalRUB).toBeGreaterThan(4_680_577 * 0.995);
+    expect(result.totalRUB).toBeLessThan(4_680_577 * 1.005);
 
     // Проверяем breakdown
     expect(result.breakdown.country).toBe('UAE');
@@ -155,8 +155,8 @@ describe('calcUAE — эталонные расчёты', () => {
     const result = calcUAE(car, TEST_RATES);
 
     // Допуск ±0.5%
-    expect(result.totalRUB).toBeGreaterThan(3_246_000 * 0.995);
-    expect(result.totalRUB).toBeLessThan(3_246_000 * 1.005);
+    expect(result.totalRUB).toBeGreaterThan(3_409_149 * 0.995);
+    expect(result.totalRUB).toBeLessThan(3_409_149 * 1.005);
 
     expect(result.breakdown.fixedCosts).toBe(580_000);
   });
@@ -217,11 +217,11 @@ describe('calcUAE — дополнительные кейсы', () => {
       horsePower: 120,
     };
     const result = calcUAE(car, TEST_RATES);
-    // priceUSD = 50K/3.67 + 1700 = 15,322.07
-    // totalRUB = 15,222.07 × 78.50 × 1.48 + 440K (≤$20K)
-    // = 1,767,796 + 440,000 = 2,207,796
-    expect(result.totalRUB).toBeGreaterThan(2_100_000);
-    expect(result.totalRUB).toBeLessThan(2_300_000);
+    // priceUSD = 50K/3.67 + 3200 = 16,823.98
+    // totalRUB = 16,823.98 × 78.50 × 1.48 + 440K (≤$20K)
+    // = 1,954,610 + 440,000 = 2,394,610
+    expect(result.totalRUB).toBeGreaterThan(2_300_000);
+    expect(result.totalRUB).toBeLessThan(2_500_000);
   });
 
   it('дорогое авто 250K AED ОАЭ→РФ — overflow фиксов', () => {
@@ -236,9 +236,9 @@ describe('calcUAE — дополнительные кейсы', () => {
       horsePower: 150,
     };
     const result = calcUAE(car, TEST_RATES);
-    // priceUSD = 250K/3.67 + 1700 = 69,827.52
-    // fix: 69,727 > $50K → 560K + ceil((69727-50000)/10000) × 100K = 560K + 200K = 760K
-    expect(result.breakdown.fixedCosts).toBe(760_000);
+    // priceUSD = 250K/3.67 + 3200 = 71,319.89
+    // fix: 71,319 > $50K → 560K + ceil((71319-50000)/10000) × 100K = 560K + 300K = 860K
+    expect(result.breakdown.fixedCosts).toBe(860_000);
   });
 
   it('бросает ошибку для авто 3–5 лет (не поддерживается)', () => {

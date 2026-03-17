@@ -381,7 +381,7 @@ describe('Integration: полный pipeline', () => {
     expect(Math.round(result.totalRUB)).toBeCloseTo(2_762_496, -3);
   });
 
-  it('ОАЭ→РФ 120K AED = ~4,506K₽ (эталон)', () => {
+  it('ОАЭ→РФ 120K AED = ~4,681K₽ (эталон)', () => {
     const parsed = CalcRequestSchema.parse({
       country: 'UAE',
       destination: 'RU',
@@ -393,7 +393,7 @@ describe('Integration: полный pipeline', () => {
     const car = toCarInput(parsed);
     const result = calculate(car, TEST_RATES);
 
-    expect(Math.round(result.totalRUB)).toBeCloseTo(4_506_000, -4);
+    expect(Math.round(result.totalRUB)).toBeCloseTo(4_680_577, -4);
   });
 
   it('Китай→РФ 180K¥ = ~3,838K₽ (эталон)', () => {

@@ -5,11 +5,11 @@
 // Формулы: подтверждены в master-context.md
 //
 // ОАЭ → РФ (только новые авто):
-//   priceUSD = priceAED / 3.67 + 1700
+//   priceUSD = priceAED / 3.67 + 3200
 //   totalRUB = priceUSD × USDT_rate × 1.48 + fix(priceUSD)
 //
 // ОАЭ → РБ (только новые авто):
-//   priceUSD = priceAED / 3.67 + 1700
+//   priceUSD = priceAED / 3.67 + 3200
 //   totalRUB = priceUSD × USDT_rate × 1.30 + fix(priceUSD)
 //
 // ⚠️ ОАЭ — ТОЛЬКО новые авто (до 3 лет). 3–5 и 5+ не поддерживаются.

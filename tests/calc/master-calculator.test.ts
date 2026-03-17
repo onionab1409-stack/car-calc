@@ -69,25 +69,25 @@ describe('calculate — 8 эталонных расчётов (≤160лс, бе�
     expect(r.breakdown.utilSbor).toBe(0);
   });
 
-  it('#5 🇦🇪 ОАЭ → 🇷🇺 РФ: 120K AED, 150лс → ~4,495,000₽', () => {
+  it('#5 🇦🇪 ОАЭ → 🇷🇺 РФ: 120K AED, 150лс → ~4,681,000₽', () => {
     const car: CarInput = {
       country: 'UAE', destination: 'RU', price: 120_000, currency: 'AED',
       year: 2025, engineType: 'petrol', engineCC: 2000, horsePower: 150,
     };
     const r = calculate(car, TEST_RATES);
-    expect(r.totalRUB).toBeGreaterThan(4_495_000 * 0.995);
-    expect(r.totalRUB).toBeLessThan(4_495_000 * 1.005);
+    expect(r.totalRUB).toBeGreaterThan(4_680_577 * 0.995);
+    expect(r.totalRUB).toBeLessThan(4_680_577 * 1.005);
     expect(r.breakdown.utilSbor).toBe(0);
   });
 
-  it('#6 🇦🇪 ОАЭ → 🇧🇾 РБ: 90K AED, 150лс → ~3,246,000₽', () => {
+  it('#6 🇦🇪 ОАЭ → 🇧🇾 РБ: 90K AED, 150лс → ~3,409,000₽', () => {
     const car: CarInput = {
       country: 'UAE', destination: 'BY', price: 90_000, currency: 'AED',
       year: 2025, engineType: 'petrol', engineCC: 2000, horsePower: 150,
     };
     const r = calculate(car, TEST_RATES);
-    expect(r.totalRUB).toBeGreaterThan(3_246_000 * 0.995);
-    expect(r.totalRUB).toBeLessThan(3_246_000 * 1.005);
+    expect(r.totalRUB).toBeGreaterThan(3_409_149 * 0.995);
+    expect(r.totalRUB).toBeLessThan(3_409_149 * 1.005);
     expect(r.breakdown.utilSbor).toBe(0);
   });
 
