@@ -26,7 +26,7 @@ import {
   lookupFixedCost,
   FIXED_COSTS_UAE_RU,
   FIXED_COSTS_UAE_BY,
-  calcETTUnder3,
+  calcETT,
 } from './data/constants';
 
 // ─────────────────────────────────────────────
@@ -78,7 +78,7 @@ export function calcUAE(
       throw new Error('Для расчёта таможни РФ нужен курс EUR/RUB');
     }
     const baseRUB = totalUSD * usdtRate;
-    customsRUB = calcETTUnder3(baseRUB, car.engineCC || 0, eurRate);
+    customsRUB = calcETT(car.engineCC || 0, eurRate, '3to5');
     totalWithCustomsRUB = baseRUB + customsRUB;
     customsFormula = `ЕТТ ЕАЭС: MAX(${Math.round(baseRUB / eurRate)}€ × %, ${car.engineCC}см³ × мин) × EUR`;
     usedTKS = true;

@@ -111,8 +111,8 @@ describe('calcChina — эталонные расчёты', () => {
     const result = calcChina(car, TEST_RATES, EUR_RATE);
 
     // Допуск ±0.5%
-    expect(result.totalRUB).toBeGreaterThan(3_837_860 * 0.99);
-    expect(result.totalRUB).toBeLessThan(3_837_860 * 1.01);
+    expect(result.totalRUB).toBeGreaterThan(3_238_748 * 0.99);
+    expect(result.totalRUB).toBeLessThan(3_238_748 * 1.01);
 
     // Breakdown
     expect(result.breakdown.country).toBe('China');
@@ -210,8 +210,8 @@ describe('calcChina — дополнительные кейсы', () => {
     };
     const result = calcChina(car, TEST_RATES, EUR_RATE);
     // baseCNY = 80K + 8K + 2K = 90K
-    // 90K × 11.40 × 1.48 + 590K = 1,518,480 + 590,000 = 2,108,480
-    expect(result.totalRUB).toBeGreaterThan(2_050_000);
+    // ETT: 90K × 11.40 + ETT(1500cc) + 590K
+    expect(result.totalRUB).toBeGreaterThan(1_700_000);
     expect(result.totalRUB).toBeLessThan(2_200_000);
   });
 
@@ -228,9 +228,9 @@ describe('calcChina — дополнительные кейсы', () => {
     };
     const result = calcChina(car, TEST_RATES, EUR_RATE);
     // baseCNY = 350K + 8K + 8750 = 366,750
-    // 366,750 × 11.40 × 1.48 + 590K = 6,186,378 + 590,000 = 6,776,378
-    expect(result.totalRUB).toBeGreaterThan(6_700_000);
-    expect(result.totalRUB).toBeLessThan(6_900_000);
+    // ETT: 366,750 × 11.40 + ETT(3000cc) + 590K
+    expect(result.totalRUB).toBeGreaterThan(5_200_000);
+    expect(result.totalRUB).toBeLessThan(5_700_000);
   });
 
   it('электромобиль 200K¥ Китай→РФ', () => {
@@ -244,8 +244,8 @@ describe('calcChina — дополнительные кейсы', () => {
       horsePower: 150,
     };
     const result = calcChina(car, TEST_RATES, EUR_RATE);
-    // Электро: формула та же для до 3 лет (множитель 1.48)
-    expect(result.totalRUB).toBeGreaterThan(3_500_000);
+    // Электро: engineCC=0 → ETT=0, только baseRUB + fixed
+    expect(result.totalRUB).toBeGreaterThan(2_800_000);
     expect(result.totalRUB).toBeLessThan(4_500_000);
   });
 

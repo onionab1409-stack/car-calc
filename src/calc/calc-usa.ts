@@ -29,7 +29,6 @@ import {
   FIXED_COSTS_USA_RU,
   FIXED_COSTS_USA_BY,
   calcETT,
-  calcETTUnder3,
 } from './data/constants';
 
 // ─────────────────────────────────────────────
@@ -83,7 +82,7 @@ export function calcUSA(
       // Таможенная стоимость = (лот + аукционный сбор + морская доставка) в рублях
       const customsBase = lotWithFee + oceanShipping;
       const customsBaseRUB = customsBase * rates.USDT_RUB;
-      const ettRUB = calcETTUnder3(customsBaseRUB, car.engineCC || 0, eurRate);
+      const ettRUB = calcETT(car.engineCC || 0, eurRate, '3to5');
       customsUSD = ettRUB / rates.USDT_RUB; // для единообразия в формуле
       customsFormula = `ЕТТ ЕАЭС: MAX(${Math.round(customsBaseRUB / eurRate)}€ × %, ${car.engineCC}см³ × мин) × EUR ${eurRate}₽`;
       usedTKS = true;

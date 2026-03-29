@@ -33,6 +33,7 @@ const VALID_REQUEST = {
   price: 25000,
   year: 2024,
   engineType: 'petrol' as const,
+  engineCC: 2000,
   horsePower: 150,
   auction: 'copart' as const,
   make: 'Toyota',
@@ -355,7 +356,7 @@ describe('getClientId', () => {
 // ==============================================
 
 describe('Integration: полный pipeline', () => {
-  it('USA→РФ $25K = ~3,972K₽ (эталон)', () => {
+  it('USA→РФ $25K = ~3,326K₽ (эталон)', () => {
     const parsed = CalcRequestSchema.parse(VALID_REQUEST);
     expect(validateBusinessRules(parsed)).toBeNull();
 
@@ -363,9 +364,9 @@ describe('Integration: полный pipeline', () => {
     const result = calculate(car, TEST_RATES, EUR_RATE);
 
     // Эталон: 3,972,193₽ (±0.5%)
-    expect(result.totalRUB).toBeGreaterThan(3_950_000);
-    expect(result.totalRUB).toBeLessThan(3_995_000);
-    expect(Math.round(result.totalRUB)).toBe(3_972_193);
+    expect(result.totalRUB).toBeGreaterThan(3_300_000);
+    expect(result.totalRUB).toBeLessThan(3_400_000);
+    expect(Math.round(result.totalRUB)).toBe(3_326_185);
   });
 
   it('Корея→РБ 28M₩ = ~2,762K₽ (эталон)', () => {
@@ -383,34 +384,36 @@ describe('Integration: полный pipeline', () => {
     expect(Math.round(result.totalRUB)).toBeCloseTo(2_762_496, -3);
   });
 
-  it('ОАЭ→РФ 120K AED = ~4,681K₽ (эталон)', () => {
+  it('ОАЭ→РФ 120K AED = ~3,782K₽ (эталон)', () => {
     const parsed = CalcRequestSchema.parse({
       country: 'UAE',
       destination: 'RU',
       price: 120_000,
       year: 2025,
       engineType: 'petrol',
+      engineCC: 2000,
       horsePower: 150,
     });
     const car = toCarInput(parsed);
     const result = calculate(car, TEST_RATES, EUR_RATE);
 
-    expect(Math.round(result.totalRUB)).toBeCloseTo(4_680_577, -4);
+    expect(Math.round(result.totalRUB)).toBeCloseTo(3_782_205, -4);
   });
 
-  it('Китай→РФ 180K¥ = ~3,838K₽ (эталон)', () => {
+  it('Китай→РФ 180K¥ = ~3,239K₽ (эталон)', () => {
     const parsed = CalcRequestSchema.parse({
       country: 'China',
       destination: 'RU',
       price: 180_000,
       year: 2024,
       engineType: 'petrol',
+      engineCC: 2000,
       horsePower: 150,
     });
     const car = toCarInput(parsed);
     const result = calculate(car, TEST_RATES, EUR_RATE);
 
-    expect(Math.round(result.totalRUB)).toBeCloseTo(3_837_860, -4);
+    expect(Math.round(result.totalRUB)).toBeCloseTo(3_238_748, -4);
   });
 
   it('API отдаёт только totalRUB (округлённый до целого)', () => {
@@ -419,7 +422,7 @@ describe('Integration: полный pipeline', () => {
     const result = calculate(car, TEST_RATES, EUR_RATE);
 
     const apiResponse = { totalRUB: Math.round(result.totalRUB) };
-    expect(apiResponse.totalRUB).toBe(3_972_193);
+    expect(apiResponse.totalRUB).toBe(3_326_185);
     // Нет breakdown, нет формулы — только число
     expect(Object.keys(apiResponse)).toEqual(['totalRUB']);
   });

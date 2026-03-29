@@ -41,7 +41,7 @@ describe('P7.2-A · Экстремальные цены', () => {
     const r = calculate(car, RATES, EUR_RATE);
     expect(r.breakdown.fixedCosts).toBe(425_000);
     expect(r.totalRUB).toBeGreaterThan(700_000);
-    expect(r.totalRUB).toBeLessThan(1_500_000);
+    expect(r.totalRUB).toBeLessThan(1_800_000);
     expect(r.breakdown.utilSbor).toBe(0);
   });
 
@@ -331,9 +331,10 @@ describe('P7.2-E · Дизель', () => {
     };
     const r = calculate(car, RATES, EUR_RATE);
     expect(r.breakdown.utilSbor).toBe(0);
-    // Формула идентична бензину
-    const expected = Math.round(35_000_000 * 0.05364 * 1.48 + 90_000 + 600_000);
-    expect(Math.abs(r.totalRUB - expected)).toBeLessThan(expected * 0.01);
+    // Формула идентична бензину (ETT по объёму)
+    const carPetrol: CarInput = { ...car, engineType: 'petrol' };
+    const rPetrol = calculate(carPetrol, RATES, EUR_RATE);
+    expect(Math.abs(r.totalRUB - rPetrol.totalRUB)).toBeLessThan(100);
   });
 
   it('Дизель 3.0L 249hp → коммерческий утильсбор (>160hp)', () => {

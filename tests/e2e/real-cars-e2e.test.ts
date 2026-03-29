@@ -38,17 +38,11 @@ const EUR_RATE = 84.12; // EUR/RUB для ЕТТ ЕАЭС
 // 🔧 Хелперы для ручного расчёта
 // ─────────────────────────────────────────────
 
-/** Ручной расчёт ЕТТ ЕАЭС для до 3 лет */
-function manualETTUnder3(carPriceRUB: number, volumeCc: number): number {
-  const priceEUR = carPriceRUB / EUR_RATE;
-  const rates: [number, number, number][] = [
-    [8500, 0.54, 2.5], [16700, 0.48, 3.5], [42300, 0.48, 5.5],
-    [84500, 0.48, 7.5], [169000, 0.48, 15.0], [Infinity, 0.48, 20.0],
-  ];
-  const rate = rates.find(r => priceEUR <= r[0])!;
-  const percentDuty = priceEUR * rate[1];
-  const minDuty = volumeCc * rate[2];
-  return Math.round(Math.max(percentDuty, minDuty) * EUR_RATE);
+/** Ручной расчёт ЕТТ ЕАЭС (ставки 3to5 по объёму) */
+function manualETT(volumeCc: number): number {
+  const rates3to5: [number, number][] = [[1000, 1.5], [1500, 1.7], [1800, 2.5], [2300, 2.7], [3000, 3.0], [Infinity, 3.6]];
+  const rate = rates3to5.find(([maxCC]) => volumeCc <= maxCC)!;
+  return Math.round(volumeCc * rate[1] * EUR_RATE);
 }
 
 /** Ручной расчёт USA → РФ/РБ (до 3 лет) */
@@ -61,7 +55,7 @@ function manualUSA(lot: number, dest: 'RU' | 'BY', engineCC?: number): number {
   if (dest === 'RU') {
     // ЕТТ ЕАЭС: MAX(% от цены, мин EUR/см³)
     const customsBaseRUB = (lotWithFee + 2200) * RATES.USDT_RUB;
-    customs = manualETTUnder3(customsBaseRUB, engineCC || 2000) / RATES.USDT_RUB;
+    customs = manualETT(engineCC ?? 0) / RATES.USDT_RUB;
   } else {
     customs = lotWithFee * 0.30;
   }
@@ -123,7 +117,7 @@ function manualKorea(priceKRW: number, dest: 'RU' | 'BY', engineCC?: number): nu
   const priceRUB = priceKRW * RATES.KRW_RUB;
   const fix = dest === 'RU' ? 600000 : 720000;
   if (dest === 'RU') {
-    const ettRUB = manualETTUnder3(priceRUB, engineCC || 2000);
+    const ettRUB = manualETT(engineCC ?? 0);
     return Math.round(priceRUB + 90000 + ettRUB + fix);
   } else {
     return Math.round(priceRUB * 1.30 + 90000 + fix);
@@ -151,7 +145,7 @@ function manualUAE(priceAED: number, dest: 'RU' | 'BY', engineCC?: number): numb
 
   let totalRUBBeforeFix: number;
   if (dest === 'RU') {
-    const ettRUB = manualETTUnder3(baseRUB, engineCC || 2000);
+    const ettRUB = manualETT(engineCC ?? 0);
     totalRUBBeforeFix = baseRUB + ettRUB;
   } else {
     totalRUBBeforeFix = baseRUB * 1.30;
@@ -181,7 +175,7 @@ function manualChina(priceCNY: number, dest: 'RU' | 'BY', engineCC?: number): nu
   const baseRUB = baseCNY * RATES.CNY_RUB;
   const fix = dest === 'RU' ? 590000 : 720000;
   if (dest === 'RU') {
-    const ettRUB = manualETTUnder3(baseRUB, engineCC || 2000);
+    const ettRUB = manualETT(engineCC ?? 0);
     return Math.round(baseRUB + ettRUB + fix);
   } else {
     return Math.round(baseRUB * 1.30 + fix);

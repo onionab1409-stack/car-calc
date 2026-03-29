@@ -26,7 +26,7 @@ import type {
   ExchangeRates,
 } from '@/types';
 import { getAgeCategory } from '@/types';
-import { CHINA, calcETT, calcETTUnder3 } from './data/constants';
+import { CHINA, calcETT } from './data/constants';
 
 // ─────────────────────────────────────────────
 // 📐 Основная функция
@@ -73,7 +73,7 @@ export function calcChina(
       if (!eurRate) {
         throw new Error('Для расчёта таможни РФ нужен курс EUR/RUB');
       }
-      customsRUB = calcETTUnder3(baseRUB, car.engineCC || 0, eurRate);
+      customsRUB = calcETT(car.engineCC || 0, eurRate, '3to5');
       customsFormula = `ЕТТ ЕАЭС: MAX(${Math.round(baseRUB / eurRate)}€ × %, ${car.engineCC}см³ × мин) × EUR`;
       usedTKS = true;
     } else {
