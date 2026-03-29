@@ -38,15 +38,30 @@ const EUR_RATE = 84.12; // EUR/RUB для ЕТТ ЕАЭС
 // 🔧 Хелперы для ручного расчёта
 // ─────────────────────────────────────────────
 
+/** Ручной расчёт ЕТТ ЕАЭС для до 3 лет */
+function manualETTUnder3(carPriceRUB: number, volumeCc: number): number {
+  const priceEUR = carPriceRUB / EUR_RATE;
+  const rates: [number, number, number][] = [
+    [8500, 0.54, 2.5], [16700, 0.48, 3.5], [42300, 0.48, 5.5],
+    [84500, 0.48, 7.5], [169000, 0.48, 15.0], [Infinity, 0.48, 20.0],
+  ];
+  const rate = rates.find(r => priceEUR <= r[0])!;
+  const percentDuty = priceEUR * rate[1];
+  const minDuty = volumeCc * rate[2];
+  return Math.round(Math.max(percentDuty, minDuty) * EUR_RATE);
+}
+
 /** Ручной расчёт USA → РФ/РБ (до 3 лет) */
-function manualUSA(lot: number, dest: 'RU' | 'BY'): number {
+function manualUSA(lot: number, dest: 'RU' | 'BY', engineCC?: number): number {
   const lotWithFee = lot * 1.08;
   const preCustomsBase = lotWithFee + 2200 + 750;
   const preCustomsTotal = preCustomsBase * 1.011;
 
   let customs: number;
   if (dest === 'RU') {
-    customs = (lotWithFee + 2200) * 0.48;
+    // ЕТТ ЕАЭС: MAX(% от цены, мин EUR/см³)
+    const customsBaseRUB = (lotWithFee + 2200) * RATES.USDT_RUB;
+    customs = manualETTUnder3(customsBaseRUB, engineCC || 2000) / RATES.USDT_RUB;
   } else {
     customs = lotWithFee * 0.30;
   }
@@ -104,10 +119,15 @@ function manualUSA_ETT(lot: number, dest: 'RU' | 'BY', engineCC: number, age: '3
 }
 
 /** Ручной расчёт Корея → РФ/РБ (до 3 лет) */
-function manualKorea(priceKRW: number, dest: 'RU' | 'BY'): number {
-  const mult = dest === 'RU' ? 1.48 : 1.30;
+function manualKorea(priceKRW: number, dest: 'RU' | 'BY', engineCC?: number): number {
+  const priceRUB = priceKRW * RATES.KRW_RUB;
   const fix = dest === 'RU' ? 600000 : 720000;
-  return Math.round(priceKRW * RATES.KRW_RUB * mult + 90000 + fix);
+  if (dest === 'RU') {
+    const ettRUB = manualETTUnder3(priceRUB, engineCC || 2000);
+    return Math.round(priceRUB + 90000 + ettRUB + fix);
+  } else {
+    return Math.round(priceRUB * 1.30 + 90000 + fix);
+  }
 }
 
 /** Ручной расчёт Корея 3-5/5+ лет */
@@ -125,10 +145,17 @@ function manualKorea_ETT(priceKRW: number, dest: 'RU' | 'BY', engineCC: number, 
 }
 
 /** Ручной расчёт ОАЭ → РФ/РБ */
-function manualUAE(priceAED: number, dest: 'RU' | 'BY'): number {
+function manualUAE(priceAED: number, dest: 'RU' | 'BY', engineCC?: number): number {
   const priceUSD = priceAED / 3.67 + 3200;
-  const mult = dest === 'RU' ? 1.48 : 1.30;
-  const totalRUBBeforeFix = priceUSD * RATES.USDT_RUB * mult;
+  const baseRUB = priceUSD * RATES.USDT_RUB;
+
+  let totalRUBBeforeFix: number;
+  if (dest === 'RU') {
+    const ettRUB = manualETTUnder3(baseRUB, engineCC || 2000);
+    totalRUBBeforeFix = baseRUB + ettRUB;
+  } else {
+    totalRUBBeforeFix = baseRUB * 1.30;
+  }
 
   let fix: number;
   if (dest === 'RU') {
@@ -149,11 +176,16 @@ function manualUAE(priceAED: number, dest: 'RU' | 'BY'): number {
 }
 
 /** Ручной расчёт Китай → РФ/РБ (до 3 лет) */
-function manualChina(priceCNY: number, dest: 'RU' | 'BY'): number {
+function manualChina(priceCNY: number, dest: 'RU' | 'BY', engineCC?: number): number {
   const baseCNY = priceCNY + 8000 + priceCNY * 0.025;
-  const mult = dest === 'RU' ? 1.48 : 1.30;
+  const baseRUB = baseCNY * RATES.CNY_RUB;
   const fix = dest === 'RU' ? 590000 : 720000;
-  return Math.round(baseCNY * RATES.CNY_RUB * mult + fix);
+  if (dest === 'RU') {
+    const ettRUB = manualETTUnder3(baseRUB, engineCC || 2000);
+    return Math.round(baseRUB + ettRUB + fix);
+  } else {
+    return Math.round(baseRUB * 1.30 + fix);
+  }
 }
 
 /** Ручной расчёт Китай 3-5/5+ лет */
@@ -197,8 +229,8 @@ describe('P7.1 · E2E: 20 реальных автомобилей', () => {
       country: 'USA', destination: 'RU', price: 18_000, currency: 'USD',
       year: 2024, engineType: 'petrol', engineCC: 2500, horsePower: 203, auction: 'copart',
     };
-    const r = calculate(car, RATES);
-    const base = manualUSA(18000, 'RU');
+    const r = calculate(car, RATES, EUR_RATE);
+    const base = manualUSA(18000, 'RU', 2500);
 
     // Базовый расчёт без утильсбора
     expect(r.breakdown.country).toBe('USA');
@@ -219,8 +251,8 @@ describe('P7.1 · E2E: 20 реальных автомобилей', () => {
       country: 'USA', destination: 'RU', price: 35_000, currency: 'USD',
       year: 2024, engineType: 'petrol', engineCC: 2300, horsePower: 310, auction: 'copart',
     };
-    const r = calculate(car, RATES);
-    const base = manualUSA(35000, 'RU');
+    const r = calculate(car, RATES, EUR_RATE);
+    const base = manualUSA(35000, 'RU', 2300);
 
     // 310hp → большой утильсбор
     expect(r.breakdown.utilSbor).toBeGreaterThan(500_000);
@@ -233,7 +265,7 @@ describe('P7.1 · E2E: 20 реальных автомобилей', () => {
       country: 'USA', destination: 'BY', price: 12_000, currency: 'USD',
       year: 2024, engineType: 'petrol', engineCC: 2000, horsePower: 158, auction: 'copart',
     };
-    const r = calculate(car, RATES);
+    const r = calculate(car, RATES, EUR_RATE);
     const expected = manualUSA(12000, 'BY');
 
     // 158hp ≤ 160 и 2.0L ≤ 3.0L → льготный → доплата 0
@@ -246,8 +278,8 @@ describe('P7.1 · E2E: 20 реальных автомобилей', () => {
       country: 'USA', destination: 'RU', price: 45_000, currency: 'USD',
       year: 2024, engineType: 'petrol', engineCC: 3000, horsePower: 335, auction: 'copart',
     };
-    const r = calculate(car, RATES);
-    const base = manualUSA(45000, 'RU');
+    const r = calculate(car, RATES, EUR_RATE);
+    const base = manualUSA(45000, 'RU', 3000);
 
     // Overflow: 45K > 40K → fix = 575K + ceil(5K/10K)*100K = 675K₽
     expect(r.breakdown.fixedCosts).toBe(675_000);
@@ -262,8 +294,8 @@ describe('P7.1 · E2E: 20 реальных автомобилей', () => {
       country: 'USA', destination: 'RU', price: 28_000, currency: 'USD',
       year: 2024, engineType: 'electric', horsePower: 283, auction: 'copart',
     };
-    const r = calculate(car, RATES);
-    const base = manualUSA(28000, 'RU');
+    const r = calculate(car, RATES, EUR_RATE);
+    const base = manualUSA(28000, 'RU', 0);
 
     // Электро 283hp → 30мин = 283 × 0.7355 × 0.45 ≈ 93.65 кВт > 58.84 → коммерческий
     expect(r.breakdown.utilSbor).toBeGreaterThan(0);
@@ -312,8 +344,8 @@ describe('P7.1 · E2E: 20 реальных автомобилей', () => {
       country: 'Korea', destination: 'RU', price: 32_000_000, currency: 'KRW',
       year: 2024, engineType: 'petrol', engineCC: 2000, horsePower: 156,
     };
-    const r = calculate(car, RATES);
-    const expected = manualKorea(32_000_000, 'RU');
+    const r = calculate(car, RATES, EUR_RATE);
+    const expected = manualKorea(32_000_000, 'RU', 2000);
 
     expect(r.breakdown.utilSbor).toBe(0); // ≤160hp
     expectWithin5Percent(r.totalRUB, expected, 'Tucson KR→РФ');
@@ -324,7 +356,7 @@ describe('P7.1 · E2E: 20 реальных автомобилей', () => {
       country: 'Korea', destination: 'BY', price: 25_000_000, currency: 'KRW',
       year: 2024, engineType: 'petrol', engineCC: 2000, horsePower: 152,
     };
-    const r = calculate(car, RATES);
+    const r = calculate(car, RATES, EUR_RATE);
     const expected = manualKorea(25_000_000, 'BY');
 
     expect(r.breakdown.utilSbor).toBe(0);
@@ -336,8 +368,8 @@ describe('P7.1 · E2E: 20 реальных автомобилей', () => {
       country: 'Korea', destination: 'RU', price: 55_000_000, currency: 'KRW',
       year: 2024, engineType: 'petrol', engineCC: 2500, horsePower: 300,
     };
-    const r = calculate(car, RATES);
-    const base = manualKorea(55_000_000, 'RU');
+    const r = calculate(car, RATES, EUR_RATE);
+    const base = manualKorea(55_000_000, 'RU', 2500);
 
     expect(r.breakdown.utilSbor).toBeGreaterThan(0);
     const baseWithoutUtil = r.totalRUB - r.breakdown.utilSbor;
@@ -369,8 +401,8 @@ describe('P7.1 · E2E: 20 реальных автомобилей', () => {
       country: 'UAE', destination: 'RU', price: 200_000, currency: 'AED',
       year: 2025, engineType: 'petrol', engineCC: 3500, horsePower: 409,
     };
-    const r = calculate(car, RATES);
-    const base = manualUAE(200_000, 'RU');
+    const r = calculate(car, RATES, EUR_RATE);
+    const base = manualUAE(200_000, 'RU', 3500);
 
     // priceUSD = 200000/3.67 + 3200 ≈ 57_717 → overflow >$50K
     expect(r.breakdown.fixedCosts).toBeGreaterThan(560_000);
@@ -385,7 +417,7 @@ describe('P7.1 · E2E: 20 реальных автомобилей', () => {
       country: 'UAE', destination: 'BY', price: 150_000, currency: 'AED',
       year: 2025, engineType: 'petrol', engineCC: 4000, horsePower: 275,
     };
-    const r = calculate(car, RATES);
+    const r = calculate(car, RATES, EUR_RATE);
     const base = manualUAE(150_000, 'BY');
 
     // 275hp > 160 и 4.0L > 3.0L → коммерческий утильсбор
@@ -399,8 +431,8 @@ describe('P7.1 · E2E: 20 реальных автомобилей', () => {
       country: 'UAE', destination: 'RU', price: 75_000, currency: 'AED',
       year: 2025, engineType: 'petrol', engineCC: 2500, horsePower: 187,
     };
-    const r = calculate(car, RATES);
-    const base = manualUAE(75_000, 'RU');
+    const r = calculate(car, RATES, EUR_RATE);
+    const base = manualUAE(75_000, 'RU', 2500);
 
     // priceUSD = 75000/3.67 + 3200 ≈ 23637 → ≤$30K → fix 460K
     expect(r.breakdown.fixedCosts).toBe(460_000);
@@ -419,8 +451,8 @@ describe('P7.1 · E2E: 20 реальных автомобилей', () => {
       country: 'China', destination: 'RU', price: 200_000, currency: 'CNY',
       year: 2024, engineType: 'electric', horsePower: 272,
     };
-    const r = calculate(car, RATES);
-    const base = manualChina(200_000, 'RU');
+    const r = calculate(car, RATES, EUR_RATE);
+    const base = manualChina(200_000, 'RU', 0);
 
     // Электро 272hp → 30мин ≈ 272 × 0.7355 × 0.45 ≈ 89.97 кВт > 58.84 → коммерческий
     expect(r.breakdown.utilSbor).toBeGreaterThan(0);
@@ -433,8 +465,8 @@ describe('P7.1 · E2E: 20 реальных автомобилей', () => {
       country: 'China', destination: 'RU', price: 160_000, currency: 'CNY',
       year: 2024, engineType: 'petrol', engineCC: 2000, horsePower: 238,
     };
-    const r = calculate(car, RATES);
-    const base = manualChina(160_000, 'RU');
+    const r = calculate(car, RATES, EUR_RATE);
+    const base = manualChina(160_000, 'RU', 2000);
 
     expect(r.breakdown.utilSbor).toBeGreaterThan(0);
     const baseWithoutUtil = r.totalRUB - r.breakdown.utilSbor;
@@ -446,7 +478,7 @@ describe('P7.1 · E2E: 20 реальных автомобилей', () => {
       country: 'China', destination: 'BY', price: 130_000, currency: 'CNY',
       year: 2024, engineType: 'petrol', engineCC: 1600, horsePower: 186,
     };
-    const r = calculate(car, RATES);
+    const r = calculate(car, RATES, EUR_RATE);
     const base = manualChina(130_000, 'BY');
 
     expect(r.breakdown.destination).toBe('BY');
@@ -460,8 +492,8 @@ describe('P7.1 · E2E: 20 реальных автомобилей', () => {
       country: 'China', destination: 'RU', price: 250_000, currency: 'CNY',
       year: 2024, engineType: 'petrol', engineCC: 2000, horsePower: 224,
     };
-    const r = calculate(car, RATES);
-    const base = manualChina(250_000, 'RU');
+    const r = calculate(car, RATES, EUR_RATE);
+    const base = manualChina(250_000, 'RU', 2000);
 
     expect(r.breakdown.utilSbor).toBeGreaterThan(0);
     const baseWithoutUtil = r.totalRUB - r.breakdown.utilSbor;
@@ -477,7 +509,7 @@ describe('P7.1 · E2E: 20 реальных автомобилей', () => {
       country: 'USA', destination: 'BY', price: 55_000, currency: 'USD',
       year: 2024, engineType: 'petrol', engineCC: 6200, horsePower: 420, auction: 'copart',
     };
-    const r = calculate(car, RATES);
+    const r = calculate(car, RATES, EUR_RATE);
     const base = manualUSA(55000, 'BY');
 
     // Overflow: 55K > 40K → fix = 600K + ceil(15K/10K)*100K = 600K + 200K = 800K
@@ -573,7 +605,7 @@ describe('P7.1 · E2E: граничные значения', () => {
       country: 'USA', destination: 'RU', price: 20_000, currency: 'USD',
       year: 2024, engineType: 'petrol', engineCC: 2000, horsePower: 150,
     };
-    const r = calculate(car, RATES);
+    const r = calculate(car, RATES, EUR_RATE);
     expect(r.breakdown.fixedCosts).toBe(425_000);
   });
 
@@ -582,7 +614,7 @@ describe('P7.1 · E2E: граничные значения', () => {
       country: 'USA', destination: 'RU', price: 20_001, currency: 'USD',
       year: 2024, engineType: 'petrol', engineCC: 2000, horsePower: 150,
     };
-    const r = calculate(car, RATES);
+    const r = calculate(car, RATES, EUR_RATE);
     expect(r.breakdown.fixedCosts).toBe(495_000);
   });
 
@@ -591,7 +623,7 @@ describe('P7.1 · E2E: граничные значения', () => {
       country: 'USA', destination: 'RU', price: 15_000, currency: 'USD',
       year: 2024, engineType: 'petrol', engineCC: 2500, horsePower: 160,
     };
-    const r = calculate(car, RATES);
+    const r = calculate(car, RATES, EUR_RATE);
     expect(r.breakdown.utilSbor).toBe(0);
   });
 
@@ -600,7 +632,7 @@ describe('P7.1 · E2E: граничные значения', () => {
       country: 'USA', destination: 'RU', price: 15_000, currency: 'USD',
       year: 2024, engineType: 'petrol', engineCC: 2500, horsePower: 161,
     };
-    const r = calculate(car, RATES);
+    const r = calculate(car, RATES, EUR_RATE);
     expect(r.breakdown.utilSbor).toBeGreaterThan(0);
   });
 
@@ -609,7 +641,7 @@ describe('P7.1 · E2E: граничные значения', () => {
       country: 'Korea', destination: 'RU', price: 40_000_000, currency: 'KRW',
       year: 2024, engineType: 'petrol', engineCC: 3000, horsePower: 160,
     };
-    const r = calculate(car, RATES);
+    const r = calculate(car, RATES, EUR_RATE);
     expect(r.breakdown.utilSbor).toBe(0);
   });
 
@@ -618,7 +650,7 @@ describe('P7.1 · E2E: граничные значения', () => {
       country: 'Korea', destination: 'RU', price: 40_000_000, currency: 'KRW',
       year: 2024, engineType: 'petrol', engineCC: 3100, horsePower: 160,
     };
-    const r = calculate(car, RATES);
+    const r = calculate(car, RATES, EUR_RATE);
     expect(r.breakdown.utilSbor).toBeGreaterThan(0);
   });
 
@@ -627,13 +659,13 @@ describe('P7.1 · E2E: граничные значения', () => {
       country: 'UAE', destination: 'RU', price: 100_000, currency: 'AED',
       year: 2025, engineType: 'petrol', engineCC: 2000, horsePower: 150,
     };
-    expect(() => calculate(newCar, RATES)).not.toThrow();
+    expect(() => calculate(newCar, RATES, EUR_RATE)).not.toThrow();
 
     const oldCar: CarInput = {
       country: 'UAE', destination: 'RU', price: 100_000, currency: 'AED',
       year: 2022, engineType: 'petrol', engineCC: 2000, horsePower: 150,
     };
-    expect(() => calculate(oldCar, RATES)).toThrow();
+    expect(() => calculate(oldCar, RATES, EUR_RATE)).toThrow();
   });
 
   it('USA 3-5 лет без engineCC → ошибка', () => {
@@ -644,10 +676,10 @@ describe('P7.1 · E2E: граничные значения', () => {
     expect(() => calculate(car, RATES, EUR_RATE)).toThrow('engineCC');
   });
 
-  it('USA 3-5 лет без eurRate → ошибка', () => {
+  it('USA до 3 лет без eurRate → ошибка для РФ', () => {
     const car: CarInput = {
       country: 'USA', destination: 'RU', price: 15_000, currency: 'USD',
-      year: 2022, engineType: 'petrol', engineCC: 2000, horsePower: 150,
+      year: 2024, engineType: 'petrol', engineCC: 2000, horsePower: 150,
     };
     expect(() => calculate(car, RATES)).toThrow('EUR');
   });

@@ -29,6 +29,7 @@ import {
   FIXED_COSTS_USA_RU,
   FIXED_COSTS_USA_BY,
   calcETT,
+  calcETTUnder3,
 } from './data/constants';
 
 // ─────────────────────────────────────────────
@@ -75,10 +76,17 @@ export function calcUSA(
   if (age === 'under3') {
     // До 3 лет — фиксированный множитель
     if (dest === 'RU') {
-      // База для 48% = lot×1.08 + ocean (2200)
+      // РФ: ЕТТ ЕАЭС = MAX(цена_EUR × %, объём × мин_EUR/см³)
+      if (!eurRate) {
+        throw new Error('Для расчёта таможни РФ нужен курс EUR/RUB');
+      }
+      // Таможенная стоимость = (лот + аукционный сбор + морская доставка) в рублях
       const customsBase = lotWithFee + oceanShipping;
-      customsUSD = customsBase * USA.CUSTOMS_RATE_RU;
-      customsFormula = `(${lot}×1.08 + ${oceanShipping}) × ${USA.CUSTOMS_RATE_RU}`;
+      const customsBaseRUB = customsBase * rates.USDT_RUB;
+      const ettRUB = calcETTUnder3(customsBaseRUB, car.engineCC || 0, eurRate);
+      customsUSD = ettRUB / rates.USDT_RUB; // для единообразия в формуле
+      customsFormula = `ЕТТ ЕАЭС: MAX(${Math.round(customsBaseRUB / eurRate)}€ × %, ${car.engineCC}см³ × мин) × EUR ${eurRate}₽`;
+      usedTKS = true;
     } else {
       // РБ: база для 30% = lot×1.08 (без доставки!)
       customsUSD = lotWithFee * USA.CUSTOMS_RATE_BY;

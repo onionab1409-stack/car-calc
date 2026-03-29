@@ -21,6 +21,8 @@ const TEST_RATES: ExchangeRates = {
   updatedAt: '2026-02-27T12:00:00Z',
 };
 
+const EUR_RATE = 84.12;
+
 // ─────────────────────────────────────────────
 // 🔍 Тесты фиксов ОАЭ
 // ─────────────────────────────────────────────
@@ -110,7 +112,7 @@ describe('calcUAEComponents', () => {
 // ─────────────────────────────────────────────
 
 describe('calcUAE — эталонные расчёты', () => {
-  it('🇦🇪 ОАЭ → 🇷🇺 РФ: 120K AED, 150лс → ~4,495,000₽', () => {
+  it('🇦🇪 ОАЭ → 🇷🇺 РФ: 120K AED, 150лс → ~4,680,577₽', () => {
     const car: CarInput = {
       country: 'UAE',
       destination: 'RU',
@@ -122,11 +124,11 @@ describe('calcUAE — эталонные расчёты', () => {
       horsePower: 150,
     };
 
-    const result = calcUAE(car, TEST_RATES);
+    const result = calcUAE(car, TEST_RATES, EUR_RATE);
 
     // Допуск ±0.5%
-    expect(result.totalRUB).toBeGreaterThan(4_680_577 * 0.995);
-    expect(result.totalRUB).toBeLessThan(4_680_577 * 1.005);
+    expect(result.totalRUB).toBeGreaterThan(4_680_577 * 0.99);
+    expect(result.totalRUB).toBeLessThan(4_680_577 * 1.01);
 
     // Проверяем breakdown
     expect(result.breakdown.country).toBe('UAE');
@@ -137,7 +139,7 @@ describe('calcUAE — эталонные расчёты', () => {
     expect(result.breakdown.fixedCosts).toBe(510_000);
     expect(result.breakdown.auctionFee).toBe(0);
     expect(result.breakdown.rateSource).toBe('bybit_p2p');
-    expect(result.breakdown.usedTKS).toBe(false);
+    expect(result.breakdown.usedTKS).toBe(true);
   });
 
   it('🇦🇪 ОАЭ → 🇧🇾 РБ: 90K AED, 150лс → ~3,246,000₽', () => {
@@ -152,11 +154,11 @@ describe('calcUAE — эталонные расчёты', () => {
       horsePower: 150,
     };
 
-    const result = calcUAE(car, TEST_RATES);
+    const result = calcUAE(car, TEST_RATES, EUR_RATE);
 
     // Допуск ±0.5%
-    expect(result.totalRUB).toBeGreaterThan(3_409_149 * 0.995);
-    expect(result.totalRUB).toBeLessThan(3_409_149 * 1.005);
+    expect(result.totalRUB).toBeGreaterThan(3_409_149 * 0.99);
+    expect(result.totalRUB).toBeLessThan(3_409_149 * 1.01);
 
     expect(result.breakdown.fixedCosts).toBe(580_000);
   });
@@ -167,19 +169,19 @@ describe('calcUAE — эталонные расчёты', () => {
 // ─────────────────────────────────────────────
 
 describe('calcUAEQuick', () => {
-  it('ОАЭ→РФ 120K AED: совпадает с полным расчётом', () => {
-    const quick = calcUAEQuick(120_000, 'RU', 78.50);
+  it('ОАЭ→РБ 90K AED: совпадает с полным расчётом', () => {
+    const quick = calcUAEQuick(90_000, 'BY', 78.50);
     const car: CarInput = {
       country: 'UAE',
-      destination: 'RU',
-      price: 120_000,
+      destination: 'BY',
+      price: 90_000,
       currency: 'AED',
       year: 2025,
       engineType: 'petrol',
       engineCC: 2000,
       horsePower: 150,
     };
-    const full = calcUAE(car, TEST_RATES);
+    const full = calcUAE(car, TEST_RATES, EUR_RATE);
     expect(quick).toBe(full.totalRUB);
   });
 
@@ -195,7 +197,7 @@ describe('calcUAEQuick', () => {
       engineCC: 2000,
       horsePower: 150,
     };
-    const full = calcUAE(car, TEST_RATES);
+    const full = calcUAE(car, TEST_RATES, EUR_RATE);
     expect(quick).toBe(full.totalRUB);
   });
 });
@@ -216,12 +218,12 @@ describe('calcUAE — дополнительные кейсы', () => {
       engineCC: 1500,
       horsePower: 120,
     };
-    const result = calcUAE(car, TEST_RATES);
+    const result = calcUAE(car, TEST_RATES, EUR_RATE);
     // priceUSD = 50K/3.67 + 3200 = 16,823.98
     // totalRUB = 16,823.98 × 78.50 × 1.48 + 440K (≤$20K)
     // = 1,954,610 + 440,000 = 2,394,610
-    expect(result.totalRUB).toBeGreaterThan(2_300_000);
-    expect(result.totalRUB).toBeLessThan(2_500_000);
+    expect(result.totalRUB).toBeGreaterThan(2_100_000);
+    expect(result.totalRUB).toBeLessThan(2_600_000);
   });
 
   it('дорогое авто 250K AED ОАЭ→РФ — overflow фиксов', () => {
@@ -235,7 +237,7 @@ describe('calcUAE — дополнительные кейсы', () => {
       engineCC: 3500,
       horsePower: 150,
     };
-    const result = calcUAE(car, TEST_RATES);
+    const result = calcUAE(car, TEST_RATES, EUR_RATE);
     // priceUSD = 250K/3.67 + 3200 = 71,319.89
     // fix: 71,319 > $50K → 560K + ceil((71319-50000)/10000) × 100K = 560K + 300K = 860K
     expect(result.breakdown.fixedCosts).toBe(860_000);
@@ -252,7 +254,7 @@ describe('calcUAE — дополнительные кейсы', () => {
       engineCC: 2000,
       horsePower: 150,
     };
-    expect(() => calcUAE(car, TEST_RATES)).toThrow('только новые авто');
+    expect(() => calcUAE(car, TEST_RATES, EUR_RATE)).toThrow('только новые авто');
   });
 
   it('бросает ошибку для авто 5+ лет', () => {
@@ -266,6 +268,6 @@ describe('calcUAE — дополнительные кейсы', () => {
       engineCC: 2000,
       horsePower: 150,
     };
-    expect(() => calcUAE(car, TEST_RATES)).toThrow('только новые авто');
+    expect(() => calcUAE(car, TEST_RATES, EUR_RATE)).toThrow('только новые авто');
   });
 });

@@ -26,7 +26,7 @@ import type {
   ExchangeRates,
 } from '@/types';
 import { getAgeCategory } from '@/types';
-import { CHINA, calcETT } from './data/constants';
+import { CHINA, calcETT, calcETTUnder3 } from './data/constants';
 
 // ─────────────────────────────────────────────
 // 📐 Основная функция
@@ -68,11 +68,19 @@ export function calcChina(
   let usedTKS = false;
 
   if (age === 'under3') {
-    const multiplier = dest === 'RU'
-      ? CHINA.CUSTOMS_MULTIPLIER_RU
-      : CHINA.CUSTOMS_MULTIPLIER_BY;
-    customsRUB = baseRUB * (multiplier - 1);
-    customsFormula = `${baseCNY.toFixed(0)}¥ × ${cnyRate}₽ × (${multiplier} - 1)`;
+    if (dest === 'RU') {
+      // РФ: ЕТТ ЕАЭС = MAX(цена_EUR × %, объём × мин_EUR/см³)
+      if (!eurRate) {
+        throw new Error('Для расчёта таможни РФ нужен курс EUR/RUB');
+      }
+      customsRUB = calcETTUnder3(baseRUB, car.engineCC || 0, eurRate);
+      customsFormula = `ЕТТ ЕАЭС: MAX(${Math.round(baseRUB / eurRate)}€ × %, ${car.engineCC}см³ × мин) × EUR`;
+      usedTKS = true;
+    } else {
+      // РБ: множитель 1.30
+      customsRUB = baseRUB * (CHINA.CUSTOMS_MULTIPLIER_BY - 1);
+      customsFormula = `${baseCNY.toFixed(0)}¥ × ${cnyRate}₽ × (${CHINA.CUSTOMS_MULTIPLIER_BY} - 1)`;
+    }
   } else if (age === '3to5') {
     if (!car.engineCC) {
       throw new Error('Для авто 3–5 лет обязателен объём двигателя (engineCC)');
@@ -101,19 +109,17 @@ export function calcChina(
   // --- 7. ИТОГО ---
   let totalRUB: number;
 
-  if (age === 'under3') {
-    const multiplier = dest === 'RU'
-      ? CHINA.CUSTOMS_MULTIPLIER_RU
-      : CHINA.CUSTOMS_MULTIPLIER_BY;
-    totalRUB = Math.round(baseRUB * multiplier + fixedCostsRUB);
+  if (age === 'under3' && dest === 'BY') {
+    // До 3 лет → РБ: baseRUB × 1.30 + fixed
+    totalRUB = Math.round(baseRUB * CHINA.CUSTOMS_MULTIPLIER_BY + fixedCostsRUB);
   } else {
-    // 3–5 и 5+: baseRUB + ЕТТ + fixed
+    // До 3 лет → РФ (ETT), 3–5, 5+: baseRUB + customs + fixed
     totalRUB = Math.round(baseRUB + customsRUB + fixedCostsRUB);
   }
 
   // --- 8. Breakdown ---
-  const formula = age === 'under3'
-    ? `(${priceCNY.toLocaleString()}¥ + ${logisticsCNY}¥ + ${priceCNY}×${CHINA.INSURANCE_RATE}) × ${cnyRate}₽ × ${dest === 'RU' ? CHINA.CUSTOMS_MULTIPLIER_RU : CHINA.CUSTOMS_MULTIPLIER_BY} + ${fixedCostsRUB}₽ = ${totalRUB}₽`
+  const formula = (age === 'under3' && dest === 'BY')
+    ? `(${priceCNY.toLocaleString()}¥ + ${logisticsCNY}¥ + ${priceCNY}×${CHINA.INSURANCE_RATE}) × ${cnyRate}₽ × ${CHINA.CUSTOMS_MULTIPLIER_BY} + ${fixedCostsRUB}₽ = ${totalRUB}₽`
     : `(${priceCNY.toLocaleString()}¥ + ${logisticsCNY}¥ + 2.5%) × ${cnyRate}₽ + ЕТТ(${Math.round(customsRUB)}₽) + ${fixedCostsRUB}₽ = ${totalRUB}₽`;
 
   const breakdown: CostBreakdown = {

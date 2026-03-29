@@ -21,6 +21,8 @@ const TEST_RATES: ExchangeRates = {
   updatedAt: '2026-02-27T12:00:00Z',
 };
 
+const EUR_RATE = 84.12;
+
 // ─────────────────────────────────────────────
 // 🔍 Тесты фиксов
 // ─────────────────────────────────────────────
@@ -98,7 +100,7 @@ describe('calcUSA — эталонные расчёты', () => {
       auction: 'copart',
     };
 
-    const result = calcUSA(car, TEST_RATES);
+    const result = calcUSA(car, TEST_RATES, EUR_RATE);
 
     // Допуск ±0.5% (округления)
     expect(result.totalRUB).toBeGreaterThan(2_351_000 * 0.995);
@@ -125,10 +127,10 @@ describe('calcUSA — эталонные расчёты', () => {
       auction: 'copart',
     };
 
-    const result = calcUSA(car, TEST_RATES);
+    const result = calcUSA(car, TEST_RATES, EUR_RATE);
 
-    expect(result.totalRUB).toBeGreaterThan(3_972_000 * 0.995);
-    expect(result.totalRUB).toBeLessThan(3_972_000 * 1.005);
+    expect(result.totalRUB).toBeGreaterThan(4_028_587 * 0.99);
+    expect(result.totalRUB).toBeLessThan(4_028_587 * 1.01);
 
     expect(result.breakdown.fixedCosts).toBe(495_000);
   });
@@ -152,17 +154,17 @@ describe('calcUSAQuick', () => {
       engineCC: 2000,
       horsePower: 150,
     };
-    const full = calcUSA(car, TEST_RATES);
+    const full = calcUSA(car, TEST_RATES, EUR_RATE);
 
     expect(quick).toBe(full.totalRUB);
   });
 
-  it('USA→РФ $25K совпадает', () => {
-    const quick = calcUSAQuick(25_000, 'RU', 78.50);
+  it('USA→РБ $25K совпадает', () => {
+    const quick = calcUSAQuick(25_000, 'BY', 78.50);
 
     const car: CarInput = {
       country: 'USA',
-      destination: 'RU',
+      destination: 'BY',
       price: 25_000,
       currency: 'USD',
       year: 2024,
@@ -170,7 +172,7 @@ describe('calcUSAQuick', () => {
       engineCC: 2500,
       horsePower: 150,
     };
-    const full = calcUSA(car, TEST_RATES);
+    const full = calcUSA(car, TEST_RATES, EUR_RATE);
 
     expect(quick).toBe(full.totalRUB);
   });
@@ -192,7 +194,7 @@ describe('calcUSA — дополнительные кейсы', () => {
       engineCC: 1500,
       horsePower: 120,
     };
-    const result = calcUSA(car, TEST_RATES);
+    const result = calcUSA(car, TEST_RATES, EUR_RATE);
     // Должен быть адекватным (>1М₽, <2М₽)
     expect(result.totalRUB).toBeGreaterThan(1_000_000);
     expect(result.totalRUB).toBeLessThan(2_000_000);
@@ -209,7 +211,7 @@ describe('calcUSA — дополнительные кейсы', () => {
       engineCC: 3000,
       horsePower: 150,
     };
-    const result = calcUSA(car, TEST_RATES);
+    const result = calcUSA(car, TEST_RATES, EUR_RATE);
 
     // Фикс: $80K → 575K + ceil((80K-40K)/10K) × 100K = 575K + 400K = 975K
     expect(result.breakdown.fixedCosts).toBe(975_000);
@@ -253,13 +255,13 @@ describe('calcUSA — дополнительные кейсы', () => {
     expect(() => calcUSA(car, TEST_RATES, 84.0)).toThrow('объём двигателя');
   });
 
-  it('бросает ошибку без eurRate для 3–5 лет', () => {
+  it('бросает ошибку без eurRate для РФ', () => {
     const car: CarInput = {
       country: 'USA',
       destination: 'RU',
       price: 15_000,
       currency: 'USD',
-      year: 2022,
+      year: 2024,
       engineType: 'petrol',
       engineCC: 2000,
       horsePower: 150,

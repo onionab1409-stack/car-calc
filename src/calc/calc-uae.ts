@@ -26,6 +26,7 @@ import {
   lookupFixedCost,
   FIXED_COSTS_UAE_RU,
   FIXED_COSTS_UAE_BY,
+  calcETTUnder3,
 } from './data/constants';
 
 // ─────────────────────────────────────────────
@@ -42,7 +43,8 @@ import {
  */
 export function calcUAE(
   car: CarInput,
-  rates: ExchangeRates
+  rates: ExchangeRates,
+  eurRate?: number
 ): CalcResult {
   const priceAED = car.price;
   const dest = car.destination;
@@ -64,13 +66,29 @@ export function calcUAE(
   // --- 3. Полная сумма в USD (для таможни и фикса) ---
   const totalUSD = priceUSD + shippingUSD;
 
-  // --- 4. Таможня через множитель ---
-  const multiplier = dest === 'RU'
-    ? UAE.CUSTOMS_MULTIPLIER_RU
-    : UAE.CUSTOMS_MULTIPLIER_BY;
+  // --- 4. Таможня ---
+  let totalWithCustomsRUB: number;
+  let customsRUB: number;
+  let customsFormula: string;
+  let usedTKS = false;
 
-  const totalWithCustomsRUB = totalUSD * usdtRate * multiplier;
-  const customsRUB = totalUSD * usdtRate * (multiplier - 1);
+  if (dest === 'RU') {
+    // РФ: ЕТТ ЕАЭС = MAX(цена_EUR × %, объём × мин_EUR/см³)
+    if (!eurRate) {
+      throw new Error('Для расчёта таможни РФ нужен курс EUR/RUB');
+    }
+    const baseRUB = totalUSD * usdtRate;
+    customsRUB = calcETTUnder3(baseRUB, car.engineCC || 0, eurRate);
+    totalWithCustomsRUB = baseRUB + customsRUB;
+    customsFormula = `ЕТТ ЕАЭС: MAX(${Math.round(baseRUB / eurRate)}€ × %, ${car.engineCC}см³ × мин) × EUR`;
+    usedTKS = true;
+  } else {
+    // РБ: множитель 1.30
+    const multiplier = UAE.CUSTOMS_MULTIPLIER_BY;
+    totalWithCustomsRUB = totalUSD * usdtRate * multiplier;
+    customsRUB = totalUSD * usdtRate * (multiplier - 1);
+    customsFormula = `${totalUSD.toFixed(0)}$ × ${usdtRate}₽ × ${multiplier}`;
+  }
 
   // --- 5. Фиксированные расходы (по таблице, ключ = totalUSD) ---
   const fixTable = dest === 'RU' ? FIXED_COSTS_UAE_RU : FIXED_COSTS_UAE_BY;
@@ -80,7 +98,7 @@ export function calcUAE(
   const totalRUB = Math.round(totalWithCustomsRUB + fixedCosts);
 
   // --- 7. Breakdown ---
-  const formula = `(${priceAED.toLocaleString()} AED ÷ ${UAE.AED_USD_RATE} + $${shippingUSD}) × ${usdtRate}₽ × ${multiplier} + ${fixedCosts}₽ = ${totalRUB}₽`;
+  const formula = `(${priceAED.toLocaleString()} AED ÷ ${UAE.AED_USD_RATE} + $${shippingUSD}) — ${customsFormula} + ${fixedCosts}₽ = ${totalRUB}₽`;
 
   const breakdown: CostBreakdown = {
     country: 'UAE',
@@ -106,7 +124,7 @@ export function calcUAE(
     totalRUB,
 
     formula,
-    usedTKS: false,
+    usedTKS,
     timestamp: new Date().toISOString(),
   };
 

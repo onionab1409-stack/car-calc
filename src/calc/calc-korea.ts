@@ -24,7 +24,7 @@ import type {
   AgeCategory,
 } from '@/types';
 import { getAgeCategory } from '@/types';
-import { KOREA, calcETT } from './data/constants';
+import { KOREA, calcETT, calcETTUnder3 } from './data/constants';
 
 // ─────────────────────────────────────────────
 // 📐 Основная функция
@@ -60,15 +60,16 @@ export function calcKorea(
   let usedTKS = false;
 
   if (age === 'under3') {
-    // До 3 лет — множитель включает пошлину + НДС
-    // Формула: priceKRW × krwRate × multiplier
-    // Но multiplier применяется к ПОЛНОЙ сумме, поэтому:
-    //   таможенная часть = carPriceRUB × multiplier - carPriceRUB
-    //                    = carPriceRUB × (multiplier - 1)
     if (dest === 'RU') {
-      customsRUB = carPriceRUB * (KOREA.CUSTOMS_MULTIPLIER_RU - 1);
-      customsFormula = `${priceKRW.toLocaleString()}₩ × ${krwRate}₽ × (${KOREA.CUSTOMS_MULTIPLIER_RU} - 1)`;
+      // До 3 лет → РФ: ЕТТ ЕАЭС = MAX(цена_EUR × %, объём × мин_EUR/см³)
+      if (!eurRate) {
+        throw new Error('Для расчёта таможни РФ нужен курс EUR/RUB');
+      }
+      customsRUB = calcETTUnder3(carPriceRUB, car.engineCC || 0, eurRate);
+      customsFormula = `ЕТТ ЕАЭС: MAX(${Math.round(carPriceRUB / eurRate)}€ × %, ${car.engineCC}см³ × мин) × EUR ${eurRate}₽`;
+      usedTKS = true;
     } else {
+      // До 3 лет → РБ: множитель 1.30 (без изменений)
       customsRUB = carPriceRUB * (KOREA.CUSTOMS_MULTIPLIER_BY - 1);
       customsFormula = `${priceKRW.toLocaleString()}₩ × ${krwRate}₽ × (${KOREA.CUSTOMS_MULTIPLIER_BY} - 1)`;
     }
@@ -102,18 +103,17 @@ export function calcKorea(
   // --- 5. ИТОГО ---
   let totalRUB: number;
 
-  if (age === 'under3') {
-    // До 3 лет: priceKRW × krwRate × multiplier + logistics + fixed
-    const multiplier = dest === 'RU' ? KOREA.CUSTOMS_MULTIPLIER_RU : KOREA.CUSTOMS_MULTIPLIER_BY;
-    totalRUB = Math.round(carPriceRUB * multiplier + logisticsRUB + fixedCostsRUB);
+  if (age === 'under3' && dest === 'BY') {
+    // До 3 лет → РБ: priceKRW × krwRate × 1.30 + logistics + fixed
+    totalRUB = Math.round(carPriceRUB * KOREA.CUSTOMS_MULTIPLIER_BY + logisticsRUB + fixedCostsRUB);
   } else {
-    // 3–5 и 5+ лет: priceRUB + logistics + ETT + fixed
+    // До 3 лет → РФ (ETT), 3–5 и 5+ лет: priceRUB + customs + logistics + fixed
     totalRUB = Math.round(carPriceRUB + logisticsRUB + customsRUB + fixedCostsRUB);
   }
 
   // --- 6. Breakdown (скрыт от клиента, для лога) ---
-  const formula = age === 'under3'
-    ? `${priceKRW.toLocaleString()}₩ × ${krwRate}₽ × ${dest === 'RU' ? KOREA.CUSTOMS_MULTIPLIER_RU : KOREA.CUSTOMS_MULTIPLIER_BY} + ${logisticsRUB}₽ + ${fixedCostsRUB}₽ = ${totalRUB}₽`
+  const formula = (age === 'under3' && dest === 'BY')
+    ? `${priceKRW.toLocaleString()}₩ × ${krwRate}₽ × ${KOREA.CUSTOMS_MULTIPLIER_BY} + ${logisticsRUB}₽ + ${fixedCostsRUB}₽ = ${totalRUB}₽`
     : `${priceKRW.toLocaleString()}₩ × ${krwRate}₽ + ${logisticsRUB}₽ + ЕТТ(${Math.round(customsRUB)}₽) + ${fixedCostsRUB}₽ = ${totalRUB}₽`;
 
   const breakdown: CostBreakdown = {

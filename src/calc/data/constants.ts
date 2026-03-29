@@ -229,6 +229,57 @@ export function calcETT(
 }
 
 // ─────────────────────────────────────────────
+// 📋 ЕТТ ЕАЭС — ставки для авто ДО 3 лет (физлица)
+// ─────────────────────────────────────────────
+// Пошлина = MAX(цена_EUR × процент, объём_см³ × мин_EUR/см³)
+// Таблица из ЕТТ ЕАЭС: ставки зависят от ЦЕНЫ авто в EUR
+
+export interface EttRateUnder3 {
+  maxPriceEUR: number;
+  percentage: number;    // доля от стоимости (0.54 = 54%)
+  minEurPerCc: number;   // минимальная ставка EUR/см³
+}
+
+export const ETT_RATES_UNDER3: EttRateUnder3[] = [
+  { maxPriceEUR: 8_500,    percentage: 0.54, minEurPerCc: 2.5 },
+  { maxPriceEUR: 16_700,   percentage: 0.48, minEurPerCc: 3.5 },
+  { maxPriceEUR: 42_300,   percentage: 0.48, minEurPerCc: 5.5 },
+  { maxPriceEUR: 84_500,   percentage: 0.48, minEurPerCc: 7.5 },
+  { maxPriceEUR: 169_000,  percentage: 0.48, minEurPerCc: 15.0 },
+  { maxPriceEUR: Infinity, percentage: 0.48, minEurPerCc: 20.0 },
+];
+
+/**
+ * Расчёт таможни по ЕТТ ЕАЭС для авто ДО 3 лет (физлица).
+ * Пошлина = MAX(цена_EUR × процент, объём_см³ × мин_EUR/см³) × EUR_RUB
+ *
+ * @param carPriceRUB — таможенная стоимость авто в рублях
+ * @param volumeCc    — объём двигателя в см³
+ * @param eurRubRate  — курс EUR/RUB из ЦБ
+ * @returns Таможенная пошлина в рублях
+ */
+export function calcETTUnder3(
+  carPriceRUB: number,
+  volumeCc: number,
+  eurRubRate: number
+): number {
+  // 1. Переводим стоимость авто в EUR
+  const priceEUR = carPriceRUB / eurRubRate;
+
+  // 2. Находим ставку по цене
+  const rate = ETT_RATES_UNDER3.find(r => priceEUR <= r.maxPriceEUR);
+  if (!rate) throw new Error(`ETT under3: не найдена ставка для цены ${priceEUR.toFixed(0)} EUR`);
+
+  // 3. Два варианта расчёта — берём MAX
+  const percentDutyEUR = priceEUR * rate.percentage;
+  const minDutyEUR = volumeCc * rate.minEurPerCc;
+  const dutyEUR = Math.max(percentDutyEUR, minDutyEUR);
+
+  // 4. В рубли
+  return Math.round(dutyEUR * eurRubRate);
+}
+
+// ─────────────────────────────────────────────
 // 📋 Маппинг таблиц фиксов по маршруту
 // ─────────────────────────────────────────────
 

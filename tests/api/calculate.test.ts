@@ -47,6 +47,8 @@ const TEST_RATES: ExchangeRates = {
   updatedAt: '2026-02-27T12:00:00.000Z',
 };
 
+const EUR_RATE = 84.12;
+
 // ==============================================
 // ✅ Тесты Zod-валидации (CalcRequestSchema)
 // ==============================================
@@ -358,7 +360,7 @@ describe('Integration: полный pipeline', () => {
     expect(validateBusinessRules(parsed)).toBeNull();
 
     const car = toCarInput(parsed);
-    const result = calculate(car, TEST_RATES);
+    const result = calculate(car, TEST_RATES, EUR_RATE);
 
     // Эталон: 3,972,193₽ (±0.5%)
     expect(result.totalRUB).toBeGreaterThan(3_950_000);
@@ -376,7 +378,7 @@ describe('Integration: полный pipeline', () => {
       horsePower: 130,
     });
     const car = toCarInput(parsed);
-    const result = calculate(car, TEST_RATES);
+    const result = calculate(car, TEST_RATES, EUR_RATE);
 
     expect(Math.round(result.totalRUB)).toBeCloseTo(2_762_496, -3);
   });
@@ -391,7 +393,7 @@ describe('Integration: полный pipeline', () => {
       horsePower: 150,
     });
     const car = toCarInput(parsed);
-    const result = calculate(car, TEST_RATES);
+    const result = calculate(car, TEST_RATES, EUR_RATE);
 
     expect(Math.round(result.totalRUB)).toBeCloseTo(4_680_577, -4);
   });
@@ -406,15 +408,15 @@ describe('Integration: полный pipeline', () => {
       horsePower: 150,
     });
     const car = toCarInput(parsed);
-    const result = calculate(car, TEST_RATES);
+    const result = calculate(car, TEST_RATES, EUR_RATE);
 
-    expect(Math.round(result.totalRUB)).toBeCloseTo(3_838_000, -4);
+    expect(Math.round(result.totalRUB)).toBeCloseTo(3_837_860, -4);
   });
 
   it('API отдаёт только totalRUB (округлённый до целого)', () => {
     const parsed = CalcRequestSchema.parse(VALID_REQUEST);
     const car = toCarInput(parsed);
-    const result = calculate(car, TEST_RATES);
+    const result = calculate(car, TEST_RATES, EUR_RATE);
 
     const apiResponse = { totalRUB: Math.round(result.totalRUB) };
     expect(apiResponse.totalRUB).toBe(3_972_193);

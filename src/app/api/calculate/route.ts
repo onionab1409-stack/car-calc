@@ -92,18 +92,18 @@ export async function POST(request: NextRequest) {
     // ─── 5. Курсы валют ───
     const rates = await getExchangeRates();
 
-    // EUR/RUB — нужен для ЕТТ ЕАЭС (3-5 и 5+ лет)
+    // EUR/RUB — нужен для ЕТТ ЕАЭС (РФ любой возраст + 3-5/5+ лет)
     const carInput = toCarInput(data);
     const age = getAgeCategory(carInput.year);
     let eurRate: number | undefined;
 
-    if (age === '3to5' || age === 'over5') {
+    if (carInput.destination === 'RU' || age === '3to5' || age === 'over5') {
       const eur = await getEURRate();
       if (!eur) {
         return NextResponse.json(
           {
             error: 'Calculation failed',
-            details: 'EUR/RUB rate unavailable (required for 3-5 year old cars)',
+            details: 'EUR/RUB rate unavailable (required for customs calculation)',
           },
           { status: 503 }
         );

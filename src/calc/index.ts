@@ -44,7 +44,7 @@ export function calculate(
       result = calcKorea(car, rates, eurRate);
       break;
     case 'UAE':
-      result = calcUAE(car, rates);
+      result = calcUAE(car, rates, eurRate);
       break;
     case 'China':
       result = calcChina(car, rates, eurRate);

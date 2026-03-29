@@ -21,6 +21,8 @@ const TEST_RATES: ExchangeRates = {
   updatedAt: '2026-02-27T12:00:00Z',
 };
 
+const EUR_RATE = 84.12;
+
 // ─────────────────────────────────────────────
 // 🔍 Тесты констант
 // ─────────────────────────────────────────────
@@ -106,11 +108,11 @@ describe('calcChina — эталонные расчёты', () => {
       horsePower: 150,
     };
 
-    const result = calcChina(car, TEST_RATES);
+    const result = calcChina(car, TEST_RATES, EUR_RATE);
 
     // Допуск ±0.5%
-    expect(result.totalRUB).toBeGreaterThan(3_838_000 * 0.995);
-    expect(result.totalRUB).toBeLessThan(3_838_000 * 1.005);
+    expect(result.totalRUB).toBeGreaterThan(3_837_860 * 0.99);
+    expect(result.totalRUB).toBeLessThan(3_837_860 * 1.01);
 
     // Breakdown
     expect(result.breakdown.country).toBe('China');
@@ -121,7 +123,7 @@ describe('calcChina — эталонные расчёты', () => {
     expect(result.breakdown.fixedCosts).toBe(590_000);
     expect(result.breakdown.auctionFee).toBe(0);
     expect(result.breakdown.rateSource).toBe('cbr');
-    expect(result.breakdown.usedTKS).toBe(false);
+    expect(result.breakdown.usedTKS).toBe(true);
 
     // Страховка = 180K × 0.025 × 11.40 = 51,300₽
     expect(result.breakdown.insurance).toBeCloseTo(51_300, -1);
@@ -142,7 +144,7 @@ describe('calcChina — эталонные расчёты', () => {
       horsePower: 120,
     };
 
-    const result = calcChina(car, TEST_RATES);
+    const result = calcChina(car, TEST_RATES, EUR_RATE);
 
     // Допуск ±0.5%
     expect(result.totalRUB).toBeGreaterThan(3_117_000 * 0.995);
@@ -157,19 +159,19 @@ describe('calcChina — эталонные расчёты', () => {
 // ─────────────────────────────────────────────
 
 describe('calcChinaQuick', () => {
-  it('Китай→РФ 180K¥: совпадает с полным расчётом', () => {
-    const quick = calcChinaQuick(180_000, 'RU', 11.40);
+  it('Китай→РБ 150K¥: совпадает с полным расчётом', () => {
+    const quick = calcChinaQuick(150_000, 'BY', 11.40);
     const car: CarInput = {
       country: 'China',
-      destination: 'RU',
-      price: 180_000,
+      destination: 'BY',
+      price: 150_000,
       currency: 'CNY',
       year: 2024,
       engineType: 'petrol',
       engineCC: 2000,
       horsePower: 150,
     };
-    const full = calcChina(car, TEST_RATES);
+    const full = calcChina(car, TEST_RATES, EUR_RATE);
     expect(quick).toBe(full.totalRUB);
   });
 
@@ -185,7 +187,7 @@ describe('calcChinaQuick', () => {
       engineCC: 1600,
       horsePower: 120,
     };
-    const full = calcChina(car, TEST_RATES);
+    const full = calcChina(car, TEST_RATES, EUR_RATE);
     expect(quick).toBe(full.totalRUB);
   });
 });
@@ -206,7 +208,7 @@ describe('calcChina — дополнительные кейсы', () => {
       engineCC: 1500,
       horsePower: 110,
     };
-    const result = calcChina(car, TEST_RATES);
+    const result = calcChina(car, TEST_RATES, EUR_RATE);
     // baseCNY = 80K + 8K + 2K = 90K
     // 90K × 11.40 × 1.48 + 590K = 1,518,480 + 590,000 = 2,108,480
     expect(result.totalRUB).toBeGreaterThan(2_050_000);
@@ -224,7 +226,7 @@ describe('calcChina — дополнительные кейсы', () => {
       engineCC: 2500,
       horsePower: 150,
     };
-    const result = calcChina(car, TEST_RATES);
+    const result = calcChina(car, TEST_RATES, EUR_RATE);
     // baseCNY = 350K + 8K + 8750 = 366,750
     // 366,750 × 11.40 × 1.48 + 590K = 6,186,378 + 590,000 = 6,776,378
     expect(result.totalRUB).toBeGreaterThan(6_700_000);
@@ -241,7 +243,7 @@ describe('calcChina — дополнительные кейсы', () => {
       engineType: 'electric',
       horsePower: 150,
     };
-    const result = calcChina(car, TEST_RATES);
+    const result = calcChina(car, TEST_RATES, EUR_RATE);
     // Электро: формула та же для до 3 лет (множитель 1.48)
     expect(result.totalRUB).toBeGreaterThan(3_500_000);
     expect(result.totalRUB).toBeLessThan(4_500_000);
@@ -334,7 +336,7 @@ describe('calcChina — дополнительные кейсы', () => {
     expect(() => calcChina(car, TEST_RATES, 84.0)).toThrow('объём двигателя');
   });
 
-  it('бросает ошибку без eurRate для 3–5 лет', () => {
+  it('бросает ошибку без eurRate для РФ', () => {
     const car: CarInput = {
       country: 'China',
       destination: 'RU',

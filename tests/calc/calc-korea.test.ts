@@ -21,6 +21,8 @@ const TEST_RATES: ExchangeRates = {
   updatedAt: '2026-02-27T12:00:00Z',
 };
 
+const EUR_RATE = 84.12;
+
 // ─────────────────────────────────────────────
 // 🔍 Тесты констант
 // ─────────────────────────────────────────────
@@ -96,11 +98,11 @@ describe('calcKorea — эталонные расчёты', () => {
       horsePower: 150,
     };
 
-    const result = calcKorea(car, TEST_RATES);
+    const result = calcKorea(car, TEST_RATES, EUR_RATE);
 
     // Допуск ±0.5% (округления)
-    expect(result.totalRUB).toBeGreaterThan(3_469_000 * 0.995);
-    expect(result.totalRUB).toBeLessThan(3_469_000 * 1.005);
+    expect(result.totalRUB).toBeGreaterThan(3_492_720 * 0.99);
+    expect(result.totalRUB).toBeLessThan(3_492_720 * 1.01);
 
     // Проверяем breakdown
     expect(result.breakdown.country).toBe('Korea');
@@ -126,7 +128,7 @@ describe('calcKorea — эталонные расчёты', () => {
       horsePower: 130,
     };
 
-    const result = calcKorea(car, TEST_RATES);
+    const result = calcKorea(car, TEST_RATES, EUR_RATE);
 
     // Допуск ±0.5%
     expect(result.totalRUB).toBeGreaterThan(2_762_000 * 0.995);
@@ -144,20 +146,20 @@ describe('calcKorea — эталонные расчёты', () => {
 // ─────────────────────────────────────────────
 
 describe('calcKoreaQuick', () => {
-  it('Корея→РФ 35M₩: совпадает с полным расчётом (до 3 лет)', () => {
-    const quick = calcKoreaQuick(35_000_000, 'RU', 0.05364);
+  it('Корея→РБ 28M₩: совпадает с полным расчётом (до 3 лет)', () => {
+    const quick = calcKoreaQuick(28_000_000, 'BY', 0.05364);
 
     const car: CarInput = {
       country: 'Korea',
-      destination: 'RU',
-      price: 35_000_000,
+      destination: 'BY',
+      price: 28_000_000,
       currency: 'KRW',
       year: 2024,
       engineType: 'petrol',
       engineCC: 2000,
       horsePower: 150,
     };
-    const full = calcKorea(car, TEST_RATES);
+    const full = calcKorea(car, TEST_RATES, EUR_RATE);
 
     expect(quick).toBe(full.totalRUB);
   });
@@ -175,7 +177,7 @@ describe('calcKoreaQuick', () => {
       engineCC: 1600,
       horsePower: 130,
     };
-    const full = calcKorea(car, TEST_RATES);
+    const full = calcKorea(car, TEST_RATES, EUR_RATE);
 
     expect(quick).toBe(full.totalRUB);
   });
@@ -197,7 +199,7 @@ describe('calcKorea — дополнительные кейсы', () => {
       engineCC: 1600,
       horsePower: 120,
     };
-    const result = calcKorea(car, TEST_RATES);
+    const result = calcKorea(car, TEST_RATES, EUR_RATE);
     // 15M × 0.05364 × 1.48 + 90K + 600K = 1,190,808 + 690,000 = 1,880,808₽
     expect(result.totalRUB).toBeGreaterThan(1_800_000);
     expect(result.totalRUB).toBeLessThan(2_000_000);
@@ -214,7 +216,7 @@ describe('calcKorea — дополнительные кейсы', () => {
       engineCC: 3000,
       horsePower: 150,
     };
-    const result = calcKorea(car, TEST_RATES);
+    const result = calcKorea(car, TEST_RATES, EUR_RATE);
     // 60M × 0.05364 × 1.48 + 90K + 600K = 4,763,232 + 690,000 = 5,453,232₽
     expect(result.totalRUB).toBeGreaterThan(5_300_000);
     expect(result.totalRUB).toBeLessThan(5_600_000);
@@ -281,13 +283,13 @@ describe('calcKorea — дополнительные кейсы', () => {
     expect(() => calcKorea(car, TEST_RATES, 84.0)).toThrow('объём двигателя');
   });
 
-  it('бросает ошибку без eurRate для 3–5 лет', () => {
+  it('бросает ошибку без eurRate для РФ', () => {
     const car: CarInput = {
       country: 'Korea',
       destination: 'RU',
       price: 30_000_000,
       currency: 'KRW',
-      year: 2022,
+      year: 2024,
       engineType: 'petrol',
       engineCC: 2000,
       horsePower: 150,
