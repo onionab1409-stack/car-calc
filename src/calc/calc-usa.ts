@@ -51,7 +51,7 @@ export function calcUSA(
 ): CalcResult {
   const lot = car.price; // цена лота в USD
   const dest = car.destination;
-  const age = getAgeCategory(car.year);
+  const age = getAgeCategory(car.year, car.month);
 
   // --- 1. Аукционный сбор (8%) ---
   const auctionFee = lot * USA.AUCTION_FEE_RATE;

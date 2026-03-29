@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
 
     // EUR/RUB — нужен для ЕТТ ЕАЭС (РФ любой возраст + 3-5/5+ лет)
     const carInput = toCarInput(data);
-    const age = getAgeCategory(carInput.year);
+    const age = getAgeCategory(carInput.year, carInput.month);
     let eurRate: number | undefined;
 
     if (carInput.destination === 'RU' || age === '3to5' || age === 'over5') {

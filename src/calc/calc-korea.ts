@@ -45,7 +45,7 @@ export function calcKorea(
 ): CalcResult {
   const priceKRW = car.price; // цена в вонах
   const dest = car.destination;
-  const age = getAgeCategory(car.year);
+  const age = getAgeCategory(car.year, car.month);
   const krwRate = rates.KRW_RUB; // уже с учётом спреда ВТБ
 
   // --- 1. Цена авто в рублях ---

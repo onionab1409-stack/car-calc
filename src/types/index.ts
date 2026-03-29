@@ -87,6 +87,9 @@ export interface CarInput {
   /** Год выпуска */
   year: number;
 
+  /** Месяц выпуска (1-12, опционально для точного расчёта возраста) */
+  month?: number;
+
   /** Тип двигателя */
   engineType: EngineType;
 
@@ -112,11 +115,22 @@ export interface CarInput {
   vin?: string;
 }
 
-/** Возрастная категория — вычисляется из года выпуска */
-export function getAgeCategory(year: number): AgeCategory {
-  const currentYear = new Date().getFullYear();
-  const age = currentYear - year;
+/** Возрастная категория — вычисляется из года и месяца выпуска */
+export function getAgeCategory(year: number, month?: number): AgeCategory {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth() + 1; // 1-12
 
+  if (month && month >= 1 && month <= 12) {
+    // Точный расчёт по месяцам
+    const ageMonths = (currentYear - year) * 12 + (currentMonth - month);
+    if (ageMonths < 36) return 'under3';   // меньше 36 месяцев
+    if (ageMonths <= 60) return '3to5';     // 36-60 месяцев
+    return 'over5';                          // больше 60 месяцев
+  }
+
+  // Без месяца — по годам (как раньше)
+  const age = currentYear - year;
   if (age < 3) return 'under3';
   if (age <= 5) return '3to5';
   return 'over5';

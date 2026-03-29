@@ -22,6 +22,7 @@ export const CalcRequestSchema = z.object({
     new Date().getFullYear() + 1,
     'Год выпуска из будущего'
   ),
+  month: z.number().int().min(1).max(12).optional(),
   engineType: z.enum(['petrol', 'diesel', 'electric', 'hybrid']),
   horsePower: z.number().positive('Мощность должна быть > 0').max(2000, 'Мощность > 2000 л.с.'),
   engineCC: z.number().positive().max(20000).optional(),
@@ -71,6 +72,7 @@ export function toCarInput(data: CalcRequest): CarInput {
     price: data.price,
     currency: COUNTRY_CURRENCY[data.country],
     year: data.year,
+    month: data.month,
     engineType: data.engineType,
     horsePower: data.horsePower,
     engineCC: data.engineCC,

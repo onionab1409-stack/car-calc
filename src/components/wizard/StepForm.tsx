@@ -40,10 +40,6 @@ const PRICE_MAX: Record<Country, number> = {
 };
 
 const CURRENT_YEAR = new Date().getFullYear();
-const AGE_PRESETS = [
-  { label: '0–3 лет', year: CURRENT_YEAR },       // under3
-  { label: '3–5 лет', year: CURRENT_YEAR - 4 },   // 3to5
-];
 
 const DEST_INFO: Record<Destination, { flag: string; name: string; hint: string }> = {
   RU: { flag: '🇷🇺', name: 'Россия', hint: 'Таможня РФ · ×1.48' },
@@ -96,6 +92,7 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
   // ── Form state ──
   const [price, setPrice] = useState<string>('');
   const [year, setYear] = useState<number>(CURRENT_YEAR);
+  const [month, setMonth] = useState<number>(0); // 0 = не указан, 1-12
   const engineType: EngineType = 'petrol'; // always petrol for физлица
   const [horsePower, setHorsePower] = useState<string>('150');
   const [engineVolume, setEngineVolume] = useState<string>('');
@@ -123,8 +120,15 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
 
   // ── Derived ──
   const priceNum = useMemo(() => Number(price.replace(/\s/g, '')) || 0, [price]);
+  const currentMonth = new Date().getMonth() + 1;
+  const ageMonths = month > 0
+    ? (CURRENT_YEAR - year) * 12 + (currentMonth - month)
+    : (CURRENT_YEAR - year) * 12;
   const carAge = CURRENT_YEAR - year;
-  const needsVolume = carAge >= 3 || parseInt(horsePower) > 160 || destination === 'RU';
+  const ageCategory = month > 0
+    ? (ageMonths < 36 ? 'under3' : ageMonths <= 60 ? '3to5' : 'over5')
+    : (carAge < 3 ? 'under3' : carAge <= 5 ? '3to5' : 'over5');
+  const needsVolume = ageCategory !== 'under3' || parseInt(horsePower) > 160 || destination === 'RU';
 
   // ── Handlers: form ──
 
@@ -151,12 +155,6 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
     setEngineVolume(raw);
     if (phase !== 'input') { setPhase('input'); setTotalRUB(0); fetchedRef.current = false; }
   }, [phase]);
-
-  const handleYearSelect = useCallback((y: number) => {
-    haptic?.selectionChanged();
-    setYear(y);
-    if (phase !== 'input') { setPhase('input'); setTotalRUB(0); fetchedRef.current = false; }
-  }, [haptic, phase]);
 
   const handleDestSelect = useCallback((dest: Destination) => {
     haptic?.selectionChanged();
@@ -198,6 +196,7 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
           destination,
           price: priceNum,
           year,
+          month: month || undefined,
           engineType,
           horsePower: hpNum,
           engineCC: engineVolume ? parseInt(engineVolume) : undefined,
@@ -236,7 +235,7 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
       setPhase('input');
       haptic?.notificationOccurred('error');
     }
-  }, [priceNum, horsePower, engineVolume, destination, country, year, needsVolume, haptic, onCalcComplete]);
+  }, [priceNum, horsePower, engineVolume, destination, country, year, month, ageCategory, needsVolume, haptic, onCalcComplete]);
 
   // ── Handler: lead ──
 
@@ -310,6 +309,7 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
   const handleNewCalc = useCallback(() => {
     setPrice('');
     setYear(CURRENT_YEAR);
+    setMonth(0);
     setHorsePower('');
     setEngineVolume('');
     setDestination(null);
@@ -387,29 +387,44 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
           </div>
         </section>
 
-        {/* ── Age Category ── */}
+        {/* ── Year & Month ── */}
         <section>
-          <p className="label-gold mb-2 ml-1">Возраст авто</p>
+          <p className="label-gold mb-2 ml-1">Год и месяц выпуска</p>
           <div className="grid grid-cols-2 gap-3">
-            {AGE_PRESETS.map((preset) => {
-              const active = year === preset.year;
-              return (
-                <button
-                  key={preset.label}
-                  onClick={() => handleYearSelect(preset.year)}
-                  className={`chip-3d ${active ? 'chip-3d-active' : ''}`}
-                  style={{ height: 44, fontSize: 14, fontWeight: 500 }}
-                >
-                  {preset.label}
-                </button>
-              );
-            })}
+            {/* Year selector */}
+            <div className="relative">
+              <select
+                value={year}
+                onChange={(e) => { const y = Number(e.target.value); setYear(y); if (phase !== 'input') { setPhase('input'); setTotalRUB(0); fetchedRef.current = false; } }}
+                className="input-3d w-full appearance-none pr-8"
+                style={{ height: 48, fontSize: 15, cursor: 'pointer' }}
+              >
+                {Array.from({ length: 15 }, (_, i) => CURRENT_YEAR - i).map(y => (
+                  <option key={y} value={y}>{y} год</option>
+                ))}
+              </select>
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--txt-muted)', fontSize: 12 }}>▼</span>
+            </div>
+            {/* Month selector */}
+            <div className="relative">
+              <select
+                value={month}
+                onChange={(e) => { const m = Number(e.target.value); setMonth(m); if (phase !== 'input') { setPhase('input'); setTotalRUB(0); fetchedRef.current = false; } }}
+                className="input-3d w-full appearance-none pr-8"
+                style={{ height: 48, fontSize: 15, cursor: 'pointer' }}
+              >
+                <option value={0}>Месяц</option>
+                {['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'].map((name, i) => (
+                  <option key={i+1} value={i+1}>{name}</option>
+                ))}
+              </select>
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--txt-muted)', fontSize: 12 }}>▼</span>
+            </div>
           </div>
-          {carAge >= 3 && (
-            <p className="text-[11px] mt-1.5 ml-1" style={{ color: 'var(--gold-warm)' }}>
-              ⚠ Расчёт по ставкам ЕТТ ЕАЭС
-            </p>
-          )}
+          <p className="text-[11px] mt-1.5 ml-1" style={{ color: ageCategory === 'under3' ? 'var(--txt-muted)' : 'var(--gold-warm)' }}>
+            {ageCategory === 'under3' ? '📋 До 3 лет' : ageCategory === '3to5' ? '⚠ 3–5 лет (ставки ЕТТ ЕАЭС)' : '⚠ Старше 5 лет (повышенные ставки)'}
+            {month > 0 ? ` · ${ageMonths} мес.` : ' · укажите месяц для точного расчёта'}
+          </p>
         </section>
 
         {/* ── Horsepower ── */}
@@ -570,7 +585,7 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
               <div className="divider-gold mb-3" />
               <div className="grid grid-cols-2 gap-y-3 gap-x-4">
                 <InfoRow label="Цена авто" value={`${symbol}${priceNum.toLocaleString('ru-RU')}`} />
-                <InfoRow label="Возраст" value={carAge >= 3 ? '3–5 лет' : '0–3 лет'} />
+                <InfoRow label="Возраст" value={ageCategory === 'under3' ? 'до 3 лет' : ageCategory === '3to5' ? '3–5 лет' : '5+ лет'} />
                 <InfoRow label="Мощность" value={`${horsePower} л.с.`} />
               </div>
             </div>

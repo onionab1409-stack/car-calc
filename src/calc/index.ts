@@ -54,7 +54,7 @@ export function calculate(
   }
 
   // --- 2. Доплата утильсбора (если нужна) ---
-  const age = getAgeCategory(car.year);
+  const age = getAgeCategory(car.year, car.month);
   const utilExtra = calcUtilSborExtra(
     car.horsePower,
     car.engineCC,

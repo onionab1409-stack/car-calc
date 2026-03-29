@@ -47,7 +47,7 @@ export function calcChina(
 ): CalcResult {
   const priceCNY = car.price;
   const dest = car.destination;
-  const age = getAgeCategory(car.year);
+  const age = getAgeCategory(car.year, car.month);
   const cnyRate = rates.CNY_RUB;
 
   // --- 1. Логистика в юанях ---

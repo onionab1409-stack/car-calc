@@ -49,7 +49,7 @@ export function calcUAE(
 ): CalcResult {
   const priceAED = car.price;
   const dest = car.destination;
-  const age = getAgeCategory(car.year);
+  const age = getAgeCategory(car.year, car.month);
 
   // ⚠️ ОАЭ — только новые авто
   if (age !== 'under3') {
