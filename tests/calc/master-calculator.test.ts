@@ -44,8 +44,8 @@ describe('calculate — 8 эталонных расчётов (≤160лс, бе�
       year: 2024, engineType: 'petrol', engineCC: 2500, horsePower: 150, auction: 'copart',
     };
     const r = calculate(car, TEST_RATES, EUR_RATE);
-    expect(r.totalRUB).toBeGreaterThan(3_502_837 * 0.99);
-    expect(r.totalRUB).toBeLessThan(3_502_837 * 1.01);
+    expect(r.totalRUB).toBeGreaterThan(4_028_587 * 0.99);
+    expect(r.totalRUB).toBeLessThan(4_028_587 * 1.01);
     expect(r.breakdown.utilSbor).toBe(0);
   });
 
@@ -55,8 +55,8 @@ describe('calculate — 8 эталонных расчётов (≤160лс, бе�
       year: 2024, engineType: 'petrol', engineCC: 2000, horsePower: 150,
     };
     const r = calculate(car, TEST_RATES, EUR_RATE);
-    expect(r.totalRUB).toBeGreaterThan(3_021_648 * 0.99);
-    expect(r.totalRUB).toBeLessThan(3_021_648 * 1.01);
+    expect(r.totalRUB).toBeGreaterThan(3_492_720 * 0.99);
+    expect(r.totalRUB).toBeLessThan(3_492_720 * 1.01);
     expect(r.breakdown.utilSbor).toBe(0);
   });
 
@@ -77,8 +77,8 @@ describe('calculate — 8 эталонных расчётов (≤160лс, бе�
       year: 2025, engineType: 'petrol', engineCC: 2000, horsePower: 150,
     };
     const r = calculate(car, TEST_RATES, EUR_RATE);
-    expect(r.totalRUB).toBeGreaterThan(3_782_205 * 0.99);
-    expect(r.totalRUB).toBeLessThan(3_782_205 * 1.01);
+    expect(r.totalRUB).toBeGreaterThan(4_680_577 * 0.99);
+    expect(r.totalRUB).toBeLessThan(4_680_577 * 1.01);
     expect(r.breakdown.utilSbor).toBe(0);
   });
 
@@ -99,8 +99,8 @@ describe('calculate — 8 эталонных расчётов (≤160лс, бе�
       year: 2024, engineType: 'petrol', engineCC: 2000, horsePower: 150,
     };
     const r = calculate(car, TEST_RATES, EUR_RATE);
-    expect(r.totalRUB).toBeGreaterThan(3_238_748 * 0.99);
-    expect(r.totalRUB).toBeLessThan(3_238_748 * 1.01);
+    expect(r.totalRUB).toBeGreaterThan(3_837_860 * 0.99);
+    expect(r.totalRUB).toBeLessThan(3_837_860 * 1.01);
     expect(r.breakdown.utilSbor).toBe(0);
   });
 
@@ -133,8 +133,8 @@ describe('calculate — с доплатой утильсбора (>160лс)', ()
 
     // Базовый расчёт ~3,326K (ETT) + утильсбор 949,400
     // + 949,400 → ~4,921K
-    expect(r.totalRUB).toBeGreaterThan(4_100_000);
-    expect(r.totalRUB).toBeLessThan(4_400_000);
+    expect(r.totalRUB).toBeGreaterThan(4_850_000);
+    expect(r.totalRUB).toBeLessThan(5_000_000);
   });
 
   it('Корея→РФ 35M₩, 180лс, 1.5L → базовый + 896,600₽', () => {
@@ -146,7 +146,7 @@ describe('calculate — с доплатой утильсбора (>160лс)', ()
 
     // 180лс, 1.5L → k=45.00 → 900K - 3.4K = 896,600₽
     expect(r.breakdown.utilSbor).toBe(896_600);
-    expect(r.totalRUB).toBeGreaterThan(2_781_906 + 896_600 - 20_000);
+    expect(r.totalRUB).toBeGreaterThan(3_468_552 + 896_600 - 20_000);
   });
 
   it('Китай→РФ 180K¥, 150лс, 3.2L → >3.0L = коммерческий!', () => {

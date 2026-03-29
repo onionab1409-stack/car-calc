@@ -101,8 +101,8 @@ describe('calcKorea — эталонные расчёты', () => {
     const result = calcKorea(car, TEST_RATES, EUR_RATE);
 
     // Допуск ±0.5% (округления)
-    expect(result.totalRUB).toBeGreaterThan(3_021_648 * 0.99);
-    expect(result.totalRUB).toBeLessThan(3_021_648 * 1.01);
+    expect(result.totalRUB).toBeGreaterThan(3_492_720 * 0.99);
+    expect(result.totalRUB).toBeLessThan(3_492_720 * 1.01);
 
     // Проверяем breakdown
     expect(result.breakdown.country).toBe('Korea');
@@ -218,8 +218,8 @@ describe('calcKorea — дополнительные кейсы', () => {
     };
     const result = calcKorea(car, TEST_RATES, EUR_RATE);
     // ETT: 60M × 0.05364 + ETT(3000cc) + 90K + 600K₽
-    expect(result.totalRUB).toBeGreaterThan(4_500_000);
-    expect(result.totalRUB).toBeLessThan(4_900_000);
+    expect(result.totalRUB).toBeGreaterThan(5_200_000);
+    expect(result.totalRUB).toBeLessThan(5_700_000);
   });
 
   it('авто 3–5 лет Корея→РФ — ЕТТ ЕАЭС', () => {

@@ -129,8 +129,8 @@ describe('calcUSA — эталонные расчёты', () => {
 
     const result = calcUSA(car, TEST_RATES, EUR_RATE);
 
-    expect(result.totalRUB).toBeGreaterThan(3_502_837 * 0.99);
-    expect(result.totalRUB).toBeLessThan(3_502_837 * 1.01);
+    expect(result.totalRUB).toBeGreaterThan(4_028_587 * 0.99);
+    expect(result.totalRUB).toBeLessThan(4_028_587 * 1.01);
 
     expect(result.breakdown.fixedCosts).toBe(495_000);
   });
@@ -216,7 +216,7 @@ describe('calcUSA — дополнительные кейсы', () => {
     // Фикс: $80K → 575K + ceil((80K-40K)/10K) × 100K = 575K + 400K = 975K
     expect(result.breakdown.fixedCosts).toBe(975_000);
     // Итого должен быть >10М₽
-    expect(result.totalRUB).toBeGreaterThan(8_500_000);
+    expect(result.totalRUB).toBeGreaterThan(11_000_000);
   });
 
   it('авто 3–5 лет USA→РФ — ЕТТ ЕАЭС', () => {

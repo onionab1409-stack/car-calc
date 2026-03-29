@@ -364,9 +364,9 @@ describe('Integration: полный pipeline', () => {
     const result = calculate(car, TEST_RATES, EUR_RATE);
 
     // Эталон: 3,972,193₽ (±0.5%)
-    expect(result.totalRUB).toBeGreaterThan(3_300_000);
-    expect(result.totalRUB).toBeLessThan(3_400_000);
-    expect(Math.round(result.totalRUB)).toBe(3_326_185);
+    expect(result.totalRUB).toBeGreaterThan(3_900_000);
+    expect(result.totalRUB).toBeLessThan(4_100_000);
+    expect(Math.round(result.totalRUB)).toBe(3_972_193);
   });
 
   it('Корея→РБ 28M₩ = ~2,762K₽ (эталон)', () => {
@@ -397,7 +397,7 @@ describe('Integration: полный pipeline', () => {
     const car = toCarInput(parsed);
     const result = calculate(car, TEST_RATES, EUR_RATE);
 
-    expect(Math.round(result.totalRUB)).toBeCloseTo(3_782_205, -4);
+    expect(Math.round(result.totalRUB)).toBeCloseTo(4_680_577, -4);
   });
 
   it('Китай→РФ 180K¥ = ~3,239K₽ (эталон)', () => {
@@ -413,7 +413,7 @@ describe('Integration: полный pipeline', () => {
     const car = toCarInput(parsed);
     const result = calculate(car, TEST_RATES, EUR_RATE);
 
-    expect(Math.round(result.totalRUB)).toBeCloseTo(3_238_748, -4);
+    expect(Math.round(result.totalRUB)).toBeCloseTo(3_837_860, -4);
   });
 
   it('API отдаёт только totalRUB (округлённый до целого)', () => {
@@ -422,7 +422,7 @@ describe('Integration: полный pipeline', () => {
     const result = calculate(car, TEST_RATES, EUR_RATE);
 
     const apiResponse = { totalRUB: Math.round(result.totalRUB) };
-    expect(apiResponse.totalRUB).toBe(3_326_185);
+    expect(apiResponse.totalRUB).toBe(3_972_193);
     // Нет breakdown, нет формулы — только число
     expect(Object.keys(apiResponse)).toEqual(['totalRUB']);
   });

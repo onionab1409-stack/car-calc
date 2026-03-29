@@ -24,7 +24,7 @@ import type {
   AgeCategory,
 } from '@/types';
 import { getAgeCategory } from '@/types';
-import { KOREA, calcETT } from './data/constants';
+import { KOREA, calcETT, calcETTUnder3 } from './data/constants';
 
 // ─────────────────────────────────────────────
 // 📐 Основная функция
@@ -65,7 +65,7 @@ export function calcKorea(
       if (!eurRate) {
         throw new Error('Для расчёта таможни РФ нужен курс EUR/RUB');
       }
-      customsRUB = calcETT(car.engineCC || 0, eurRate, '3to5');
+      customsRUB = calcETTUnder3(carPriceRUB, car.engineCC || 0, eurRate);
       customsFormula = `ЕТТ ЕАЭС: MAX(${Math.round(carPriceRUB / eurRate)}€ × %, ${car.engineCC}см³ × мин) × EUR ${eurRate}₽`;
       usedTKS = true;
     } else {
