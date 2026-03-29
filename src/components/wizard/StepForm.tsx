@@ -124,7 +124,7 @@ export function StepForm({ country, onBack, onCalcComplete }: StepFormProps) {
   // ── Derived ──
   const priceNum = useMemo(() => Number(price.replace(/\s/g, '')) || 0, [price]);
   const carAge = CURRENT_YEAR - year;
-  const needsVolume = carAge >= 3 || parseInt(horsePower) > 160;
+  const needsVolume = carAge >= 3 || parseInt(horsePower) > 160 || destination === 'RU';
 
   // ── Handlers: form ──
 
