@@ -114,9 +114,9 @@ export const FIXED_COSTS_USA_RU: FixedCostsTable = {
 export const FIXED_COSTS_USA_BY: FixedCostsTable = {
   route: 'USA_BY',
   steps: [
-    { maxPriceUSD: 20_000, fixedRUB: 450_000 },
-    { maxPriceUSD: 30_000, fixedRUB: 520_000 },
-    { maxPriceUSD: 40_000, fixedRUB: 600_000 },
+    { maxPriceUSD: 20_000, fixedRUB: 520_000 },
+    { maxPriceUSD: 30_000, fixedRUB: 590_000 },
+    { maxPriceUSD: 40_000, fixedRUB: 670_000 },
   ],
   overflowStepRUB: 100_000,
   overflowAfterUSD: 40_000,

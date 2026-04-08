@@ -53,8 +53,8 @@ describe('lookupFixedCost', () => {
     expect(lookupFixedCost(FIXED_COSTS_USA_RU, 75_000)).toBe(975_000);
   });
 
-  it('USA→РБ: $15K → 450K₽', () => {
-    expect(lookupFixedCost(FIXED_COSTS_USA_BY, 15_000)).toBe(450_000);
+  it('USA→РБ: $15K → 520K₽', () => {
+    expect(lookupFixedCost(FIXED_COSTS_USA_BY, 15_000)).toBe(520_000);
   });
 });
 
@@ -87,7 +87,7 @@ describe('calcUSAComponents', () => {
 // ─────────────────────────────────────────────
 
 describe('calcUSA — эталонные расчёты', () => {
-  it('🇺🇸 USA → 🇧🇾 РБ: $15K, 150лс → ~2,351,000₽', () => {
+  it('🇺🇸 USA → 🇧🇾 РБ: $15K, 150лс → ~2,421,000₽', () => {
     const car: CarInput = {
       country: 'USA',
       destination: 'BY',
@@ -103,15 +103,15 @@ describe('calcUSA — эталонные расчёты', () => {
     const result = calcUSA(car, TEST_RATES, EUR_RATE);
 
     // Допуск ±0.5% (округления)
-    expect(result.totalRUB).toBeGreaterThan(2_351_000 * 0.995);
-    expect(result.totalRUB).toBeLessThan(2_351_000 * 1.005);
+    expect(result.totalRUB).toBeGreaterThan(2_421_000 * 0.995);
+    expect(result.totalRUB).toBeLessThan(2_421_000 * 1.005);
 
     // Проверяем breakdown
     expect(result.breakdown.country).toBe('USA');
     expect(result.breakdown.destination).toBe('BY');
     expect(result.breakdown.ageCategory).toBe('under3');
     expect(result.breakdown.carPriceOriginal).toBe(15_000);
-    expect(result.breakdown.fixedCosts).toBe(450_000);
+    expect(result.breakdown.fixedCosts).toBe(520_000);
   });
 
   it('🇺🇸 USA → 🇷🇺 РФ: $25K, 150лс → ~3,972,000₽', () => {

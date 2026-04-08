@@ -513,7 +513,7 @@ describe('P7.1 · E2E: 20 реальных автомобилей', () => {
     const base = manualUSA(55000, 'BY');
 
     // Overflow: 55K > 40K → fix = 600K + ceil(15K/10K)*100K = 600K + 200K = 800K
-    expect(r.breakdown.fixedCosts).toBe(800_000);
+    expect(r.breakdown.fixedCosts).toBe(870_000);
     // 6.2L > 3.0L И 420hp > 160 → ОГРОМНЫЙ коммерческий утильсбор
     expect(r.breakdown.utilSbor).toBeGreaterThan(2_000_000);
     const baseWithoutUtil = r.totalRUB - r.breakdown.utilSbor;

@@ -27,14 +27,14 @@ const EUR_RATE = 84.12;
 // ─────────────────────────────────────────────
 
 describe('calculate — 8 эталонных расчётов (≤160лс, без доплаты утильсбора)', () => {
-  it('#1 🇺🇸 USA → 🇧🇾 РБ: $15K, 150лс → ~2,351,000₽', () => {
+  it('#1 🇺🇸 USA → 🇧🇾 РБ: $15K, 150лс → ~2,421,000₽', () => {
     const car: CarInput = {
       country: 'USA', destination: 'BY', price: 15_000, currency: 'USD',
       year: 2024, engineType: 'petrol', engineCC: 2000, horsePower: 150, auction: 'copart',
     };
     const r = calculate(car, TEST_RATES, EUR_RATE);
-    expect(r.totalRUB).toBeGreaterThan(2_351_000 * 0.995);
-    expect(r.totalRUB).toBeLessThan(2_351_000 * 1.005);
+    expect(r.totalRUB).toBeGreaterThan(2_421_000 * 0.995);
+    expect(r.totalRUB).toBeLessThan(2_421_000 * 1.005);
     expect(r.breakdown.utilSbor).toBe(0);
   });
 
